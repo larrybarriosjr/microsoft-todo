@@ -1,8 +1,9 @@
 import React from "react"
 import "App.scss"
+import NavDrawer from "layout/NavDrawer"
 
 function App() {
-  return <div></div>
+  return <NavDrawer />
 }
 
 export default App
