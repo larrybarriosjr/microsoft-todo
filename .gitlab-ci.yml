@@ -24,7 +24,7 @@ deploy_production:
         - app
     script:
         - echo "Deploying to server"
-        - cp -rv build/* /var/www/html/futhark/
+        - sudo cp -rv build/* /var/www/html/futhark/
         - echo "Deployed"
     environment:
         name: production
