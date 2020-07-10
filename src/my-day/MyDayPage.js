@@ -1,7 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import scss from "my-day/MyDayPage.module.scss"
 
 const MyDayPage = () => {
+  const [submitHidden, setSubmitHidden] = useState(true)
+  const handleInput = (e) => setSubmitHidden(e.target.value.length === 0)
+
   return (
     <div className={scss.background}>
       <section className={scss.page}>
@@ -12,8 +15,8 @@ const MyDayPage = () => {
         </button>
         <ul className={scss.list}>list</ul>
         <form className={scss.form}>
-          <input placeholder="Add a task" />
-          <button type="button">
+          <input placeholder="Add a task" onInput={handleInput} />
+          <button type="button" hidden={submitHidden}>
             <i className="icon-plus" />
           </button>
         </form>
