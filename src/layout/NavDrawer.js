@@ -1,7 +1,12 @@
 import React, { useState } from "react"
+import { useSetRecoilState } from "recoil"
+import { pageState } from "state/atoms"
 import scss from "layout/NavDrawer.module.scss"
 
 const NavDrawer = () => {
+  // global states
+  const setPage = useSetRecoilState(pageState)
+
   // local states
   const [navDisplay, setNavDisplay] = useState("open")
   const [navIcon, setNavIcon] = useState("icon-left-open")
@@ -17,6 +22,10 @@ const NavDrawer = () => {
     console.log(navDisplay)
   }
 
+  const goToPage = (page) => () => {
+    setPage(page)
+  }
+
   // styling classname variables
   const containerClass = `${scss.container} ${scss[navDisplay]}`
   const brandClass = `${scss.brand} ${scss[navDisplay]}`
@@ -27,6 +36,9 @@ const NavDrawer = () => {
         <h1 className={brandClass}>
           {navDisplay === "open" ? "Futhark — Impel Focus" : "F"}
         </h1>
+        <li>
+          <button onClick={goToPage("myDay")}>My Day</button>
+        </li>
       </nav>
       <button className={scss.toggle} onClick={toggleNav}>
         <i className={navIcon} />
