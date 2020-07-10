@@ -1,1 +1,6 @@
 @import "fontello/css/fontello.css";
+
+main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
