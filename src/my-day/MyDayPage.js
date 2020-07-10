@@ -2,7 +2,10 @@ import React, { useState } from "react"
 import scss from "my-day/MyDayPage.module.scss"
 
 const MyDayPage = () => {
+  // local state
   const [submitHidden, setSubmitHidden] = useState(true)
+
+  // toggle submit display whether input is empty or not
   const handleInput = (e) => setSubmitHidden(e.target.value.length === 0)
 
   return (

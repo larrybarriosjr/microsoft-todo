@@ -11,6 +11,7 @@ const NavDrawer = () => {
   const [navDisplay, setNavDisplay] = useState("open")
   const [navIcon, setNavIcon] = useState("icon-left-open")
 
+  // toggle navigation display and arrow icons
   const toggleNav = () => {
     if (navDisplay === "open") {
       setNavDisplay("close")
@@ -22,9 +23,8 @@ const NavDrawer = () => {
     console.log(navDisplay)
   }
 
-  const goToPage = (page) => () => {
-    setPage(page)
-  }
+  // send to specified page
+  const goToPage = (page) => () => setPage(page)
 
   // styling classname variables
   const containerClass = `${scss.container} ${scss[navDisplay]}`
