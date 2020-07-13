@@ -1,8 +1,13 @@
 import React, { useState } from "react"
+import { useRecoilValue } from "recoil"
+import { myDayListState } from "state/atoms"
 import scss from "my-day/MyDayPage.module.scss"
 
 const MyDayPage = () => {
-  // local state
+  // global states
+  const myDayList = useRecoilValue(myDayListState)
+
+  // local states
   const [submitHidden, setSubmitHidden] = useState(true)
 
   // toggle submit display whether input is empty or not
@@ -16,7 +21,24 @@ const MyDayPage = () => {
         <button className={scss.bulb}>
           <i className="icon-lightbulb" />
         </button>
-        <ul className={scss.list}>list</ul>
+        <article className={scss.list}>
+          <ul>
+            {myDayList.map((item, i) => (
+              <li key={i} className={scss["todo-item"]}>
+                <button className={scss["item-check"]}>
+                  {item.completed && <i className="icon-ok" />}
+                </button>
+                <p className={scss["item-name"]}>{item.name}</p>
+                <p className={scss["item-description"]}>{item.description}</p>
+                <button className={scss["item-star"]}>
+                  <i
+                    className={item.starred ? "icon-star-filled" : "icon-star"}
+                  />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </article>
         <form className={scss.form}>
           <input placeholder="Add a task" onInput={handleInput} />
           <button type="button" hidden={submitHidden}>
