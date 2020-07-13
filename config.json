@@ -1,5 +1,5 @@
 {
-  "name": "fontello",
+  "name": "",
   "css_prefix_text": "icon-",
   "css_use_suffix": false,
   "hinting": true,
@@ -11,12 +11,6 @@
       "css": "sun",
       "code": 59392,
       "src": "iconic"
-    },
-    {
-      "uid": "0817b47d6e5f1d85f2428640a021f0c4",
-      "css": "star",
-      "code": 59393,
-      "src": "linecons"
     },
     {
       "uid": "9de4ac1aec6b1cca1929e1407eecf3db",
@@ -113,6 +107,24 @@
       "css": "trash",
       "code": 61944,
       "src": "fontawesome"
+    },
+    {
+      "uid": "bcdc294bb787b15203b82f2be8096548",
+      "css": "star",
+      "code": 59393,
+      "src": "typicons"
+    },
+    {
+      "uid": "vyuzsm6wijlfwtjo4ifkoblfmsepk6g8",
+      "css": "star-filled",
+      "code": 59404,
+      "src": "typicons"
+    },
+    {
+      "uid": "b90d80c250a9bbdd6cd3fe00e6351710",
+      "css": "ok",
+      "code": 59403,
+      "src": "iconic"
     }
   ]
 }
