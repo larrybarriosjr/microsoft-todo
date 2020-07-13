@@ -20,7 +20,6 @@ const NavDrawer = () => {
       setNavDisplay("open")
       setNavIcon("icon-left-open")
     }
-    console.log(navDisplay)
   }
 
   // send to specified page
