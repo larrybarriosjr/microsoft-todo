@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { myDayListState } from "state/atoms"
 import scss from "my-day/MyDayPage.module.scss"
+import dayjs from "dayjs"
 
 const MyDayPage = () => {
   // global states
@@ -10,6 +11,9 @@ const MyDayPage = () => {
   // local states
   const [submitHidden, setSubmitHidden] = useState(true)
 
+  // formatted current date
+  const currentDate = dayjs().format("dddd, MMMM D")
+
   // toggle submit display whether input is empty or not
   const handleInput = (e) => setSubmitHidden(e.target.value.length === 0)
 
@@ -17,7 +21,7 @@ const MyDayPage = () => {
     <div className={scss.background}>
       <section className={scss.page}>
         <h2 className={scss.title}>My Day</h2>
-        <p className={scss.date}>Friday, July 10</p>
+        <p className={scss.date}>{currentDate}</p>
         <button className={scss.bulb}>
           <i className="icon-lightbulb" />
         </button>
