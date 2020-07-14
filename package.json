@@ -7,10 +7,12 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "dayjs": "^1.8.29",
+    "lovefield": "^2.1.12",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "recoil": "^0.0.10"
+    "recoil": "^0.0.10",
+    "uuid": "^8.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

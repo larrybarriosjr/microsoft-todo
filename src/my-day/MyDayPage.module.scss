@@ -58,57 +58,12 @@
 
 .list {
   grid-area: list;
+  height: calc(100vh - 12.5rem);
+  overflow-y: auto;
 }
 
-.todo-item {
-  display: grid;
-  background-color: rgba(#000, 0.5);
-  padding: 0.5rem 0;
-  margin-top: 0.1rem;
-  border: none;
-  border-radius: 5px;
-  grid-template-columns: auto 1fr auto;
-  grid-template-rows: repeat(2, auto);
-  grid-template-areas:
-    "item-check item-name item-star"
-    "item-check item-description item-star";
-}
-
-.item-check {
-  grid-area: item-check;
-  color: rgba(#fff, 0.5);
-  border: 2px solid rgba(#fff, 0.5);
-  border-radius: 50%;
-  background: none;
-  height: 1.5rem;
-  width: 1.5rem;
-  padding: 0;
-  margin: 0 1rem;
-  align-self: center;
-  font-size: 0.75rem;
-}
-
-.item-name {
-  grid-area: item-name;
-}
-
-.item-description {
-  grid-area: item-description;
-  font-size: 0.8rem;
-  color: rgba(#fff, 0.5);
-}
-
-.item-star {
-  grid-area: item-star;
-  background: none;
-  border: none;
-  color: rgba(#fff, 0.5);
-  font-size: 1rem;
-  padding: 0;
-  width: 1.5rem;
-  height: 1.5rem;
-  align-self: center;
-  margin: 0 1rem;
+.todo-list {
+  margin: 0;
 }
 
 .form {
@@ -132,6 +87,10 @@
   > button {
     position: absolute;
     right: 0;
+    font-size: 1rem;
+    color: #fff;
+    border: none;
+    background: none;
     height: 100%;
     width: 3rem;
     z-index: 2;

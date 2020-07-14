@@ -1,21 +1,36 @@
-import React, { useState } from "react"
-import { useRecoilValue } from "recoil"
-import { myDayListState } from "state/atoms"
+import React, { useState, useEffect } from "react"
 import scss from "my-day/MyDayPage.module.scss"
 import dayjs from "dayjs"
+import TaskItem from "common/TaskItem"
+import { Task } from "service/lovefield"
 
 const MyDayPage = () => {
-  // global states
-  const myDayList = useRecoilValue(myDayListState)
-
   // local states
   const [submitHidden, setSubmitHidden] = useState(true)
+  const [taskName, setTaskName] = useState("")
+  const [taskList, setTaskList] = useState([])
 
   // formatted current date
   const currentDate = dayjs().format("dddd, MMMM D")
 
   // toggle submit display whether input is empty or not
-  const handleInput = (e) => setSubmitHidden(e.target.value.length === 0)
+  const handleInput = (e) => {
+    setTaskName(e.target.value)
+    setSubmitHidden(e.target.value.length === 0)
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setTaskName("")
+    Task.post({ taskName })
+      .then((res) => setTaskList(res))
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    Task.get()
+      .then((res) => setTaskList(res))
+      .catch((err) => console.log(err))
+  }, [])
 
   return (
     <div className={scss.background}>
@@ -26,26 +41,19 @@ const MyDayPage = () => {
           <i className="icon-lightbulb" />
         </button>
         <article className={scss.list}>
-          <ul>
-            {myDayList.map((item, i) => (
-              <li key={i} className={scss["todo-item"]}>
-                <button className={scss["item-check"]}>
-                  {item.completed && <i className="icon-ok" />}
-                </button>
-                <p className={scss["item-name"]}>{item.name}</p>
-                <p className={scss["item-description"]}>{item.description}</p>
-                <button className={scss["item-star"]}>
-                  <i
-                    className={item.starred ? "icon-star-filled" : "icon-star"}
-                  />
-                </button>
-              </li>
+          <ul className={scss["todo-list"]}>
+            {taskList.map((item, i) => (
+              <TaskItem key={i} item={item} />
             ))}
           </ul>
         </article>
-        <form className={scss.form}>
-          <input placeholder="Add a task" onInput={handleInput} />
-          <button type="button" hidden={submitHidden}>
+        <form className={scss.form} onSubmit={handleSubmit}>
+          <input
+            placeholder="Add a task"
+            onChange={handleInput}
+            value={taskName}
+          />
+          <button type="submit" hidden={submitHidden}>
             <i className="icon-plus" />
           </button>
         </form>
