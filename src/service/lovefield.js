@@ -9,9 +9,13 @@ const buildSchema = () => {
     .addColumn("name", lf.Type.STRING)
     .addColumn("completed", lf.Type.BOOLEAN)
     .addColumn("starred", lf.Type.BOOLEAN)
+    .addColumn("steps", lf.Type.ARRAY_BUFFER)
+    .addColumn("dueDate", lf.Type.DATE_TIME)
+    .addColumn("reminder", lf.Type.DATE_TIME)
+    .addColumn("notes", lf.Type.STRING)
     .addColumn("listId", lf.Type.STRING)
     .addPrimaryKey(["id"])
-    .addNullable(["listId"])
+    .addNullable(["steps", "dueDate", "reminder", "listId"])
     .addForeignKey("fk_task_list", {
       local: "listId",
       ref: "lists.id",
@@ -52,7 +56,9 @@ export const Task = {
       name: obj.taskName,
       completed: false,
       starred: false,
-      listId: obj.list || null
+      steps: null,
+      notes: "",
+      listId: null
     }
   },
   get: async (id) => {
