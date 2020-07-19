@@ -4,3 +4,9 @@ export const pageState = atom({
   key: "pageState",
   default: "myDay"
 })
+
+export const taskHiddenState = atom({
+  key: "taskHiddenState",
+  default: true
+})
+

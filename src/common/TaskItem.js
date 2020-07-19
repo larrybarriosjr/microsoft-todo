@@ -1,8 +1,11 @@
 import React, { useState } from "react"
+import { useRecoilState } from "recoil"
+import { taskHiddenState } from "state/atoms"
 import scss from "common/TaskItem.module.scss"
 import { Task } from "service/lovefield"
 
 const TaskItem = ({ item }) => {
+  const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
   const [checkShown, setCheckShown] = useState(false)
 
   const displayCheck = (completed) => () => {
@@ -12,14 +15,15 @@ const TaskItem = ({ item }) => {
 
   const hideCheck = () => setCheckShown(false)
 
-  const handleClick = (id) => () => {
+  const toggleTaskDrawer = (id) => () => {
+    setTaskHidden(!taskHidden)
     Task.get(id)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
   }
 
   return (
-    <li className={scss["todo-item"]} onClick={handleClick(item.id)}>
+    <li className={scss["todo-item"]} onClick={toggleTaskDrawer(item.id)}>
       <button
         className={scss["item-check"]}
         onMouseEnter={displayCheck(item.completed)}
