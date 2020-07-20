@@ -10,3 +10,8 @@ export const taskHiddenState = atom({
   default: true
 })
 
+export const taskListState = atom({
+  key: "taskList",
+  default: []
+})
+

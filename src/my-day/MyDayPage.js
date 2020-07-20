@@ -3,12 +3,14 @@ import scss from "my-day/MyDayPage.module.scss"
 import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
 import { Task } from "service/lovefield"
+import { useRecoilState } from "recoil"
+import { taskListState } from "state/atoms"
 
 const MyDayPage = () => {
   // local states
   const [submitHidden, setSubmitHidden] = useState(true)
   const [taskName, setTaskName] = useState("")
-  const [taskList, setTaskList] = useState([])
+  const [taskList, setTaskList] = useRecoilState(taskListState)
 
   // formatted current date
   const currentDate = dayjs().format("dddd, MMMM D")
@@ -30,7 +32,7 @@ const MyDayPage = () => {
     Task.get()
       .then((res) => setTaskList(res))
       .catch((err) => console.log(err))
-  }, [])
+  }, [setTaskList])
 
   return (
     <div className={scss.background}>
@@ -42,13 +44,16 @@ const MyDayPage = () => {
         </button>
         <article className={scss.list}>
           <ul className={scss["todo-list"]}>
-            {taskList.map((item, i) => (
-              <TaskItem key={i} item={item} />
-            ))}
+            {taskList.length > 0 ? (
+              taskList.map((item, i) => <TaskItem key={i} item={item} />)
+            ) : (
+              <p>No tasks found.</p>
+            )}
           </ul>
         </article>
         <form className={scss.form} onSubmit={handleSubmit}>
           <input
+            name="task-name"
             placeholder="Add a task"
             onChange={handleInput}
             value={taskName}

@@ -30,12 +30,10 @@ const buildSchema = () => {
 }
 
 const tblTasks = buildSchema().getSchema().table("tasks")
-const tblLists = buildSchema().getSchema().table("lists")
 
-const insert = (data, db) => {
-  const dataRow = tblTasks.createRow(data)
-  db.insert().into(tblTasks).values([dataRow]).exec()
-  return db
+const select = (id, db) => {
+  const query = db.select().from(tblTasks).where(tblTasks.id.eq(id))
+  return query.exec()
 }
 
 const index = (db) => {
@@ -49,10 +47,9 @@ const get = (id, db) => {
 }
 
 export const Task = {
-  _createId: () => uuid(),
-  _createData: (obj) => {
+  _serialize: (obj) => {
     return {
-      id: Task._createId(),
+      id: uuid(),
       name: obj.taskName,
       completed: false,
       starred: false,
@@ -64,7 +61,7 @@ export const Task = {
   get: async (id) => {
     return buildSchema()
       .connect()
-      .then((db) => (typeof id === "undefined" ? index(db) : get(id, db)))
+      .then((db) => (typeof id === "undefined" ? index(db) : select(id, db)))
       .then((res) => (res.length === 1 ? res[0] : res))
   },
   post: async (obj) => {
