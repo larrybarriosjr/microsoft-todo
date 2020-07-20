@@ -6,3 +6,35 @@
   background-color: #111;
 }
 
+.header {
+  background-color: #222;
+  padding: 1rem;
+}
+
+.title {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  > button:nth-of-type(1) {
+    color: rgba(#fff, 0.5);
+    border: 2px solid rgba(#fff, 0.5);
+    border-radius: 50%;
+    background: none;
+    height: 1.5rem;
+    width: 1.5rem;
+    padding: 0;
+    margin-right: 1rem;
+    align-self: center;
+    font-size: 0.75rem;
+  }
+  > button:nth-of-type(2) {
+    background: none;
+    border: none;
+    color: rgba(#fff, 0.5);
+    font-size: 1rem;
+    padding: 0;
+    margin-left: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    align-self: center;
+  }
+}

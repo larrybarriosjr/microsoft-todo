@@ -15,3 +15,7 @@ export const taskListState = atom({
   default: []
 })
 
+export const taskState = atom({
+  key: "taskState",
+  default: {}
+})

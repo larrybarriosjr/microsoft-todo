@@ -41,13 +41,23 @@ const index = (db) => {
   return query.exec()
 }
 
-const get = (id, db) => {
-  const query = db.select().from(tblTasks).where(tblTasks.id.eq(id))
-  return query.exec()
+const insert = (data, db) => {
+  const dataRow = tblTasks.createRow(data)
+  db.insert().into(tblTasks).values([dataRow]).exec()
+  return db
 }
 
 export const Task = {
   _serialize: (obj) => {
+    if (obj.taskId) {
+      if (obj.taskName) return { name: obj.taskName }
+      if (obj.taskCompleted) return { completed: obj.taskCompleted }
+      if (obj.taskStarred) return { starred: obj.taskStarred }
+      if (obj.taskSteps) return { steps: obj.taskSteps }
+      if (obj.taskDueDate) return { dueDate: obj.taskDueDate }
+      if (obj.taskReminder) return { reminder: obj.taskReminder }
+      if (obj.taskNotes) return { notes: obj.taskNotes }
+    }
     return {
       id: uuid(),
       name: obj.taskName,
@@ -67,7 +77,8 @@ export const Task = {
   post: async (obj) => {
     return buildSchema()
       .connect()
-      .then((db) => insert(Task._createData(obj), db))
+      .then((db) => insert(Task._serialize(obj), db))
+      .then((db) => index(db))
       .then((db) => index(db))
   }
 }

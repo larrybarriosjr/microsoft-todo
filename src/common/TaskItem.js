@@ -1,10 +1,11 @@
 import React, { useState } from "react"
-import { useRecoilState } from "recoil"
-import { taskHiddenState } from "state/atoms"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { taskHiddenState, taskState } from "state/atoms"
 import scss from "common/TaskItem.module.scss"
 import { Task } from "service/lovefield"
 
 const TaskItem = ({ item }) => {
+  const setTask = useSetRecoilState(taskState)
   const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
   const [checkShown, setCheckShown] = useState(false)
 
@@ -18,7 +19,7 @@ const TaskItem = ({ item }) => {
   const toggleTaskDrawer = (id) => () => {
     setTaskHidden(!taskHidden)
     Task.get(id)
-      .then((res) => console.log(res))
+      .then((res) => setTask(res))
       .catch((err) => console.log(err))
   }
 

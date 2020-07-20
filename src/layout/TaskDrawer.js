@@ -1,15 +1,47 @@
-import { useRecoilValue } from "recoil"
-import { taskHiddenState } from "state/atoms"
+import React, { useState, useEffect } from "react"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { taskHiddenState, taskListState, taskState } from "state/atoms"
+import { Task } from "service/lovefield"
 import scss from "layout/TaskDrawer.module.scss"
 
 const TaskDrawer = () => {
   const taskHidden = useRecoilValue(taskHiddenState)
+  const task = useRecoilValue(taskState)
+  const setTaskList = useSetRecoilState(taskListState)
+  const [taskId, setTaskId] = useState("")
+  const [taskName, setTaskName] = useState("")
+  const [checkShown, setCheckShown] = useState(false)
+
+  const displayCheck = (completed) => () => {
+    if (completed) return
+    setCheckShown(true)
+  }
+
+  const hideCheck = () => setCheckShown(false)
+
+  useEffect(() => {
+    setTaskId(task.id)
+    setTaskName(task.name)
+  }, [task])
+
   return (
     <aside className={scss.container} hidden={taskHidden}>
+      <header className={scss.header}>
+        <form className={scss.title}>
+          <button
+            type="button"
+            onMouseEnter={displayCheck(task.completed)}
+            onMouseLeave={hideCheck}
+          >
+            {task.completed && <i className="icon-ok" />}
+            {checkShown && <i className="icon-ok" />}
           </button>
-          <input />
-          <button>
-            <i />
+          <input
+            name="task-name"
+            value={taskName || ""}
+          />
+          <button type="button">
+            <i className={task.starred ? "icon-star-filled" : "icon-star"} />
           </button>
         </form>
         <ul>
