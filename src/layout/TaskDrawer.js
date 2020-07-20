@@ -19,10 +19,22 @@ const TaskDrawer = () => {
 
   const hideCheck = () => setCheckShown(false)
 
+  const handleChangeName = (e) => {
+    setTaskName(e.target.value)
+  }
+
   useEffect(() => {
     setTaskId(task.id)
     setTaskName(task.name)
   }, [task])
+
+  useEffect(() => {
+    if (taskId && taskName) {
+      Task.patch({ taskId, taskName })
+        .then((res) => setTaskList(res))
+        .catch((err) => console.log(err))
+    }
+  }, [taskId, taskName, setTaskList])
 
   return (
     <aside className={scss.container} hidden={taskHidden}>
@@ -38,6 +50,7 @@ const TaskDrawer = () => {
           </button>
           <input
             name="task-name"
+            onChange={handleChangeName}
             value={taskName || ""}
           />
           <button type="button">

@@ -47,6 +47,15 @@ const insert = (data, db) => {
   return db
 }
 
+const update = (data, id, db) => {
+  const dataKey = Object.keys(data)[0]
+  db.update(tblTasks)
+    .set(tblTasks[dataKey], data[dataKey])
+    .where(tblTasks.id.eq(id))
+    .exec()
+  return db
+}
+
 export const Task = {
   _serialize: (obj) => {
     if (obj.taskId) {
@@ -79,6 +88,11 @@ export const Task = {
       .connect()
       .then((db) => insert(Task._serialize(obj), db))
       .then((db) => index(db))
+  },
+  patch: async (obj) => {
+    return buildSchema()
+      .connect()
+      .then((db) => update(Task._serialize(obj), obj.taskId, db))
       .then((db) => index(db))
   }
 }
