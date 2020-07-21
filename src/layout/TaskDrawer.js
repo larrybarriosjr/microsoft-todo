@@ -7,14 +7,22 @@ import CheckButton from "common/CheckButton"
 import StarButton from "common/StarButton"
 
 const TaskDrawer = () => {
+  const getInputHeight = (chars) => Math.ceil(chars / 22) * 1.75
   const taskHidden = useRecoilValue(taskHiddenState)
   const task = useRecoilValue(taskState)
   const setTaskList = useSetRecoilState(taskListState)
   const [taskId, setTaskId] = useState("")
   const [taskName, setTaskName] = useState("")
+  const [height, setHeight] = useState("1.75rem")
 
   const handleChangeName = (e) => {
+    const inputLength = getInputHeight(e.target.value.length)
     setTaskName(e.target.value)
+    setHeight((inputLength || 1.75) + "rem")
+  }
+
+  const disableEnter = (e) => {
+    if (e.key === "Enter") e.preventDefault()
   }
 
   useEffect(() => {
@@ -24,11 +32,14 @@ const TaskDrawer = () => {
 
   useEffect(() => {
     if (taskId && taskName) {
+      setHeight(getInputHeight(taskName.length) + "rem")
       Task.patch({ taskId, taskName })
         .then((res) => setTaskList(res))
         .catch((err) => console.log(err))
     }
   }, [taskId, taskName, setTaskList])
+
+  const itemNameClass = `${scss["item-name"]} ${task.completed && scss.deleted}`
 
   return (
     <aside className={scss.container} hidden={taskHidden}>
@@ -39,10 +50,14 @@ const TaskDrawer = () => {
             completed={task.completed}
             className={scss["item-check"]}
           />
-          <input
+          <textarea
             name="task-name"
             onChange={handleChangeName}
+            onInput={handleChangeName}
+            onKeyPress={disableEnter}
             value={taskName || ""}
+            className={itemNameClass}
+            style={{ height }}
           />
           <StarButton
             id={task.id}
