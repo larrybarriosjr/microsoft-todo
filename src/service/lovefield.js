@@ -59,13 +59,13 @@ const update = (data, id, db) => {
 export const Task = {
   _serialize: (obj) => {
     if (obj.taskId) {
-      if (obj.taskName) return { name: obj.taskName }
-      if (obj.taskCompleted) return { completed: obj.taskCompleted }
-      if (obj.taskStarred) return { starred: obj.taskStarred }
-      if (obj.taskSteps) return { steps: obj.taskSteps }
-      if (obj.taskDueDate) return { dueDate: obj.taskDueDate }
-      if (obj.taskReminder) return { reminder: obj.taskReminder }
-      if (obj.taskNotes) return { notes: obj.taskNotes }
+      if ("taskName" in obj) return { name: obj.taskName }
+      if ("taskCompleted" in obj) return { completed: obj.taskCompleted }
+      if ("taskStarred" in obj) return { starred: obj.taskStarred }
+      if ("taskSteps" in obj) return { steps: obj.taskSteps }
+      if ("taskDueDate" in obj) return { dueDate: obj.taskDueDate }
+      if ("taskReminder" in obj) return { reminder: obj.taskReminder }
+      if ("taskNotes" in obj) return { notes: obj.taskNotes }
     }
     return {
       id: uuid(),
