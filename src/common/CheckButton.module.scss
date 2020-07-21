@@ -1,0 +1,16 @@
+.item-check {
+  color: rgba(#fff, 0.5);
+  border: 2px solid rgba(#fff, 0.5);
+  border-radius: 50%;
+  background: none;
+  height: 1.5rem;
+  width: 1.5rem;
+  padding: 0;
+  align-self: center;
+  font-size: 0.75rem;
+  &.checked {
+    color: #111;
+    background-color: dodgerblue;
+    border: 2px solid dodgerblue;
+  }
+}

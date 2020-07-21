@@ -1,20 +1,13 @@
-import React, { useState } from "react"
+import React from "react"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { taskHiddenState, taskState } from "state/atoms"
 import scss from "common/TaskItem.module.scss"
 import { Task } from "service/lovefield"
+import CheckButton from "./CheckButton"
 
 const TaskItem = ({ item }) => {
   const setTask = useSetRecoilState(taskState)
   const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
-  const [checkShown, setCheckShown] = useState(false)
-
-  const displayCheck = (completed) => () => {
-    if (completed) return
-    setCheckShown(true)
-  }
-
-  const hideCheck = () => setCheckShown(false)
 
   const toggleTaskDrawer = (id) => () => {
     setTaskHidden(!taskHidden)
@@ -22,18 +15,16 @@ const TaskItem = ({ item }) => {
       .then((res) => setTask(res))
       .catch((err) => console.log(err))
   }
+  const itemNameClass = `${scss["item-name"]} ${item.completed && scss.deleted}`
 
   return (
     <li className={scss["todo-item"]} onClick={toggleTaskDrawer(item.id)}>
-      <button
+      <CheckButton
+        id={item.id}
+        completed={item.completed}
         className={scss["item-check"]}
-        onMouseEnter={displayCheck(item.completed)}
-        onMouseLeave={hideCheck}
-      >
-        {item.completed && <i className="icon-ok" />}
-        {checkShown && <i className="icon-ok" />}
-      </button>
-      <p className={scss["item-name"]}>{item.name}</p>
+      />
+      <p className={itemNameClass}>{item.name}</p>
       <p className={scss["item-category"]}>{item.listId || "Tasks"}</p>
       <button className={scss["item-star"]}>
         <i className={item.starred ? "icon-star-filled" : "icon-star"} />

@@ -14,20 +14,14 @@
 
 .item-check {
   grid-area: item-check;
-  color: rgba(#fff, 0.5);
-  border: 2px solid rgba(#fff, 0.5);
-  border-radius: 50%;
-  background: none;
-  height: 1.5rem;
-  width: 1.5rem;
-  padding: 0;
   margin: 0 1rem;
-  align-self: center;
-  font-size: 0.75rem;
 }
 
 .item-name {
   grid-area: item-name;
+  &.deleted {
+    text-decoration: line-through;
+  }
 }
 
 .item-category {

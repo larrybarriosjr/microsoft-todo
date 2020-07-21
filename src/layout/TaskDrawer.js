@@ -3,6 +3,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import { taskHiddenState, taskListState, taskState } from "state/atoms"
 import { Task } from "service/lovefield"
 import scss from "layout/TaskDrawer.module.scss"
+import CheckButton from "common/CheckButton"
 
 const TaskDrawer = () => {
   const taskHidden = useRecoilValue(taskHiddenState)
@@ -10,14 +11,6 @@ const TaskDrawer = () => {
   const setTaskList = useSetRecoilState(taskListState)
   const [taskId, setTaskId] = useState("")
   const [taskName, setTaskName] = useState("")
-  const [checkShown, setCheckShown] = useState(false)
-
-  const displayCheck = (completed) => () => {
-    if (completed) return
-    setCheckShown(true)
-  }
-
-  const hideCheck = () => setCheckShown(false)
 
   const handleChangeName = (e) => {
     setTaskName(e.target.value)
@@ -40,14 +33,11 @@ const TaskDrawer = () => {
     <aside className={scss.container} hidden={taskHidden}>
       <header className={scss.header}>
         <form className={scss.title}>
-          <button
-            type="button"
-            onMouseEnter={displayCheck(task.completed)}
-            onMouseLeave={hideCheck}
-          >
-            {task.completed && <i className="icon-ok" />}
-            {checkShown && <i className="icon-ok" />}
-          </button>
+          <CheckButton
+            id={task.id}
+            completed={task.completed}
+            className={scss["item-check"]}
+          />
           <input
             name="task-name"
             onChange={handleChangeName}
