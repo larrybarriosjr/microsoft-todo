@@ -3,8 +3,9 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100vh;
-  color: #fff;
-  background-color: #000;
+  color: var(--primary-text);
+  border-right: var(--border-drawer);
+  background-color: var(--background);
   &.open {
     width: 240px;
   }
@@ -15,7 +16,7 @@
 
 .brand {
   padding: 0.5rem;
-  color: #ccc;
+  color: var(--primary-text);
   &.open {
     font-size: 1rem;
     font-weight: normal;
@@ -28,7 +29,7 @@
 }
 
 .toggle {
-  color: #fff;
+  color: var(--primary-text);
   border: none;
   background: none;
   padding: 0.5rem 0;
