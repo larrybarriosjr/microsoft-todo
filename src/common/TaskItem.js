@@ -4,6 +4,7 @@ import { taskHiddenState, taskState } from "state/atoms"
 import scss from "common/TaskItem.module.scss"
 import { Task } from "service/lovefield"
 import CheckButton from "./CheckButton"
+import StarButton from "./StarButton"
 
 const TaskItem = ({ item }) => {
   const setTask = useSetRecoilState(taskState)
@@ -26,9 +27,11 @@ const TaskItem = ({ item }) => {
       />
       <p className={itemNameClass}>{item.name}</p>
       <p className={scss["item-category"]}>{item.listId || "Tasks"}</p>
-      <button className={scss["item-star"]}>
-        <i className={item.starred ? "icon-star-filled" : "icon-star"} />
-      </button>
+      <StarButton
+        id={item.id}
+        starred={item.starred}
+        className={scss["item-star"]}
+      />
     </li>
   )
 }

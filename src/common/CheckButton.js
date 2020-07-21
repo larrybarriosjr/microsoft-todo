@@ -23,7 +23,7 @@ const CheckButton = ({ id, completed, className }) => {
         .catch((err) => console.log(err))
     Task.patch({ taskId: id, taskCompleted: !completed })
       .then((res) => setTaskList(res))
-      .then(() => setCheckShown(false))
+      .then(hideCheck)
       .then(() => task.id === id && fetchTask())
       .catch((err) => console.log(err))
   }

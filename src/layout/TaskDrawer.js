@@ -4,6 +4,7 @@ import { taskHiddenState, taskListState, taskState } from "state/atoms"
 import { Task } from "service/lovefield"
 import scss from "layout/TaskDrawer.module.scss"
 import CheckButton from "common/CheckButton"
+import StarButton from "common/StarButton"
 
 const TaskDrawer = () => {
   const taskHidden = useRecoilValue(taskHiddenState)
@@ -43,9 +44,11 @@ const TaskDrawer = () => {
             onChange={handleChangeName}
             value={taskName || ""}
           />
-          <button type="button">
-            <i className={task.starred ? "icon-star-filled" : "icon-star"} />
-          </button>
+          <StarButton
+            id={task.id}
+            starred={task.starred}
+            className={scss["item-star"]}
+          />
         </form>
         <ul>
           <li>
