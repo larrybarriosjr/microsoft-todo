@@ -46,11 +46,8 @@ const MyDayPage = () => {
         </button>
         <article className={scss.list}>
           <ul className={scss["todo-list"]}>
-            {myDayList.length > 0 ? (
-              myDayList.map((item, i) => <TaskItem key={i} item={item} />)
-            ) : (
-              <p className={scss["list-empty"]}>No tasks found.</p>
-            )}
+            {myDayList &&
+              myDayList.map((item, i) => <TaskItem key={i} item={item} />)}
           </ul>
         </article>
         <form className={scss.form} onSubmit={handleSubmit}>
