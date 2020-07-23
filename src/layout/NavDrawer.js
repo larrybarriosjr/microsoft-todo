@@ -33,7 +33,7 @@ const NavDrawer = () => {
     <aside className={containerClass}>
       <nav>
         <h1 className={brandClass}>
-          {navDisplay === "open" ? "Futhark — Impel Focus" : "F"}
+          {navDisplay === "open" ? "Microsoft To Do Clone" : "TD"}
         </h1>
         <li>
           <button onClick={goToPage("myDay")}>My Day</button>
