@@ -6,11 +6,15 @@ export const pageListState = selector({
   get: ({ get }) => {
     const page = get(pageState)
     const taskList = get(taskListState)
-    switch (page) {
-      case "myDay":
-        return taskList.filter((task) => task.myDay)
-      default:
-        return taskList.filter((task) => task.listId === null)
+    if (taskList.length) {
+      switch (page) {
+        case "myDay":
+          return taskList.filter((task) => task.myDay)
+        default:
+          return taskList.filter((task) => task.listId === null)
+      }
+    } else {
+      return []
     }
   }
 })
