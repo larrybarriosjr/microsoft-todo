@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { taskHiddenState, taskListState, taskState } from "state/atoms"
 import { Task } from "service/lovefield"
+import dayjs from "dayjs"
 import scss from "layout/TaskDrawer.module.scss"
 import CheckButton from "common/CheckButton"
 import StarButton from "common/StarButton"
@@ -24,6 +25,7 @@ const TaskDrawer = () => {
   const disableEnter = (e) => {
     if (e.key === "Enter") e.preventDefault()
   }
+  const dateCreated = dayjs(task.dateCreated).format("ddd, MMMM D")
 
   useEffect(() => {
     setTaskId(task.id)
@@ -112,7 +114,7 @@ const TaskDrawer = () => {
           <button>
             <i className="icon-right-open" />
           </button>
-          <p>Created</p>
+          <p>Created on {dateCreated}</p>
           <button>
             <i className="icon-trash" />
           </button>

@@ -13,6 +13,7 @@ const buildSchema = () => {
     .addColumn("dueDate", lf.Type.DATE_TIME)
     .addColumn("reminder", lf.Type.DATE_TIME)
     .addColumn("notes", lf.Type.STRING)
+    .addColumn("dateCreated", lf.Type.DATE_TIME)
     .addColumn("listId", lf.Type.STRING)
     .addPrimaryKey(["id"])
     .addNullable(["steps", "dueDate", "reminder", "listId"])
@@ -74,6 +75,7 @@ export const Task = {
       starred: false,
       steps: null,
       notes: "",
+      dateCreated: new Date(),
       listId: null
     }
   },
