@@ -8,6 +8,11 @@ import CheckButton from "common/CheckButton"
 import StarButton from "common/StarButton"
 
 const TaskDrawer = () => {
+  const fetchTask = () =>
+    Task.get(task.id)
+      .then((res) => setTask(res))
+      .catch((err) => console.log(err))
+
   const getInputHeight = (chars) => Math.ceil(chars / 22) * 1.75
   const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
   const [task, setTask] = useRecoilState(taskState)
@@ -23,16 +28,10 @@ const TaskDrawer = () => {
     setTaskName(e.target.value)
     setHeight((inputLength || 1.75) + "rem")
   }
-  const handleChangeNotes = (e) => {
-    setTaskNotes(e.target.value)
-  }
+  const handleChangeNotes = (e) => setTaskNotes(e.target.value)
 
   const handleMyDay = () => {
     if (!taskMyDay) {
-      const fetchTask = () =>
-        Task.get(task.id)
-          .then((res) => setTask(res))
-          .catch((err) => console.log(err))
       Task.patch({ taskId, taskMyDay: true })
         .then((res) => setTaskList(res))
         .then(() => task.id === taskId && fetchTask())
@@ -40,10 +39,6 @@ const TaskDrawer = () => {
     }
   }
   const handleRemoveMyDay = () => {
-    const fetchTask = () =>
-      Task.get(task.id)
-        .then((res) => setTask(res))
-        .catch((err) => console.log(err))
     Task.patch({ taskId, taskMyDay: false })
       .then((res) => setTaskList(res))
       .then(() => task.id === taskId && fetchTask())
