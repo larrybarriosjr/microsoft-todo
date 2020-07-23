@@ -3,14 +3,16 @@ import scss from "my-day/MyDayPage.module.scss"
 import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
 import { Task } from "service/lovefield"
-import { useRecoilState } from "recoil"
+import { useSetRecoilState, useRecoilValue } from "recoil"
 import { taskListState } from "state/atoms"
+import { pageListState } from "state/selectors"
 
 const MyDayPage = () => {
   // local states
   const [submitHidden, setSubmitHidden] = useState(true)
   const [taskName, setTaskName] = useState("")
-  const [taskList, setTaskList] = useRecoilState(taskListState)
+  const setTaskList = useSetRecoilState(taskListState)
+  const myDayList = useRecoilValue(pageListState)
 
   // formatted current date
   const currentDate = dayjs().format("dddd, MMMM D")
@@ -44,8 +46,8 @@ const MyDayPage = () => {
         </button>
         <article className={scss.list}>
           <ul className={scss["todo-list"]}>
-            {taskList.length > 0 ? (
-              taskList.map((item, i) => <TaskItem key={i} item={item} />)
+            {myDayList.length > 0 ? (
+              myDayList.map((item, i) => <TaskItem key={i} item={item} />)
             ) : (
               <p className={scss["list-empty"]}>No tasks found.</p>
             )}
