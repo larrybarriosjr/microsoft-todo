@@ -7,6 +7,7 @@ const buildSchema = () => {
     .createTable("tasks")
     .addColumn("id", lf.Type.STRING)
     .addColumn("name", lf.Type.STRING)
+    .addColumn("myDay", lf.Type.BOOLEAN)
     .addColumn("completed", lf.Type.BOOLEAN)
     .addColumn("starred", lf.Type.BOOLEAN)
     .addColumn("steps", lf.Type.ARRAY_BUFFER)
@@ -61,6 +62,7 @@ export const Task = {
   _serialize: (obj) => {
     if (obj.taskId) {
       if ("taskName" in obj) return { name: obj.taskName }
+      if ("taskMyDay" in obj) return { myDay: obj.taskMyDay }
       if ("taskCompleted" in obj) return { completed: obj.taskCompleted }
       if ("taskStarred" in obj) return { starred: obj.taskStarred }
       if ("taskSteps" in obj) return { steps: obj.taskSteps }
@@ -71,6 +73,7 @@ export const Task = {
     return {
       id: uuid(),
       name: obj.taskName,
+      myDay: true,
       completed: false,
       starred: false,
       steps: null,

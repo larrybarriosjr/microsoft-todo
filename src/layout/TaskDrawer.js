@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil"
 import { taskHiddenState, taskListState, taskState } from "state/atoms"
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
@@ -10,16 +10,40 @@ import StarButton from "common/StarButton"
 const TaskDrawer = () => {
   const getInputHeight = (chars) => Math.ceil(chars / 22) * 1.75
   const taskHidden = useRecoilValue(taskHiddenState)
-  const task = useRecoilValue(taskState)
+  const [task, setTask] = useRecoilState(taskState)
   const setTaskList = useSetRecoilState(taskListState)
   const [taskId, setTaskId] = useState("")
   const [taskName, setTaskName] = useState("")
+  const [taskMyDay, setTaskMyDay] = useState(false)
   const [height, setHeight] = useState("1.75rem")
 
   const handleChangeName = (e) => {
     const inputLength = getInputHeight(e.target.value.length)
     setTaskName(e.target.value)
     setHeight((inputLength || 1.75) + "rem")
+  }
+
+  const handleMyDay = () => {
+    if (!taskMyDay) {
+      const fetchTask = () =>
+        Task.get(task.id)
+          .then((res) => setTask(res))
+          .catch((err) => console.log(err))
+      Task.patch({ taskId, taskMyDay: true })
+        .then((res) => setTaskList(res))
+        .then(() => task.id === taskId && fetchTask())
+        .catch((err) => console.log(err))
+    }
+  }
+  const handleRemoveMyDay = () => {
+    const fetchTask = () =>
+      Task.get(task.id)
+        .then((res) => setTask(res))
+        .catch((err) => console.log(err))
+    Task.patch({ taskId, taskMyDay: false })
+      .then((res) => setTaskList(res))
+      .then(() => task.id === taskId && fetchTask())
+      .catch((err) => console.log(err))
   }
 
   const disableEnter = (e) => {
@@ -30,6 +54,7 @@ const TaskDrawer = () => {
   useEffect(() => {
     setTaskId(task.id)
     setTaskName(task.name)
+    setTaskMyDay(task.myDay)
   }, [task])
 
   useEffect(() => {
@@ -42,6 +67,9 @@ const TaskDrawer = () => {
   }, [taskId, taskName, setTaskList])
 
   const itemNameClass = `${scss["item-name"]} ${task.completed && scss.deleted}`
+  const actionMyDayClass = `${scss["action-my-day"]} ${
+    task.myDay && scss.checked
+  }`
 
   return (
     <aside className={scss.container} hidden={taskHidden}>
@@ -82,24 +110,26 @@ const TaskDrawer = () => {
         </form>
       </header>
       <section>
-        <form>
-          <i className="icon-sun" />
-          <p>Add to My Day</p>
-          <button>
+        <form className={actionMyDayClass}>
+          <i className="icon-sun" onClick={handleMyDay} />
+          <p onClick={handleMyDay}>
+            {task.myDay ? "Added to My Day" : "Add to My Day"}
+          </p>
+          <button type="button" onClick={handleRemoveMyDay}>
             <i className="icon-cancel" />
           </button>
         </form>
         <form>
           <i className="icon-bell" />
           <p>Remind me</p>
-          <button>
+          <button type="button">
             <i className="icon-cancel" />
           </button>
         </form>
         <form>
           <i className="icon-calendar-plus-o" />
           <p>Add due date</p>
-          <button>
+          <button type="button">
             <i className="icon-cancel" />
           </button>
         </form>
@@ -111,11 +141,11 @@ const TaskDrawer = () => {
       </section>
       <footer className={scss.footer}>
         <form>
-          <button>
+          <button type="button">
             <i className="icon-right-open" />
           </button>
           <p>Created on {dateCreated}</p>
-          <button>
+          <button type="button">
             <i className="icon-trash" />
           </button>
         </form>

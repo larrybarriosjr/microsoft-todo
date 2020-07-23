@@ -78,6 +78,18 @@
   }
 }
 
+.action-my-day {
+  > button {
+    display: none;
+  }
+  &.checked {
+    color: var(--primary-fill);
+    > button {
+      display: block;
+    }
+  }
+}
+
 .footer {
   position: absolute;
   bottom: 0;
