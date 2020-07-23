@@ -134,9 +134,11 @@ const TaskDrawer = () => {
           <p onClick={handleMyDay}>
             {task.myDay ? "Added to My Day" : "Add to My Day"}
           </p>
-          <button type="button" onClick={handleRemoveMyDay}>
-            <i className="icon-cancel" />
-          </button>
+          {task.myDay && (
+            <button type="button" onClick={handleRemoveMyDay}>
+              <i className="icon-cancel" />
+            </button>
+          )}
         </form>
         <form>
           <i className="icon-bell" />
