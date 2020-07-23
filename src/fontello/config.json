@@ -125,6 +125,18 @@
       "css": "ok",
       "code": 59403,
       "src": "iconic"
+    },
+    {
+      "uid": "2c5335c6e56b876139d7a58ab2f4b2fe",
+      "css": "bell",
+      "code": 59405,
+      "src": "entypo"
+    },
+    {
+      "uid": "e7eecc3cc44f3f4cad6229b202588308",
+      "css": "calendar-plus-o",
+      "code": 62065,
+      "src": "fontawesome"
     }
   ]
 }
