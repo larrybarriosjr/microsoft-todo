@@ -58,6 +58,11 @@ const update = (data, id, db) => {
   return db
 }
 
+const remove = (id, db) => {
+  db.delete().from(tblTasks).where(tblTasks.id.eq(id)).exec()
+  return db
+}
+
 export const Task = {
   _serialize: (obj) => {
     if (obj.taskId) {
@@ -98,6 +103,12 @@ export const Task = {
     return buildSchema()
       .connect()
       .then((db) => update(Task._serialize(obj), obj.taskId, db))
+      .then((db) => index(db))
+  },
+  delete: async (id) => {
+    return buildSchema()
+      .connect()
+      .then((db) => remove(id, db))
       .then((db) => index(db))
   }
 }

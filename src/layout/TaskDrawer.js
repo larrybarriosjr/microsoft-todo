@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil"
+import { useSetRecoilState, useRecoilState } from "recoil"
 import { taskHiddenState, taskListState, taskState } from "state/atoms"
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
@@ -48,6 +48,13 @@ const TaskDrawer = () => {
   const handleCloseDrawer = () => {
     setTask({})
     setTaskHidden(true)
+  }
+
+  const handleDeleteTask = () => {
+    Task.delete(taskId)
+      .then((res) => setTaskList(res))
+      .then(handleCloseDrawer)
+      .catch((err) => console.log(err))
   }
 
   const disableEnter = (e) => {
@@ -163,7 +170,7 @@ const TaskDrawer = () => {
             <i className="icon-right-open" />
           </button>
           <p>Created on {dateCreated}</p>
-          <button type="button">
+          <button type="button" onClick={handleDeleteTask}>
             <i className="icon-trash" />
           </button>
         </form>
