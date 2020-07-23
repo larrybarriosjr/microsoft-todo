@@ -81,31 +81,41 @@ const TaskDrawer = () => {
       </header>
       <section>
         <form>
-          <i />
+          <i className="icon-sun" />
           <p>Add to My Day</p>
-          <button>x</button>
+          <button>
+            <i className="icon-cancel" />
+          </button>
         </form>
         <form>
-          <i />
+          <i className="icon-bell" />
           <p>Remind me</p>
-          <button>x</button>
+          <button>
+            <i className="icon-cancel" />
+          </button>
         </form>
         <form>
-          <i />
+          <i className="icon-calendar-plus-o" />
           <p>Add due date</p>
-          <button>x</button>
+          <button>
+            <i className="icon-cancel" />
+          </button>
         </form>
       </section>
       <section>
         <form>
-          <textarea placeholder="Add note" />
+          <textarea rows="5" placeholder="Add note" />
         </form>
       </section>
-      <footer>
+      <footer className={scss.footer}>
         <form>
-          <button>{">"}</button>
+          <button>
+            <i className="icon-right-open" />
+          </button>
           <p>Created</p>
-          <button>x</button>
+          <button>
+            <i className="icon-trash" />
+          </button>
         </form>
       </footer>
     </aside>

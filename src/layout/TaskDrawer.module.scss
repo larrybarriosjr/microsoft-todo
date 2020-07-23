@@ -1,12 +1,51 @@
 .container {
+  position: relative;
   height: 100vh;
   width: 360px;
   color: var(--primary-text);
   border-left: var(--border-drawer);
   background-color: var(--background);
+  > section {
+    color: var(--secondary-text);
+    margin: 0.5rem;
+    border: var(--border-light);
+    background-color: var(--surface);
+    > form {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      border-bottom: var(--border-light);
+      &:last-child {
+        border-bottom: none;
+      }
+      > i {
+        font-size: 1.1rem;
+        padding: 0.75rem;
+      }
+      > p {
+        align-self: center;
+      }
+      > button {
+        color: var(--secondary-text);
+        padding: 0.75rem;
+        border: none;
+        background: none;
+      }
+      > textarea {
+        grid-column: 2 / 3;
+        color: var(--secondary-text);
+        font-size: 1rem;
+        padding: 1rem;
+        border: none;
+        background: none;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+      }
+    }
+  }
 }
 
 .header {
+  border-bottom: var(--border-drawer);
   background-color: var(--surface);
   padding: 1rem;
 }
@@ -22,7 +61,7 @@
     margin-left: 1rem;
     align-self: start;
   }
-  > textarea {
+  > .item-name {
     resize: none;
     overflow: hidden;
     font-size: 1.5rem;
@@ -35,6 +74,31 @@
       &:focus {
         text-decoration: none;
       }
+    }
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: var(--secondary-text);
+  background-color: var(--surface);
+  border-top: var(--border-light);
+  > form {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    > button {
+      color: var(--secondary-text);
+      font-size: 1.1rem;
+      border: none;
+      background: none;
+      padding: 1rem;
+    }
+    > p {
+      align-self: center;
+      justify-self: center;
     }
   }
 }
