@@ -60,6 +60,12 @@
   overflow-y: auto;
 }
 
+.list-empty {
+  font-style: italic;
+  text-align: center;
+  margin-top: 5rem;
+}
+
 .todo-list {
   margin: 0;
 }

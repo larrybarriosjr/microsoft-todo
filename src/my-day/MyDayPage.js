@@ -47,7 +47,7 @@ const MyDayPage = () => {
             {taskList.length > 0 ? (
               taskList.map((item, i) => <TaskItem key={i} item={item} />)
             ) : (
-              <p>No tasks found.</p>
+              <p className={scss["list-empty"]}>No tasks found.</p>
             )}
           </ul>
         </article>
