@@ -15,12 +15,16 @@ const TaskDrawer = () => {
   const [taskId, setTaskId] = useState("")
   const [taskName, setTaskName] = useState("")
   const [taskMyDay, setTaskMyDay] = useState(false)
+  const [taskNotes, setTaskNotes] = useState("")
   const [height, setHeight] = useState("1.75rem")
 
   const handleChangeName = (e) => {
     const inputLength = getInputHeight(e.target.value.length)
     setTaskName(e.target.value)
     setHeight((inputLength || 1.75) + "rem")
+  }
+  const handleChangeNotes = (e) => {
+    setTaskNotes(e.target.value)
   }
 
   const handleMyDay = () => {
@@ -51,25 +55,33 @@ const TaskDrawer = () => {
   }
   const dateCreated = dayjs(task.dateCreated).format("ddd, MMMM D")
 
+  // Initialize task item
   useEffect(() => {
     setTaskId(task.id)
     setTaskName(task.name)
     setTaskMyDay(task.myDay)
+    setTaskNotes(task.notes)
   }, [task])
 
+  // Automatically submit and set input height on task name change
   useEffect(() => {
     if (taskId && taskName) {
+      const syncData = async () => {
+        await Task.patch({ taskId, taskName })
+          .then((res) => setTaskList(res))
+          .catch((err) => console.log(err))
+        await Task.patch({ taskId, taskNotes })
+          .then((res) => setTaskList(res))
+          .catch((err) => console.log(err))
+      }
+      syncData()
       setHeight(getInputHeight(taskName.length) + "rem")
-      Task.patch({ taskId, taskName })
-        .then((res) => setTaskList(res))
-        .catch((err) => console.log(err))
     }
-  }, [taskId, taskName, setTaskList])
+  }, [taskId, taskName, taskNotes, setTaskList])
 
   const itemNameClass = `${scss["item-name"]} ${task.completed && scss.deleted}`
-  const actionMyDayClass = `${scss["action-my-day"]} ${
-    task.myDay && scss.checked
-  }`
+  const actionMyDayClass = `${scss["action-my-day"]}
+    ${task.myDay && scss.checked}`
 
   return (
     <aside className={scss.container} hidden={taskHidden}>
@@ -136,7 +148,13 @@ const TaskDrawer = () => {
       </section>
       <section>
         <form>
-          <textarea rows="5" placeholder="Add note" />
+          <textarea
+            rows="5"
+            name="task-notes"
+            placeholder="Add note"
+            onChange={handleChangeNotes}
+            value={taskNotes || ""}
+          />
         </form>
       </section>
       <footer className={scss.footer}>
