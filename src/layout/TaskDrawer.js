@@ -9,7 +9,7 @@ import StarButton from "common/StarButton"
 
 const TaskDrawer = () => {
   const getInputHeight = (chars) => Math.ceil(chars / 22) * 1.75
-  const taskHidden = useRecoilValue(taskHiddenState)
+  const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
   const [task, setTask] = useRecoilState(taskState)
   const setTaskList = useSetRecoilState(taskListState)
   const [taskId, setTaskId] = useState("")
@@ -48,6 +48,11 @@ const TaskDrawer = () => {
       .then((res) => setTaskList(res))
       .then(() => task.id === taskId && fetchTask())
       .catch((err) => console.log(err))
+  }
+
+  const handleCloseDrawer = () => {
+    setTask({})
+    setTaskHidden(true)
   }
 
   const disableEnter = (e) => {
@@ -159,7 +164,7 @@ const TaskDrawer = () => {
       </section>
       <footer className={scss.footer}>
         <form>
-          <button type="button">
+          <button type="button" onClick={handleCloseDrawer}>
             <i className="icon-right-open" />
           </button>
           <p>Created on {dateCreated}</p>
