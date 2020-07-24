@@ -501,7 +501,6 @@ template {
 /*
    * 1. Remove the tapping delay in IE 10.
    * 2. Remove the tapping delay on clickable elements
-   * 3. Add cursor pointer. [larry]
         in all browsers (opinionated).
    */
 
@@ -516,7 +515,6 @@ textarea,
 [tabindex] {
   -ms-touch-action: manipulation; /* 1 */
   touch-action: manipulation; /* 2 */
-  cursor: pointer; /* 3 */
 }
 
 /**
@@ -568,4 +566,22 @@ textarea,
 [aria-hidden="false"][hidden]:not(:focus) {
   clip: rect(0, 0, 0, 0);
   position: absolute;
+}
+
+/*
+   * Add proper cursor on elements. [larry]
+   */
+
+a,
+button,
+input[type="button"],
+label,
+select,
+summary {
+  cursor: pointer;
+}
+
+input,
+textarea {
+  cursor: text;
 }
