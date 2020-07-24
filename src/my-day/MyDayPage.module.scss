@@ -1,5 +1,6 @@
 .background {
   position: relative;
+  background-color: black;
   &::after {
     content: "";
     position: absolute;

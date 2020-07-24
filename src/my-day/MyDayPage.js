@@ -41,7 +41,7 @@ const MyDayPage = () => {
       <section className={scss.page}>
         <h2 className={scss.title}>My Day</h2>
         <p className={scss.date}>{currentDate}</p>
-        <button className={scss.bulb}>
+        <button className={scss.bulb} aria-label="Task drawer button">
           <i className="icon-lightbulb" />
         </button>
         <article className={scss.list}>
@@ -56,6 +56,7 @@ const MyDayPage = () => {
             placeholder="Add a task"
             onChange={handleInput}
             value={taskName}
+            aria-label="Add task"
           />
           <button type="submit" hidden={submitHidden}>
             <i className="icon-plus" />

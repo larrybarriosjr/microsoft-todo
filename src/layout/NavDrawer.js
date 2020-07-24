@@ -35,11 +35,17 @@ const NavDrawer = () => {
         <h1 className={brandClass}>
           {navDisplay === "open" ? "Microsoft To Do Clone" : "TD"}
         </h1>
-        <li>
-          <button onClick={goToPage("myDay")}>My Day</button>
-        </li>
+        <ul>
+          <li>
+            <button onClick={goToPage("myDay")}>My Day</button>
+          </li>
+        </ul>
       </nav>
-      <button className={scss.toggle} onClick={toggleNav}>
+      <button
+        className={scss.toggle}
+        onClick={toggleNav}
+        aria-label="Toggle drawer button"
+      >
         <i className={navIcon} />
       </button>
     </aside>
