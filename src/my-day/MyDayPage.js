@@ -24,10 +24,12 @@ const MyDayPage = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    setTaskName("")
-    Task.post({ taskName })
-      .then((res) => setTaskList(res))
-      .catch((err) => console.log(err))
+    if (taskName) {
+      Task.post({ taskName })
+        .then((res) => setTaskList(res))
+        .then(() => setTaskName(""))
+        .catch((err) => console.log(err))
+    }
   }
 
   useEffect(() => {
