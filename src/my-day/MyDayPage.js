@@ -28,6 +28,7 @@ const MyDayPage = () => {
       Task.post({ taskName })
         .then((res) => setTaskList(res))
         .then(() => setTaskName(""))
+        .then(() => setSubmitHidden(true))
         .catch((err) => console.log(err))
     }
   }
