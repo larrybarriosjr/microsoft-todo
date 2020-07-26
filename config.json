@@ -157,16 +157,16 @@
       "src": "typicons"
     },
     {
-      "uid": "d4816c0845aa43767213d45574b3b145",
-      "css": "history",
-      "code": 61914,
-      "src": "fontawesome"
-    },
-    {
       "uid": "e5e2804a6d7681eb37e80a1fc380fe49",
       "css": "wristwatch",
       "code": 59409,
       "src": "typicons"
+    },
+    {
+      "uid": "35ce53990ec0892d7dcea2d0159f8dca",
+      "css": "hourglass",
+      "code": 59410,
+      "src": "mfglabs"
     }
   ]
 }
