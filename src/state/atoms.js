@@ -5,6 +5,11 @@ export const pageState = atom({
   default: "myDay"
 })
 
+export const reminderModalState = atom({
+  key: "reminderModalState",
+  default: false
+})
+
 export const taskHiddenState = atom({
   key: "taskHiddenState",
   default: true

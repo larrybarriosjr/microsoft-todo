@@ -2,6 +2,7 @@
   position: relative;
   height: 100vh;
   width: 360px;
+  font-size: 0.9rem;
   color: var(--primary-text);
   border-left: var(--border-drawer);
   background-color: var(--background);
@@ -13,10 +14,9 @@
     > form {
       display: grid;
       grid-template-columns: auto 1fr auto;
-      border-bottom: var(--border-light);
       cursor: pointer;
-      &:last-child {
-        border-bottom: none;
+      &:not(:last-child) {
+        border-bottom: var(--border-light);
       }
       > i {
         font-size: 1.1rem;
@@ -34,7 +34,6 @@
       > textarea {
         grid-column: 2 / 3;
         color: var(--secondary-text);
-        font-size: 1rem;
         padding: 1rem;
         border: none;
         background: none;
@@ -79,10 +78,69 @@
   }
 }
 
-.action-my-day {
-  &.checked {
-    color: var(--primary-fill);
-    cursor: default;
+.action-checked {
+  color: var(--primary-fill);
+  cursor: default;
+}
+
+.reminder-modal {
+  padding: 0;
+  margin-top: 3.5rem;
+  border: var(--border-light);
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px var(--background), -1px -1px 1px var(--surface);
+  background-color: var(--surface);
+  z-index: 1;
+  > button {
+    display: grid;
+    grid-template-columns: auto repeat(2, 1fr);
+    border: none;
+    background: none;
+    align-self: center;
+    padding: 0;
+    color: var(--secondary-text);
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    > i {
+      align-self: center;
+      font-size: 1rem;
+      padding: 0.75rem;
+    }
+    > p {
+      color: var(--primary-text);
+      text-align: left;
+      align-self: center;
+      width: 90px;
+    }
+    > span {
+      width: 120px;
+      padding: 1rem;
+      padding-left: 0;
+      text-align: right;
+    }
+  }
+  > footer > button {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    border: none;
+    border-top: var(--border-light);
+    background: none;
+    align-self: center;
+    padding: 0;
+    width: 100%;
+    color: var(--secondary-text);
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    > i {
+      align-self: center;
+      font-size: 1rem;
+      padding: 0.75rem;
+    }
+    > p {
+      color: var(--primary-text);
+      align-self: center;
+      text-align: left;
+    }
   }
 }
 
