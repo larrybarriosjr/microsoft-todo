@@ -78,9 +78,15 @@
   }
 }
 
-.action-checked {
+.action-myday-checked {
   color: var(--primary-fill);
-  cursor: default;
+  cursor: default !important;
+}
+.action-date-checked {
+  color: var(--primary-fill);
+}
+.action-date-error {
+  color: var(--error-fill);
 }
 
 .reminder-modal {

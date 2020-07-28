@@ -103,7 +103,7 @@ const TaskDrawer = () => {
   }
   const dateCreated = dayjs(task.dateCreated).format("ddd, MMMM D")
 
-  // Initialize task item
+  // Initialize task item inputs
   useEffect(() => {
     setTaskId(task.id)
     setTaskName(task.name)
@@ -127,8 +127,11 @@ const TaskDrawer = () => {
   }, [taskId, taskName, taskNotes, setTaskList])
 
   const itemNameClass = `${scss["item-name"]} ${task.completed && scss.deleted}`
-  const actionClass = (checked) =>
-    checked ? scss["action-checked"] : undefined
+  const actionMyDayClass = task.myDay && scss["action-myday-checked"]
+  const actionDateClass = (date) => {
+    if (dayjs().isAfter(date)) return scss["action-date-error"]
+    if (date) return scss["action-date-checked"]
+  }
 
   return (
     <aside className={scss.container} hidden={taskHidden}>
@@ -169,7 +172,7 @@ const TaskDrawer = () => {
         </form>
       </header>
       <section>
-        <form className={actionClass(task.myDay)}>
+        <form className={actionMyDayClass}>
           <i className="icon-sun" onClick={handleMyDay} />
           <p onClick={handleMyDay}>
             {task.myDay ? "Added to My Day" : "Add to My Day"}
@@ -180,7 +183,7 @@ const TaskDrawer = () => {
             </button>
           )}
         </form>
-        <form className={actionClass(task.reminder)}>
+        <form className={actionDateClass(task.reminder)}>
           <i className="icon-bell" onClick={handleReminder} />
           <p onClick={handleReminder}>
             {task.reminder
