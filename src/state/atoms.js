@@ -1,4 +1,5 @@
 import { atom } from "recoil"
+import dayjs from "dayjs"
 
 export const pageState = atom({
   key: "pageState",
@@ -13,6 +14,21 @@ export const reminderModalState = atom({
 export const reminderCalendarModalState = atom({
   key: "reminderCalendarModalState",
   default: false
+})
+
+export const hourState = atom({
+  key: "hourState",
+  default: dayjs().format("hh")
+})
+
+export const minuteState = atom({
+  key: "minuteState",
+  default: dayjs().format("mm")
+})
+
+export const periodState = atom({
+  key: "periodState",
+  default: dayjs().format("A")
 })
 
 export const taskHiddenState = atom({
