@@ -68,29 +68,3 @@
     bottom: 3px;
   }
 }
-
-.time {
-  padding: 0 0.5rem;
-}
-
-.time-button {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  width: 100%;
-  padding: 0;
-  color: var(--primary-text);
-  border: 1px solid var(--secondary-fill);
-  border-radius: 5px;
-  background: none;
-  font-size: 0.75rem;
-  &:hover {
-    background-color: var(--background);
-  }
-  > p {
-    height: 1.5rem;
-    padding: 0.25rem;
-    &:not(:last-child) {
-      border-right: var(--border-light);
-    }
-  }
-}

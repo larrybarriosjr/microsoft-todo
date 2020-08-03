@@ -3,6 +3,7 @@ import scss from "common/DateCalendar.module.scss"
 import dayjs from "dayjs"
 import { useSetRecoilState } from "recoil"
 import { reminderCalendarModalState } from "state/atoms"
+import TimePicker from "./TimePicker"
 
 const DayCells = ({ selectedDate, currentMonth, setCurrentMonth, onClick }) => {
   const monthStart = dayjs(currentMonth).startOf("month").format()
@@ -80,14 +81,7 @@ const DateCalendar = ({ open }) => {
         setCurrentMonth={setCurrentMonth}
         onClick={onDayClick}
       />
-      <article className={scss.time}>
-        <button type="button" className={scss["time-button"]}>
-          <p>10</p>
-          <p>00</p>
-          <p>PM</p>
-        </button>
-        <dialog open></dialog>
-      </article>
+      <TimePicker />
       <menu>
         <button type="button" onClick={handleReminderCalendarModalClose}>
           Cancel
