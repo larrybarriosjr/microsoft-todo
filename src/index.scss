@@ -143,12 +143,11 @@ a {
 }
 
 /**
-   * Add the correct text decoration in Edge 18-, IE, and Safari.
+   * Remove text decoration. [larry]
    */
 
 abbr[title] {
-  text-decoration: underline;
-  text-decoration: underline dotted;
+  text-decoration: none;
 }
 
 /**
