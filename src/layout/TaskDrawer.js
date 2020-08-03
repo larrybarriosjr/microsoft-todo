@@ -4,13 +4,15 @@ import {
   taskHiddenState,
   taskListState,
   taskState,
-  reminderModalState
+  reminderModalState,
+  reminderCalendarModalState
 } from "state/atoms"
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
 import scss from "layout/TaskDrawer.module.scss"
 import CheckButton from "common/CheckButton"
 import StarButton from "common/StarButton"
+import DateCalendar from "common/DateCalendar"
 
 const TaskDrawer = () => {
   const fetchTask = () =>
@@ -32,6 +34,9 @@ const TaskDrawer = () => {
   const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
   const [task, setTask] = useRecoilState(taskState)
   const [reminderModal, setReminderModal] = useRecoilState(reminderModalState)
+  const [reminderCalendarModal, setReminderCalendarModal] = useRecoilState(
+    reminderCalendarModalState
+  )
   const setTaskList = useSetRecoilState(taskListState)
 
   const [taskId, setTaskId] = useState("")
@@ -72,8 +77,11 @@ const TaskDrawer = () => {
       .then(() => task.id === taskId && fetchTask())
       .catch((err) => console.log(err))
   }
+  const handleReminderCalendar = () => {
+    setReminderCalendarModal(true)
+  }
 
-  const handleSubmitReminderPreset = (preset) => () => {
+  const handleSubmitReminderPreset = (preset) => async () => {
     let dt
 
     if (preset === "later") dt = getCurrentHour().add(3, "h")
@@ -222,12 +230,13 @@ const TaskDrawer = () => {
               </span>
             </button>
             <footer>
-              <button type="button">
+              <button type="button" onClick={handleReminderCalendar}>
                 <i className="icon-wristwatch" />
                 <p>Pick a date and time</p>
               </button>
             </footer>
           </dialog>
+          <DateCalendar open={reminderCalendarModal} />
         </form>
         <form>
           <i className="icon-calendar-plus-o" />

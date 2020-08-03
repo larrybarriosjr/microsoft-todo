@@ -10,6 +10,11 @@ export const reminderModalState = atom({
   default: false
 })
 
+export const reminderCalendarModalState = atom({
+  key: "reminderCalendarModalState",
+  default: false
+})
+
 export const taskHiddenState = atom({
   key: "taskHiddenState",
   default: true

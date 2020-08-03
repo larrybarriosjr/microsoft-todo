@@ -1,0 +1,96 @@
+.modal {
+  color: var(--primary-text);
+  border: var(--border-light);
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px var(--background), -1px -1px 1px var(--surface);
+  background-color: var(--surface);
+  padding: 0.5rem;
+  margin-top: 3.5rem;
+  z-index: 1;
+  font-size: 0.75rem;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: 160px repeat(2, auto);
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  > button {
+    color: inherit;
+    font-size: inherit;
+    border: none;
+    background: none;
+  }
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  height: 1.5rem;
+  font-size: 0.75rem;
+}
+
+.days {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0.25rem 0;
+  > div {
+    height: 2.5rem;
+    text-align: center;
+    padding: 0.75rem;
+  }
+}
+
+.today {
+  background-color: var(--primary-fill);
+}
+
+.disabled {
+  color: var(--secondary-text);
+}
+
+.selected {
+  position: relative;
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    background: none;
+    outline: 3px solid var(--primary-fill);
+    border: 3px solid var(--surface);
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+  }
+}
+
+.time {
+  padding: 0 0.5rem;
+}
+
+.time-button {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  padding: 0;
+  color: var(--primary-text);
+  border: 1px solid var(--secondary-fill);
+  border-radius: 5px;
+  background: none;
+  font-size: 0.75rem;
+  &:hover {
+    background-color: var(--background);
+  }
+  > p {
+    height: 1.5rem;
+    padding: 0.25rem;
+    &:not(:last-child) {
+      border-right: var(--border-light);
+    }
+  }
+}
