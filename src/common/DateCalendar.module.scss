@@ -68,3 +68,20 @@
     bottom: 3px;
   }
 }
+
+.action {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 0 0.5rem;
+  gap: 0.25rem;
+  > button {
+    padding: 0.5rem 0;
+    border: none;
+    background: var(--secondary-fill);
+  }
+  > button:last-of-type {
+    color: var(--primary-text);
+    font-weight: bold;
+    background: var(--primary-fill);
+  }
+}

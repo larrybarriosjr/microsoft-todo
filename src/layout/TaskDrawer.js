@@ -5,7 +5,11 @@ import {
   taskListState,
   taskState,
   reminderModalState,
-  reminderCalendarModalState
+  reminderCalendarModalState,
+  dateState,
+  hourState,
+  minuteState,
+  periodState
 } from "state/atoms"
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
@@ -19,6 +23,13 @@ const TaskDrawer = () => {
     Task.get(task.id)
       .then((res) => setTask(res))
       .catch((err) => console.log(err))
+
+  const resetDate = () => {
+    setDate(dayjs().startOf("day"))
+    setHour(dayjs().format("hh"))
+    setMinute(dayjs().format("mm"))
+    setPeriod(dayjs().format("A"))
+  }
 
   const getInputHeight = (chars) => Math.ceil(chars / 22) * 1.75
   const getCurrentHour = () => dayjs().startOf("hour")
@@ -37,6 +48,10 @@ const TaskDrawer = () => {
   const [reminderCalendarModal, setReminderCalendarModal] = useRecoilState(
     reminderCalendarModalState
   )
+  const [date, setDate] = useRecoilState(dateState)
+  const [hour, setHour] = useRecoilState(hourState)
+  const [minute, setMinute] = useRecoilState(minuteState)
+  const [period, setPeriod] = useRecoilState(periodState)
   const setTaskList = useSetRecoilState(taskListState)
 
   const [taskId, setTaskId] = useState("")
@@ -78,20 +93,43 @@ const TaskDrawer = () => {
       .catch((err) => console.log(err))
   }
   const handleReminderCalendar = () => {
+    let dt = dayjs(task.reminder)
     setReminderCalendarModal(true)
+    setDate(dt.startOf("day"))
+    setMinute(dt.startOf("minute").format("mm"))
+    if (dt.get("hour") > 12) {
+      setHour(dt.startOf("hour").subtract(12, "hour").format("hh"))
+      setPeriod("PM")
+    } else {
+      setHour(dt.startOf("hour").format("hh"))
+      setPeriod("AM")
+    }
   }
 
-  const handleSubmitReminderPreset = (preset) => async () => {
+  const handleSubmitReminder = (preset) => async () => {
     let dt
 
     if (preset === "later") dt = getCurrentHour().add(3, "h")
     if (preset === "tomorrow") dt = getCurrentDay().add(1, "d").add(9, "h")
     if (preset === "next week") dt = getCurrentDay().add(7, "d").add(9, "h")
 
+    if (typeof preset === "undefined") {
+      let hr = Number(hour)
+      if (period === "PM") hr += 12
+      dt = dayjs(date).add(hr, "h").add(minute, "m")
+    }
+
     Task.patch({ taskId, taskReminder: new Date(dt) })
       .then((res) => setTaskList(res))
       .then(() => task.id === taskId && fetchTask())
+      .then(() => setReminderCalendarModal(false))
+      .then(resetDate())
       .catch((err) => console.log(err))
+  }
+
+  const handleCancelReminder = () => {
+    setReminderCalendarModal(false)
+    resetDate()
   }
 
   const handleCloseDrawer = () => {
@@ -204,25 +242,19 @@ const TaskDrawer = () => {
             </button>
           )}
           <dialog className={scss["reminder-modal"]} open={reminderModal}>
-            <button type="button" onClick={handleSubmitReminderPreset("later")}>
+            <button type="button" onClick={handleSubmitReminder("later")}>
               <i className="icon-hourglass" />
               <p>Later Today</p>
               <span>{getCurrentHour().add(3, "hour").format("h:mm A")}</span>
             </button>
-            <button
-              type="button"
-              onClick={handleSubmitReminderPreset("tomorrow")}
-            >
+            <button type="button" onClick={handleSubmitReminder("tomorrow")}>
               <i className="icon-right" />
               <p>Tomorrow</p>
               <span>
                 {getCurrentDay().add(1, "d").add(9, "h").format("ddd, h:mm A")}
               </span>
             </button>
-            <button
-              type="button"
-              onClick={handleSubmitReminderPreset("next week")}
-            >
+            <button type="button" onClick={handleSubmitReminder("next week")}>
               <i className="icon-fast-fw" />
               <p>Next Week</p>
               <span>
@@ -236,7 +268,12 @@ const TaskDrawer = () => {
               </button>
             </footer>
           </dialog>
-          <DateCalendar open={reminderCalendarModal} />
+          <DateCalendar
+            time
+            open={reminderCalendarModal}
+            onCancel={handleCancelReminder}
+            onSubmit={handleSubmitReminder()}
+          />
         </form>
         <form>
           <i className="icon-calendar-plus-o" />

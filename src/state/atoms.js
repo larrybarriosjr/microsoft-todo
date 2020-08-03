@@ -16,6 +16,11 @@ export const reminderCalendarModalState = atom({
   default: false
 })
 
+export const dateState = atom({
+  key: "dateState",
+  default: dayjs().startOf("day")
+})
+
 export const hourState = atom({
   key: "hourState",
   default: dayjs().format("hh")

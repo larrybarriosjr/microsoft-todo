@@ -1,11 +1,13 @@
 import React, { useState } from "react"
 import scss from "common/DateCalendar.module.scss"
 import dayjs from "dayjs"
-import { useSetRecoilState } from "recoil"
-import { reminderCalendarModalState } from "state/atoms"
+import { useSetRecoilState, useRecoilValue } from "recoil"
+import { dateState } from "state/atoms"
 import TimePicker from "./TimePicker"
 
-const DayCells = ({ selectedDate, currentMonth, setCurrentMonth, onClick }) => {
+const DayCells = ({ currentMonth, onClick }) => {
+  const selectedDate = useRecoilValue(dateState)
+
   const monthStart = dayjs(currentMonth).startOf("month").format()
   const monthEnd = dayjs(currentMonth).endOf("month").format()
   const startDate = dayjs(monthStart).startOf("week").format()
@@ -38,19 +40,16 @@ const DayCells = ({ selectedDate, currentMonth, setCurrentMonth, onClick }) => {
   )
 }
 
-const DateCalendar = ({ open }) => {
-  const setReminderCalendarModal = useSetRecoilState(reminderCalendarModalState)
+const DateCalendar = ({ open, time, onCancel, onSubmit }) => {
+  const setDate = useSetRecoilState(dateState)
+
   const [currentMonth, setCurrentMonth] = useState(new Date())
-  const [selectedDate, setSelectedDate] = useState(new Date())
 
   const prevMonth = () => setCurrentMonth(dayjs(currentMonth).subtract(1, "M"))
   const nextMonth = () => setCurrentMonth(dayjs(currentMonth).add(1, "M"))
 
-  const handleReminderCalendarModalClose = () => setReminderCalendarModal(false)
-  const handleReminderCalendarSubmit = () => console.log(new Date(selectedDate))
-
   const onDayClick = (day) => () => {
-    setSelectedDate(day)
+    setDate(day)
     setCurrentMonth(day)
   }
 
@@ -75,18 +74,13 @@ const DateCalendar = ({ open }) => {
           </abbr>
         ))}
       </header>
-      <DayCells
-        selectedDate={selectedDate}
-        currentMonth={currentMonth}
-        setCurrentMonth={setCurrentMonth}
-        onClick={onDayClick}
-      />
-      <TimePicker />
-      <menu>
-        <button type="button" onClick={handleReminderCalendarModalClose}>
+      <DayCells currentMonth={currentMonth} onClick={onDayClick} />
+      {time && <TimePicker />}
+      <menu className={scss.action}>
+        <button type="button" onClick={onCancel}>
           Cancel
         </button>
-        <button type="button" onClick={handleReminderCalendarSubmit}>
+        <button type="button" onClick={onSubmit}>
           Save
         </button>
       </menu>
