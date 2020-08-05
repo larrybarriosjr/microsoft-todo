@@ -1,0 +1,33 @@
+.header {
+  border-bottom: var(--border-drawer);
+  background-color: var(--surface);
+  padding: 1rem;
+}
+
+.title {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  > .item-check {
+    margin-right: 1rem;
+    align-self: start;
+  }
+  > .item-star {
+    margin-left: 1rem;
+    align-self: start;
+  }
+  > .item-name {
+    resize: none;
+    overflow: hidden;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-text);
+    border: none;
+    background: none;
+    &.deleted {
+      text-decoration: line-through;
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}

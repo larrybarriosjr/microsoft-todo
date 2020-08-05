@@ -14,11 +14,11 @@ import {
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
 import scss from "layout/TaskDrawer.module.scss"
-import CheckButton from "common/CheckButton"
-import StarButton from "common/StarButton"
 import DateCalendar from "common/DateCalendar"
+import TaskHeader from "./TaskHeader"
 
 const TaskDrawer = () => {
+  // CRUD for Tasks
   const fetchTask = () =>
     Task.get(task.id)
       .then((res) => setTask(res))
@@ -144,9 +144,6 @@ const TaskDrawer = () => {
       .catch((err) => console.log(err))
   }
 
-  const disableEnter = (e) => {
-    if (e.key === "Enter") e.preventDefault()
-  }
   const dateCreated = dayjs(task.dateCreated).format("ddd, MMMM D")
 
   // Initialize task item inputs
@@ -172,7 +169,6 @@ const TaskDrawer = () => {
     }
   }, [taskId, taskName, taskNotes, setTaskList])
 
-  const itemNameClass = `${scss["item-name"]} ${task.completed && scss.deleted}`
   const actionMyDayClass = task.myDay && scss["action-myday-checked"]
   const actionDateClass = (date) => {
     if (dayjs().isAfter(date)) return scss["action-date-error"]
@@ -181,43 +177,16 @@ const TaskDrawer = () => {
 
   return (
     <aside className={scss.container} hidden={taskHidden}>
-      <header className={scss.header}>
-        <form className={scss.title}>
-          <CheckButton
+      <TaskHeader
             id={task.id}
+        name={taskName}
             completed={task.completed}
-            className={scss["item-check"]}
-          />
-          <textarea
-            name="task-name"
+        starred={task.starred}
             onChange={handleChangeName}
-            onInput={handleChangeName}
-            onKeyPress={disableEnter}
-            value={taskName || ""}
-            className={itemNameClass}
-            style={{ height }}
+        ref={taskNameRef}
           />
-          <StarButton
-            id={task.id}
-            starred={task.starred}
-            className={scss["item-star"]}
-          />
-        </form>
-        <ul>
-          <li>
-            <button>
-              <i />
-            </button>
-            <input />
-            <button>x</button>
-          </li>
-        </ul>
-        <form>
-          <i />
-          <input placeholder="Next step" />
-        </form>
-      </header>
       <section>
+        {/* Add to My Day */}
         <form className={actionMyDayClass}>
           <i className="icon-sun" onClick={handleMyDay} />
           <p onClick={handleMyDay}>
@@ -229,6 +198,8 @@ const TaskDrawer = () => {
             </button>
           )}
         </form>
+
+        {/* Remind Me */}
         <form className={actionDateClass(task.reminder)}>
           <i className="icon-bell" onClick={handleReminder} />
           <p onClick={handleReminder}>
@@ -284,6 +255,7 @@ const TaskDrawer = () => {
         </form>
       </section>
       <section>
+        {/* Add Note */}
         <form>
           <textarea
             rows="5"
