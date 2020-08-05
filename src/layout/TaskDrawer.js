@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback, useRef } from "react"
 import { useSetRecoilState, useRecoilState } from "recoil"
 import {
   taskHiddenState,
@@ -42,8 +42,6 @@ const TaskDrawer = () => {
     setPeriod(dayjs().format("A"))
   }
 
-  const getInputHeight = (chars) => Math.ceil(chars / 22) * 1.75
-  
   const getTimeDifference = (dt) => {
     if (dayjs().isSame(dt, "day")) return "(Today)"
     if (dayjs().add(1, "day").isSame(dt, "day")) return "(Tomorrow)"
@@ -67,7 +65,6 @@ const TaskDrawer = () => {
   const [taskId, setTaskId] = useState("")
   const [taskName, setTaskName] = useState("")
   const [taskNotes, setTaskNotes] = useState("")
-  const [height, setHeight] = useState("1.75rem")
 
   // Initialize task item inputs
   useEffect(() => {
@@ -85,10 +82,10 @@ const TaskDrawer = () => {
     []
   )
 
+  const taskNameRef = useRef(null)
+
   const handleChangeName = (e) => {
-    const inputLength = getInputHeight(e.target.value.length)
     setTaskName(e.target.value)
-    setHeight((inputLength || 1.75) + "rem")
   }
   const handleChangeNotes = (e) => setTaskNotes(e.target.value)
 
@@ -172,9 +169,12 @@ const TaskDrawer = () => {
 
   const dateCreated = dayjs(task.dateCreated).format("ddd, MMMM D")
 
-  // Initialize task item inputs
+  // Automatically submit on task name change
   useEffect(() => {
+    const input = taskNameRef.current
     if (taskId && taskName) {
+      input.style.height = "1.5rem"
+      input.style.height = `${input.scrollHeight}px`
       patchNameDebounced(taskId, taskName)
     }
   }, [taskId, taskName, patchNameDebounced, setTaskList])
