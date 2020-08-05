@@ -3,6 +3,7 @@ import { useSetRecoilState, useRecoilState } from "recoil"
 import { taskListState, taskState } from "state/atoms"
 import scss from "common/CheckButton.module.scss"
 import { Task } from "service/lovefield"
+import { fetchTask } from "utils"
 
 const CheckButton = ({ id, completed, className }) => {
   const setTaskList = useSetRecoilState(taskListState)
@@ -17,14 +18,10 @@ const CheckButton = ({ id, completed, className }) => {
 
   const handleCompleted = (e) => {
     e.stopPropagation()
-    const fetchTask = () =>
-      Task.get(id)
-        .then((res) => setTask(res))
-        .catch((err) => console.log(err))
     Task.patch({ taskId: id, taskCompleted: !completed })
       .then((res) => setTaskList(res))
       .then(hideCheck)
-      .then(() => task.id === id && fetchTask())
+      .then(() => task.id === id && fetchTask(id, setTask))
       .catch((err) => console.log(err))
   }
 

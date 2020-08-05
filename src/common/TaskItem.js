@@ -2,9 +2,9 @@ import React from "react"
 import { useRecoilState } from "recoil"
 import { taskHiddenState, taskState } from "state/atoms"
 import scss from "common/TaskItem.module.scss"
-import { Task } from "service/lovefield"
 import CheckButton from "./CheckButton"
 import StarButton from "./StarButton"
+import { fetchTask } from "utils"
 
 const TaskItem = ({ item }) => {
   const [task, setTask] = useRecoilState(taskState)
@@ -14,9 +14,7 @@ const TaskItem = ({ item }) => {
     !taskHidden && id !== task.id
       ? setTaskHidden(false)
       : setTaskHidden(!taskHidden)
-    Task.get(id)
-      .then((res) => setTask(res))
-      .catch((err) => console.log(err))
+    fetchTask(id, setTask)
   }
   const itemNameClass = `${scss["item-name"]} ${item.completed && scss.deleted}`
 

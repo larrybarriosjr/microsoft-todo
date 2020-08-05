@@ -3,6 +3,7 @@ import { useSetRecoilState, useRecoilState } from "recoil"
 import { taskListState, taskState } from "state/atoms"
 import scss from "common/StarButton.module.scss"
 import { Task } from "service/lovefield"
+import { fetchTask } from "utils"
 
 const StarButton = ({ id, starred, className }) => {
   const setTaskList = useSetRecoilState(taskListState)
@@ -17,14 +18,10 @@ const StarButton = ({ id, starred, className }) => {
 
   const handleStarred = (e) => {
     e.stopPropagation()
-    const fetchTask = () =>
-      Task.get(id)
-        .then((res) => setTask(res))
-        .catch((err) => console.log(err))
     Task.patch({ taskId: id, taskStarred: !starred })
       .then((res) => setTaskList(res))
       .then(unhighlightStar)
-      .then(() => task.id === id && fetchTask())
+      .then(() => task.id === id && fetchTask(id, setTask))
       .catch((err) => console.log(err))
   }
 

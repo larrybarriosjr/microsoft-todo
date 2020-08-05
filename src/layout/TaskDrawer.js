@@ -16,15 +16,10 @@ import dayjs from "dayjs"
 import scss from "layout/TaskDrawer.module.scss"
 import DateCalendar from "common/DateCalendar"
 import TaskHeader from "./TaskHeader"
-import { debounce, currentDay, currentHour } from "utils"
+import { fetchTask, debounce, currentDay, currentHour } from "utils"
 
 const TaskDrawer = () => {
   // CRUD for Tasks
-  const fetchTask = () =>
-    Task.get(task.id)
-      .then((res) => setTask(res))
-      .catch((err) => console.log(err))
-
   const patchName = (id, name) =>
     Task.patch({ taskId: id, taskName: name })
       .then((res) => setTaskList(res))
@@ -93,14 +88,14 @@ const TaskDrawer = () => {
     if (!task.myDay) {
       Task.patch({ taskId, taskMyDay: true })
         .then((res) => setTaskList(res))
-        .then(() => task.id === taskId && fetchTask())
+        .then(() => task.id === taskId && fetchTask(task.id, setTask))
         .catch((err) => console.log(err))
     }
   }
   const handleRemoveMyDay = () => {
     Task.patch({ taskId, taskMyDay: false })
       .then((res) => setTaskList(res))
-      .then(() => task.id === taskId && fetchTask())
+      .then(() => task.id === taskId && fetchTask(task.id, setTask))
       .catch((err) => console.log(err))
   }
 
@@ -112,7 +107,7 @@ const TaskDrawer = () => {
   const handleRemoveReminder = () => {
     Task.patch({ taskId, taskReminder: null })
       .then((res) => setTaskList(res))
-      .then(() => task.id === taskId && fetchTask())
+      .then(() => task.id === taskId && fetchTask(task.id, setTask))
       .catch((err) => console.log(err))
   }
   const handleReminderCalendar = () => {
