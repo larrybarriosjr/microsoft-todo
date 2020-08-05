@@ -7,15 +7,23 @@ import StarButton from "./StarButton"
 import { fetchTask } from "utils"
 
 const TaskItem = ({ item }) => {
-  const [task, setTask] = useRecoilState(taskState)
-  const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
+  const [task, setTask] = useRecoilState(taskState) // Task item
+  const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState) // Drawer display status
 
   const toggleTaskDrawer = (id) => () => {
-    !taskHidden && id !== task.id
-      ? setTaskHidden(false)
-      : setTaskHidden(!taskHidden)
-    fetchTask(id, setTask)
+    fetchTask(id, setTask).then(() => {
+      if (!taskHidden && id !== task.id) {
+        // Change drawer content when selecting new task item
+        setTaskHidden(false)
+      } else {
+        // Close drawer if the task item is already selected
+        // Open drawer when no task item is selected
+        setTaskHidden(!taskHidden)
+      }
+    })
   }
+
+  // Style: Strikethrough task name when completed
   const itemNameClass = `${scss["item-name"]} ${item.completed && scss.deleted}`
 
   return (
