@@ -10,21 +10,25 @@ const CheckButton = ({ id, completed, className }) => {
   const [task, setTask] = useRecoilState(taskState)
   const [checkShown, setCheckShown] = useState(false)
 
-  const displayCheck = (completed) => () => {
-    if (completed) return
+  // Display icon on mouse enter
+  const handleDisplayCheck = () => {
+    if (completed) return // Do nothing if icon is already displayed
     setCheckShown(true)
   }
-  const hideCheck = () => setCheckShown(false)
+  // Hide icon on mouse leave
+  const handleHideCheck = () => setCheckShown(false)
 
+  // Patch task completed status on click
   const handleCompleted = (e) => {
-    e.stopPropagation()
+    e.stopPropagation() // Disable drawer toggle
     Task.patch({ taskId: id, taskCompleted: !completed })
-      .then((res) => setTaskList(res))
-      .then(hideCheck)
-      .then(() => task.id === id && fetchTask(id, setTask))
+      .then((res) => setTaskList(res)) // Rerender list of task items
+      .then(handleHideCheck) // Hide icon to avoid rendering duplicates
+      .then(() => task.id === id && fetchTask(id, setTask)) // Sync info between list and drawer
       .catch((err) => console.log(err))
   }
 
+  // Style: Add color and checkmark when completed
   const itemCheckClass = `${scss["item-check"]} 
     ${completed && scss.checked} ${className}`
 
@@ -32,11 +36,14 @@ const CheckButton = ({ id, completed, className }) => {
     <button
       type="button"
       className={itemCheckClass}
-      onMouseEnter={displayCheck(completed)}
-      onMouseLeave={hideCheck}
+      onMouseEnter={handleDisplayCheck}
+      onMouseLeave={handleHideCheck}
       onClick={handleCompleted}
     >
+      {/* When completed, display icon */}
       {completed && <i className="icon-ok" />}
+
+      {/* On hover, display icon only when not already completed */}
       {checkShown && <i className="icon-ok" />}
     </button>
   )
