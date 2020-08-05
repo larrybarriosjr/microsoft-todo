@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { useSetRecoilState, useRecoilState } from "recoil"
 import {
   taskHiddenState,
@@ -16,13 +16,23 @@ import dayjs from "dayjs"
 import scss from "layout/TaskDrawer.module.scss"
 import DateCalendar from "common/DateCalendar"
 import TaskHeader from "./TaskHeader"
-import { currentDay, currentHour } from "utils"
+import { debounce, currentDay, currentHour } from "utils"
 
 const TaskDrawer = () => {
   // CRUD for Tasks
   const fetchTask = () =>
     Task.get(task.id)
       .then((res) => setTask(res))
+      .catch((err) => console.log(err))
+
+  const patchName = (id, name) =>
+    Task.patch({ taskId: id, taskName: name })
+      .then((res) => setTaskList(res))
+      .catch((err) => console.log(err))
+
+  const patchNotes = (id, notes) =>
+    Task.patch({ taskId: id, taskNotes: notes })
+      .then((res) => setTaskList(res))
       .catch((err) => console.log(err))
 
   const resetDate = () => {
@@ -58,6 +68,22 @@ const TaskDrawer = () => {
   const [taskName, setTaskName] = useState("")
   const [taskNotes, setTaskNotes] = useState("")
   const [height, setHeight] = useState("1.75rem")
+
+  // Initialize task item inputs
+  useEffect(() => {
+    setTaskId(task.id)
+    setTaskName(task.name)
+    setTaskNotes(task.notes)
+  }, [task])
+
+  const patchNameDebounced = useCallback(
+    debounce((id, name) => patchName(id, name)),
+    []
+  )
+  const patchNotesDebounced = useCallback(
+    debounce((id, notes) => patchNotes(id, notes)),
+    []
+  )
 
   const handleChangeName = (e) => {
     const inputLength = getInputHeight(e.target.value.length)
@@ -148,26 +174,16 @@ const TaskDrawer = () => {
 
   // Initialize task item inputs
   useEffect(() => {
-    setTaskId(task.id)
-    setTaskName(task.name)
-    setTaskNotes(task.notes)
-  }, [task])
-
-  // Automatically submit and set input height on task name change
-  useEffect(() => {
     if (taskId && taskName) {
-      const syncData = async () => {
-        await Task.patch({ taskId, taskName })
-          .then((res) => setTaskList(res))
-          .catch((err) => console.log(err))
-        await Task.patch({ taskId, taskNotes })
-          .then((res) => setTaskList(res))
-          .catch((err) => console.log(err))
-      }
-      syncData()
-      setHeight(getInputHeight(taskName.length) + "rem")
+      patchNameDebounced(taskId, taskName)
     }
-  }, [taskId, taskName, taskNotes, setTaskList])
+  }, [taskId, taskName, patchNameDebounced, setTaskList])
+
+  useEffect(() => {
+    if (taskId) {
+      patchNotesDebounced(taskId, taskNotes)
+      }
+  }, [taskId, taskNotes, patchNotesDebounced, setTaskList])
 
   const actionMyDayClass = task.myDay && scss["action-myday-checked"]
   const actionDateClass = (date) => {
