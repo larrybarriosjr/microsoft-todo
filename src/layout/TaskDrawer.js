@@ -16,6 +16,7 @@ import dayjs from "dayjs"
 import scss from "layout/TaskDrawer.module.scss"
 import DateCalendar from "common/DateCalendar"
 import TaskHeader from "./TaskHeader"
+import { currentDay, currentHour } from "utils"
 
 const TaskDrawer = () => {
   // CRUD for Tasks
@@ -25,15 +26,14 @@ const TaskDrawer = () => {
       .catch((err) => console.log(err))
 
   const resetDate = () => {
-    setDate(dayjs().startOf("day"))
+    setDate(currentDay)
     setHour(dayjs().format("hh"))
     setMinute(dayjs().format("mm"))
     setPeriod(dayjs().format("A"))
   }
 
   const getInputHeight = (chars) => Math.ceil(chars / 22) * 1.75
-  const getCurrentHour = () => dayjs().startOf("hour")
-  const getCurrentDay = () => dayjs().startOf("day")
+  
   const getTimeDifference = (dt) => {
     if (dayjs().isSame(dt, "day")) return "(Today)"
     if (dayjs().add(1, "day").isSame(dt, "day")) return "(Tomorrow)"
@@ -109,9 +109,9 @@ const TaskDrawer = () => {
   const handleSubmitReminder = (preset) => async () => {
     let dt
 
-    if (preset === "later") dt = getCurrentHour().add(3, "h")
-    if (preset === "tomorrow") dt = getCurrentDay().add(1, "d").add(9, "h")
-    if (preset === "next week") dt = getCurrentDay().add(7, "d").add(9, "h")
+    if (preset === "later") dt = currentHour.add(3, "h")
+    if (preset === "tomorrow") dt = currentDay.add(1, "d").add(9, "h")
+    if (preset === "next week") dt = currentDay.add(7, "d").add(9, "h")
 
     if (typeof preset === "undefined") {
       let hr = Number(hour)
@@ -216,20 +216,20 @@ const TaskDrawer = () => {
             <button type="button" onClick={handleSubmitReminder("later")}>
               <i className="icon-hourglass" />
               <p>Later Today</p>
-              <span>{getCurrentHour().add(3, "hour").format("h:mm A")}</span>
+              <span>{currentHour.add(3, "hour").format("h:mm A")}</span>
             </button>
             <button type="button" onClick={handleSubmitReminder("tomorrow")}>
               <i className="icon-right" />
               <p>Tomorrow</p>
               <span>
-                {getCurrentDay().add(1, "d").add(9, "h").format("ddd, h:mm A")}
+                {currentDay.add(1, "d").add(9, "h").format("ddd, h:mm A")}
               </span>
             </button>
             <button type="button" onClick={handleSubmitReminder("next week")}>
               <i className="icon-fast-fw" />
               <p>Next Week</p>
               <span>
-                {getCurrentDay().add(7, "d").add(9, "h").format("ddd, h:mm A")}
+                {currentDay.add(7, "d").add(9, "h").format("ddd, h:mm A")}
               </span>
             </button>
             <footer>
