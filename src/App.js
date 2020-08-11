@@ -7,10 +7,10 @@ import MyDayPage from "my-day/MyDayPage"
 import TaskDrawer from "layout/TaskDrawer"
 
 function App() {
-  // global state
   const page = useRecoilValue(pageState)
   const setReminderModal = useSetRecoilState(reminderModalState)
 
+  // Close all modals when clicking anywhere outside the modal
   const closeAllModals = () => {
     setReminderModal(false)
   }
@@ -18,6 +18,7 @@ function App() {
   return (
     <main onClick={closeAllModals}>
       <NavDrawer />
+      {/* Change task list content depending on page chosen */}
       {page === "myDay" && <MyDayPage />}
       <TaskDrawer />
     </main>
