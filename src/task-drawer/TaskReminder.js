@@ -5,6 +5,8 @@ import {
   taskListState,
   reminderModalState,
   reminderCalendarModalState,
+  dueDateModalState,
+  dueDateCalendarModalState,
   dateState,
   hourState,
   minuteState,
@@ -18,6 +20,8 @@ import dayjs from "dayjs"
 
 const TaskReminder = () => {
   const setTaskList = useSetRecoilState(taskListState)
+  const setDueDateModal = useSetRecoilState(dueDateModalState)
+  const setDueDateCalendarModal = useSetRecoilState(dueDateCalendarModalState)
 
   const [date, setDate] = useRecoilState(dateState)
   const [hour, setHour] = useRecoilState(hourState)
@@ -54,10 +58,12 @@ const TaskReminder = () => {
       .catch((err) => console.log(err))
   }
 
-  // Open Remind Me modal
+  // Open Remind Me modal and close Due Date modals
   const handleReminder = (e) => {
     e.stopPropagation() // Disable closing of this modal
     setReminderModal(true)
+    setDueDateModal(false)
+    setDueDateCalendarModal(false)
   }
 
   // Open Reminder Calendar modal
