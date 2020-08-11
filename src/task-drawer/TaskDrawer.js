@@ -7,6 +7,7 @@ import scss from "task-drawer/TaskDrawer.module.scss"
 import TaskHeader from "task-drawer/TaskHeader"
 import { fetchTask, debounce } from "utils"
 import TaskReminder from "./TaskReminder"
+import TaskDueDate from "./TaskDueDate"
 
 const TaskDrawer = () => {
   // CRUD for Tasks
@@ -126,47 +127,7 @@ const TaskDrawer = () => {
         <TaskReminder />
 
         {/* Add Due Date */}
-        {/* <form className={actionDateClass(task.dueDate)}>
-          <i className="icon-calendar-plus-o" />
-          <p onClick={handleReminder}>
-            {task.dueDate
-              ? `Due ${getTaskReminder(task.dueDate)}`
-              : "Add Due Date"}
-          </p>
-          {task.dueDate && (
-            <button type="button" onClick={handleRemoveReminder}>
-              <i className="icon-cancel" />
-            </button>
-          )}
-          <dialog className={scss["reminder-modal"]} open={reminderModal}>
-            <button type="button" onClick={handleSubmitReminder("later")}>
-              <i className="icon-hourglass" />
-              <p>Today</p>
-              <span>{currentDay.format("ddd")}</span>
-            </button>
-            <button type="button" onClick={handleSubmitReminder("tomorrow")}>
-              <i className="icon-right" />
-              <p>Tomorrow</p>
-              <span>{currentDay.add(1, "d").add(9, "h").format("ddd")}</span>
-            </button>
-            <button type="button" onClick={handleSubmitReminder("next week")}>
-              <i className="icon-fast-fw" />
-              <p>Next Week</p>
-              <span>{currentDay.add(7, "d").add(9, "h").format("ddd")}</span>
-            </button>
-            <footer>
-              <button type="button" onClick={handleReminderCalendar}>
-                <i className="icon-calendar-plus-o" />
-                <p>Pick a date</p>
-              </button>
-            </footer>
-          </dialog>
-          <DateCalendar
-            open={reminderCalendarModal}
-            onCancel={handleCancelReminder}
-            onSubmit={handleSubmitReminder()}
-          />
-        </form> */}
+        <TaskDueDate />
       </section>
       <section>
         {/* Add Note */}
