@@ -1,9 +1,4 @@
-import dayjs from "dayjs"
 import { Task } from "service/lovefield"
-
-// Day JS supplemental variables (not formatted)
-export const currentHour = dayjs().startOf("hour")
-export const currentDay = dayjs().startOf("day")
 
 /**
  * Fetch Task API accepting the task ID and the setter function, usually setTask
