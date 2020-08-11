@@ -13,9 +13,9 @@ import {
 } from "state/atoms"
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
-import scss from "layout/TaskDrawer.module.scss"
+import scss from "task-drawer/TaskDrawer.module.scss"
 import DateCalendar from "common/DateCalendar"
-import TaskHeader from "./TaskHeader"
+import TaskHeader from "task-drawer/TaskHeader"
 import { fetchTask, debounce, currentDay, currentHour } from "utils"
 
 const TaskDrawer = () => {
@@ -123,7 +123,6 @@ const TaskDrawer = () => {
       setPeriod("AM")
     }
   }
-
   const handleSubmitReminder = (preset) => async () => {
     let dt
 
@@ -139,12 +138,11 @@ const TaskDrawer = () => {
 
     Task.patch({ taskId, taskReminder: new Date(dt) })
       .then((res) => setTaskList(res))
-      .then(() => task.id === taskId && fetchTask())
+      .then(() => task.id === taskId && fetchTask(task.id, setTask))
       .then(() => setReminderCalendarModal(false))
       .then(resetDate())
       .catch((err) => console.log(err))
   }
-
   const handleCancelReminder = () => {
     setReminderCalendarModal(false)
     resetDate()
@@ -177,7 +175,7 @@ const TaskDrawer = () => {
   useEffect(() => {
     if (taskId) {
       patchNotesDebounced(taskId, taskNotes)
-      }
+    }
   }, [taskId, taskNotes, patchNotesDebounced, setTaskList])
 
   const actionMyDayClass = task.myDay && scss["action-myday-checked"]
@@ -189,13 +187,13 @@ const TaskDrawer = () => {
   return (
     <aside className={scss.container} hidden={taskHidden}>
       <TaskHeader
-            id={task.id}
+        id={task.id}
         name={taskName}
-            completed={task.completed}
+        completed={task.completed}
         starred={task.starred}
-            onChange={handleChangeName}
+        onChange={handleChangeName}
         ref={taskNameRef}
-          />
+      />
       <section>
         {/* Add to My Day */}
         <form className={actionMyDayClass}>
@@ -257,12 +255,48 @@ const TaskDrawer = () => {
             onSubmit={handleSubmitReminder()}
           />
         </form>
-        <form>
+
+        {/* Add Due Date */}
+        <form className={actionDateClass(task.dueDate)}>
           <i className="icon-calendar-plus-o" />
-          <p>Add due date</p>
-          <button type="button">
-            <i className="icon-cancel" />
-          </button>
+          <p onClick={handleReminder}>
+            {task.dueDate
+              ? `Due ${getTaskReminder(task.dueDate)}`
+              : "Add Due Date"}
+          </p>
+          {task.dueDate && (
+            <button type="button" onClick={handleRemoveReminder}>
+              <i className="icon-cancel" />
+            </button>
+          )}
+          <dialog className={scss["reminder-modal"]} open={reminderModal}>
+            <button type="button" onClick={handleSubmitReminder("later")}>
+              <i className="icon-hourglass" />
+              <p>Today</p>
+              <span>{currentDay.format("ddd")}</span>
+            </button>
+            <button type="button" onClick={handleSubmitReminder("tomorrow")}>
+              <i className="icon-right" />
+              <p>Tomorrow</p>
+              <span>{currentDay.add(1, "d").add(9, "h").format("ddd")}</span>
+            </button>
+            <button type="button" onClick={handleSubmitReminder("next week")}>
+              <i className="icon-fast-fw" />
+              <p>Next Week</p>
+              <span>{currentDay.add(7, "d").add(9, "h").format("ddd")}</span>
+            </button>
+            <footer>
+              <button type="button" onClick={handleReminderCalendar}>
+                <i className="icon-calendar-plus-o" />
+                <p>Pick a date</p>
+              </button>
+            </footer>
+          </dialog>
+          <DateCalendar
+            open={reminderCalendarModal}
+            onCancel={handleCancelReminder}
+            onSubmit={handleSubmitReminder()}
+          />
         </form>
       </section>
       <section>

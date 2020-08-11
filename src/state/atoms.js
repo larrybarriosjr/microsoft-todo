@@ -19,6 +19,18 @@ export const reminderCalendarModalState = atom({
   default: false
 })
 
+/** Due date modal with preset actions. */
+export const dueDateModalState = atom({
+  key: "dueDateModalState",
+  default: false
+})
+
+/** Calendar modal for the due date. */
+export const dueDateCalendarModalState = atom({
+  key: "dueDateCalendarModalState",
+  default: false
+})
+
 /** Current date chosen in calendar modals. */
 export const dateState = atom({
   key: "dateState",

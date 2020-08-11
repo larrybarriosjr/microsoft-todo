@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react"
-import scss from "layout/TaskHeader.module.scss"
+import scss from "task-drawer/TaskHeader.module.scss"
 import CheckButton from "common/CheckButton"
 import StarButton from "common/StarButton"
 
