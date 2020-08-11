@@ -1,22 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react"
 import { useSetRecoilState, useRecoilState } from "recoil"
-import {
-  taskHiddenState,
-  taskListState,
-  taskState,
-  reminderModalState,
-  reminderCalendarModalState,
-  dateState,
-  hourState,
-  minuteState,
-  periodState
-} from "state/atoms"
+import { taskHiddenState, taskListState, taskState } from "state/atoms"
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
 import scss from "task-drawer/TaskDrawer.module.scss"
-import DateCalendar from "common/DateCalendar"
 import TaskHeader from "task-drawer/TaskHeader"
-import { fetchTask, debounce, currentDay, currentHour } from "utils"
+import { fetchTask, debounce } from "utils"
+import TaskReminder from "./TaskReminder"
 
 const TaskDrawer = () => {
   // CRUD for Tasks
@@ -30,31 +20,8 @@ const TaskDrawer = () => {
       .then((res) => setTaskList(res))
       .catch((err) => console.log(err))
 
-  const resetDate = () => {
-    setDate(currentDay)
-    setHour(dayjs().format("hh"))
-    setMinute(dayjs().format("mm"))
-    setPeriod(dayjs().format("A"))
-  }
-
-  const getTimeDifference = (dt) => {
-    if (dayjs().isSame(dt, "day")) return "(Today)"
-    if (dayjs().add(1, "day").isSame(dt, "day")) return "(Tomorrow)"
-    return `(${dayjs(dt).format("ddd, MMM D")})`
-  }
-  const getTaskReminder = (dt) =>
-    dayjs(dt).format("h:mm A ") + getTimeDifference(dt)
-
   const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
   const [task, setTask] = useRecoilState(taskState)
-  const [reminderModal, setReminderModal] = useRecoilState(reminderModalState)
-  const [reminderCalendarModal, setReminderCalendarModal] = useRecoilState(
-    reminderCalendarModalState
-  )
-  const [date, setDate] = useRecoilState(dateState)
-  const [hour, setHour] = useRecoilState(hourState)
-  const [minute, setMinute] = useRecoilState(minuteState)
-  const [period, setPeriod] = useRecoilState(periodState)
   const setTaskList = useSetRecoilState(taskListState)
 
   const [taskId, setTaskId] = useState("")
@@ -99,55 +66,6 @@ const TaskDrawer = () => {
       .catch((err) => console.log(err))
   }
 
-  const handleReminder = (e) => {
-    e.stopPropagation()
-    if (Notification.permission !== "granted") Notification.requestPermission()
-    setReminderModal(true)
-  }
-  const handleRemoveReminder = () => {
-    Task.patch({ taskId, taskReminder: null })
-      .then((res) => setTaskList(res))
-      .then(() => task.id === taskId && fetchTask(task.id, setTask))
-      .catch((err) => console.log(err))
-  }
-  const handleReminderCalendar = () => {
-    let dt = dayjs(task.reminder)
-    setReminderCalendarModal(true)
-    setDate(dt.startOf("day"))
-    setMinute(dt.startOf("minute").format("mm"))
-    if (dt.get("hour") > 12) {
-      setHour(dt.startOf("hour").subtract(12, "hour").format("hh"))
-      setPeriod("PM")
-    } else {
-      setHour(dt.startOf("hour").format("hh"))
-      setPeriod("AM")
-    }
-  }
-  const handleSubmitReminder = (preset) => async () => {
-    let dt
-
-    if (preset === "later") dt = currentHour.add(3, "h")
-    if (preset === "tomorrow") dt = currentDay.add(1, "d").add(9, "h")
-    if (preset === "next week") dt = currentDay.add(7, "d").add(9, "h")
-
-    if (typeof preset === "undefined") {
-      let hr = Number(hour)
-      if (period === "PM") hr += 12
-      dt = dayjs(date).add(hr, "h").add(minute, "m")
-    }
-
-    Task.patch({ taskId, taskReminder: new Date(dt) })
-      .then((res) => setTaskList(res))
-      .then(() => task.id === taskId && fetchTask(task.id, setTask))
-      .then(() => setReminderCalendarModal(false))
-      .then(resetDate())
-      .catch((err) => console.log(err))
-  }
-  const handleCancelReminder = () => {
-    setReminderCalendarModal(false)
-    resetDate()
-  }
-
   const handleCloseDrawer = () => {
     setTask({})
     setTaskHidden(true)
@@ -179,10 +97,6 @@ const TaskDrawer = () => {
   }, [taskId, taskNotes, patchNotesDebounced, setTaskList])
 
   const actionMyDayClass = task.myDay && scss["action-myday-checked"]
-  const actionDateClass = (date) => {
-    if (dayjs().isAfter(date)) return scss["action-date-error"]
-    if (date) return scss["action-date-checked"]
-  }
 
   return (
     <aside className={scss.container} hidden={taskHidden}>
@@ -209,55 +123,10 @@ const TaskDrawer = () => {
         </form>
 
         {/* Remind Me */}
-        <form className={actionDateClass(task.reminder)}>
-          <i className="icon-bell" onClick={handleReminder} />
-          <p onClick={handleReminder}>
-            {task.reminder
-              ? `Remind me at ${getTaskReminder(task.reminder)}`
-              : "Remind me"}
-          </p>
-          {task.reminder && (
-            <button type="button" onClick={handleRemoveReminder}>
-              <i className="icon-cancel" />
-            </button>
-          )}
-          <dialog className={scss["reminder-modal"]} open={reminderModal}>
-            <button type="button" onClick={handleSubmitReminder("later")}>
-              <i className="icon-hourglass" />
-              <p>Later Today</p>
-              <span>{currentHour.add(3, "hour").format("h:mm A")}</span>
-            </button>
-            <button type="button" onClick={handleSubmitReminder("tomorrow")}>
-              <i className="icon-right" />
-              <p>Tomorrow</p>
-              <span>
-                {currentDay.add(1, "d").add(9, "h").format("ddd, h:mm A")}
-              </span>
-            </button>
-            <button type="button" onClick={handleSubmitReminder("next week")}>
-              <i className="icon-fast-fw" />
-              <p>Next Week</p>
-              <span>
-                {currentDay.add(7, "d").add(9, "h").format("ddd, h:mm A")}
-              </span>
-            </button>
-            <footer>
-              <button type="button" onClick={handleReminderCalendar}>
-                <i className="icon-wristwatch" />
-                <p>Pick a date and time</p>
-              </button>
-            </footer>
-          </dialog>
-          <DateCalendar
-            time
-            open={reminderCalendarModal}
-            onCancel={handleCancelReminder}
-            onSubmit={handleSubmitReminder()}
-          />
-        </form>
+        <TaskReminder />
 
         {/* Add Due Date */}
-        <form className={actionDateClass(task.dueDate)}>
+        {/* <form className={actionDateClass(task.dueDate)}>
           <i className="icon-calendar-plus-o" />
           <p onClick={handleReminder}>
             {task.dueDate
@@ -297,7 +166,7 @@ const TaskDrawer = () => {
             onCancel={handleCancelReminder}
             onSubmit={handleSubmitReminder()}
           />
-        </form>
+        </form> */}
       </section>
       <section>
         {/* Add Note */}

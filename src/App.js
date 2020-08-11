@@ -4,7 +4,7 @@ import { pageState, reminderModalState } from "state/atoms"
 import "App.scss"
 import NavDrawer from "layout/NavDrawer"
 import MyDayPage from "my-day/MyDayPage"
-import TaskDrawer from "layout/TaskDrawer"
+import TaskDrawer from "task-drawer/TaskDrawer"
 
 function App() {
   const page = useRecoilValue(pageState)
