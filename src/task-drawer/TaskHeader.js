@@ -1,15 +1,55 @@
-import React, { forwardRef } from "react"
+import React, { useState, useEffect, useCallback, useRef } from "react"
 import scss from "task-drawer/TaskHeader.module.scss"
 import CheckButton from "common/CheckButton"
 import StarButton from "common/StarButton"
+import { Task } from "service/lovefield"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { taskState, taskListState } from "state/atoms"
+import { debounce } from "utils"
 
-const TaskHeader = (props, ref) => {
-  const { id, name, completed, starred, onChange } = props
+const TaskHeader = () => {
+  const task = useRecoilValue(taskState)
+  const setTaskList = useSetRecoilState(taskListState)
+  const [taskName, setTaskName] = useState("")
+
+  // HTML Element References
+  const nameRef = useRef(null)
+
+  // Deconstructed task object
+  const { id, name, completed, starred } = task
+
+  // Debounced function for patching task name (500ms delay)
+  const patchNameDebounced = useCallback(
+    debounce((id, name) =>
+      Task.patch({ id, name })
+        .then((res) => setTaskList(res))
+        .catch((err) => console.log(err))
+    ),
+    []
+  )
 
   // Disable enter key when typing in task name
   const disableEnter = (e) => {
     if (e.key === "Enter") e.preventDefault()
   }
+
+  // Initialize task name input
+  useEffect(() => {
+    setTaskName(name)
+  }, [name])
+
+  // Automatically submit on task name change
+  const handleChangeName = (e) => setTaskName(e.target.value)
+
+  // Adjust textarea height automatically and debounce submission
+  useEffect(() => {
+    const inputEl = nameRef.current
+    if (id && taskName) {
+      inputEl.style.height = "1.5rem"
+      inputEl.style.height = `${inputEl.scrollHeight}px`
+      patchNameDebounced(id, taskName)
+    }
+  }, [id, taskName, patchNameDebounced, setTaskList])
 
   // Style: Strikethrough task name when completed
   const itemNameClass = `${scss["item-name"]} ${completed && scss.deleted}`
@@ -25,11 +65,11 @@ const TaskHeader = (props, ref) => {
         <textarea
           rows={1}
           name="task-name"
-          onChange={onChange}
+          onChange={handleChangeName}
           onKeyPress={disableEnter}
-          value={name || ""}
+          value={taskName}
           className={itemNameClass}
-          ref={ref}
+          ref={nameRef}
         />
         <StarButton id={id} starred={starred} className={scss["item-star"]} />
       </form>
@@ -50,4 +90,4 @@ const TaskHeader = (props, ref) => {
   )
 }
 
-export default forwardRef(TaskHeader)
+export default TaskHeader
