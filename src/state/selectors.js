@@ -11,7 +11,9 @@ export const pageListState = selector({
       switch (page) {
         // return all task items with My Day only
         case "myDay":
-          return taskList.filter((task) => task.myDay)
+          return taskList
+            .filter((task) => task.myDay)
+            .sort((a, b) => a._myDay - b._myDay) // ascending, new item at the end
 
         // return all task items not belonging to a list
         default:

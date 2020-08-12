@@ -5,8 +5,10 @@ const dt = () => new Date()
 
 const buildSchema = () => {
   const schemaBuilder = lf.schema.create("futhark", 1)
+
   schemaBuilder
     .createTable("tasks")
+
     .addColumn("id", lf.Type.STRING)
     .addColumn("name", lf.Type.STRING)
     .addColumn("myDay", lf.Type.BOOLEAN)
@@ -16,7 +18,13 @@ const buildSchema = () => {
     .addColumn("dueDate", lf.Type.DATE_TIME)
     .addColumn("reminder", lf.Type.DATE_TIME)
     .addColumn("notes", lf.Type.STRING)
+
     .addColumn("dateCreated", lf.Type.DATE_TIME)
+    .addColumn("_myDay", lf.Type.DATE_TIME)
+    .addColumn("_completed", lf.Type.DATE_TIME)
+    .addColumn("_starred", lf.Type.DATE_TIME)
+    .addColumn("_dueDate", lf.Type.DATE_TIME)
+
     .addColumn("listId", lf.Type.STRING)
     .addPrimaryKey(["id"])
     .addNullable(["steps", "dueDate", "reminder", "listId"])
@@ -25,11 +33,13 @@ const buildSchema = () => {
       ref: "lists.id",
       action: lf.ConstraintAction.CASCADE
     })
+
   schemaBuilder
     .createTable("lists")
     .addColumn("id", lf.Type.STRING)
     .addColumn("name", lf.Type.STRING)
     .addPrimaryKey(["id"])
+
   return schemaBuilder
 }
 
@@ -53,10 +63,20 @@ const insert = (data, db) => {
 
 const update = (data, id, db) => {
   const dataKey = Object.keys(data)[0]
+  const dataKeyDate = Object.keys(data)[1]
+
   db.update(tblTasks)
     .set(tblTasks[dataKey], data[dataKey])
     .where(tblTasks.id.eq(id))
     .exec()
+
+  if (dataKeyDate) {
+    db.update(tblTasks)
+      .set(tblTasks[dataKeyDate], data[dataKeyDate])
+      .where(tblTasks.id.eq(id))
+      .exec()
+  }
+
   return db
 }
 
@@ -81,11 +101,11 @@ export const Task = {
 
     if (id) {
       if ("name" in obj) return { name: name }
-      if ("myDay" in obj) return { myDay: myDay }
-      if ("completed" in obj) return { completed: completed }
-      if ("starred" in obj) return { starred: starred }
+      if ("myDay" in obj) return { myDay: myDay, _myDay: dt() }
+      if ("completed" in obj) return { completed: completed, _completed: dt() }
+      if ("starred" in obj) return { starred: starred, _starred: dt() }
       if ("steps" in obj) return { steps: steps }
-      if ("dueDate" in obj) return { dueDate: dueDate }
+      if ("dueDate" in obj) return { dueDate: dueDate, _dueDate: dt() }
       if ("reminder" in obj) return { reminder: reminder }
       if ("notes" in obj) return { notes: notes }
     }
@@ -98,7 +118,11 @@ export const Task = {
       steps: null,
       notes: "",
       dateCreated: dt(),
-      listId: null
+      listId: null,
+      _myDay: dt(),
+      _completed: dt(),
+      _starred: dt(),
+      _dueDate: dt()
     }
   },
   get: async (id) => {
