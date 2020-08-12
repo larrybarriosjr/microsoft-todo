@@ -1,6 +1,8 @@
 import lf from "lovefield"
 import { v4 as uuid } from "uuid"
 
+const dt = () => new Date()
+
 const buildSchema = () => {
   const schemaBuilder = lf.schema.create("futhark", 1)
   schemaBuilder
@@ -65,25 +67,37 @@ const remove = (id, db) => {
 
 export const Task = {
   _serialize: (obj) => {
-    if (obj.taskId) {
-      if ("taskName" in obj) return { name: obj.taskName }
-      if ("taskMyDay" in obj) return { myDay: obj.taskMyDay }
-      if ("taskCompleted" in obj) return { completed: obj.taskCompleted }
-      if ("taskStarred" in obj) return { starred: obj.taskStarred }
-      if ("taskSteps" in obj) return { steps: obj.taskSteps }
-      if ("taskDueDate" in obj) return { dueDate: obj.taskDueDate }
-      if ("taskReminder" in obj) return { reminder: obj.taskReminder }
-      if ("taskNotes" in obj) return { notes: obj.taskNotes }
+    const {
+      id,
+      name,
+      myDay,
+      completed,
+      starred,
+      steps,
+      dueDate,
+      reminder,
+      notes
+    } = obj
+
+    if (id) {
+      if ("name" in obj) return { name: name }
+      if ("myDay" in obj) return { myDay: myDay }
+      if ("completed" in obj) return { completed: completed }
+      if ("starred" in obj) return { starred: starred }
+      if ("steps" in obj) return { steps: steps }
+      if ("dueDate" in obj) return { dueDate: dueDate }
+      if ("reminder" in obj) return { reminder: reminder }
+      if ("notes" in obj) return { notes: notes }
     }
     return {
       id: uuid(),
-      name: obj.taskName,
+      name: name,
       myDay: true,
       completed: false,
       starred: false,
       steps: null,
       notes: "",
-      dateCreated: new Date(),
+      dateCreated: dt(),
       listId: null
     }
   },
@@ -102,7 +116,7 @@ export const Task = {
   patch: async (obj) => {
     return buildSchema()
       .connect()
-      .then((db) => update(Task._serialize(obj), obj.taskId, db))
+      .then((db) => update(Task._serialize(obj), obj.id, db))
       .then((db) => index(db))
   },
   delete: async (id) => {

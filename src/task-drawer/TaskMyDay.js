@@ -11,14 +11,14 @@ const TaskMyDay = () => {
 
   const handleMyDay = () => {
     if (!task.myDay) {
-      Task.patch({ taskId: task.id, taskMyDay: true })
+      Task.patch({ id: task.id, myDay: true })
         .then((res) => setTaskList(res))
         .then(() => fetchTask(task.id, setTask))
         .catch((err) => console.log(err))
     }
   }
   const handleRemoveMyDay = () => {
-    Task.patch({ taskId: task.id, taskMyDay: false })
+    Task.patch({ id: task.id, myDay: false })
       .then((res) => setTaskList(res))
       .then(() => fetchTask(task.id, setTask))
       .catch((err) => console.log(err))

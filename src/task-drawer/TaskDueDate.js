@@ -42,7 +42,7 @@ const TaskDueDate = () => {
 
   // Remove due date in task item on button press
   const handleRemoveDueDate = () => {
-    Task.patch({ taskId: task.id, taskDueDate: null })
+    Task.patch({ id: task.id, dueDate: null })
       .then((res) => setTaskList(res))
       .then(() => fetchTask(task.id, setTask))
       .catch((err) => console.log(err))
@@ -89,7 +89,7 @@ const TaskDueDate = () => {
     //   showTrigger: new window.TimestampTrigger(dt.valueOf())
     // }
 
-    Task.patch({ taskId: task.id, taskDueDate: new Date(dt) })
+    Task.patch({ id: task.id, dueDate: new Date(dt) })
       .then((res) => setTaskList(res))
       .then(() => fetchTask(task.id, setTask))
       .then(setDueDateCalendarModal(false)) // Close due date calendar modal

@@ -13,12 +13,12 @@ import TaskMyDay from "task-drawer/TaskMyDay"
 const TaskDrawer = () => {
   // CRUD for Tasks
   const patchName = (id, name) =>
-    Task.patch({ taskId: id, taskName: name })
+    Task.patch({ id, name })
       .then((res) => setTaskList(res))
       .catch((err) => console.log(err))
 
   const patchNotes = (id, notes) =>
-    Task.patch({ taskId: id, taskNotes: notes })
+    Task.patch({ id, notes })
       .then((res) => setTaskList(res))
       .catch((err) => console.log(err))
 

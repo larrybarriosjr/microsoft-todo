@@ -52,7 +52,7 @@ const TaskReminder = () => {
 
   // Remove reminder in task item on button press
   const handleRemoveReminder = () => {
-    Task.patch({ taskId: task.id, taskReminder: null })
+    Task.patch({ id: task.id, reminder: null })
       .then((res) => setTaskList(res))
       .then(() => fetchTask(task.id, setTask))
       .catch((err) => console.log(err))
@@ -102,7 +102,7 @@ const TaskReminder = () => {
     //   showTrigger: new window.TimestampTrigger(dt.valueOf())
     // }
 
-    Task.patch({ taskId: task.id, taskReminder: new Date(dt) })
+    Task.patch({ id: task.id, reminder: new Date(dt) })
       .then((res) => setTaskList(res))
       .then(() => fetchTask(task.id, setTask))
       .then(setReminderCalendarModal(false)) // Close reminder calendar modal
