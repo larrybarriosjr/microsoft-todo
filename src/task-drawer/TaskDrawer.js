@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from "react"
-import { useSetRecoilState, useRecoilState } from "recoil"
+import { useSetRecoilState, useRecoilValue } from "recoil"
 import { taskHiddenState, taskListState, taskState } from "state/atoms"
 import { Task } from "service/lovefield"
-import dayjs from "dayjs"
 import scss from "task-drawer/TaskDrawer.module.scss"
 import { debounce } from "utils"
 import TaskHeader from "task-drawer/TaskHeader"
 import TaskReminder from "task-drawer/TaskReminder"
 import TaskDueDate from "task-drawer/TaskDueDate"
 import TaskMyDay from "task-drawer/TaskMyDay"
+import TaskFooter from "task-drawer/TaskFooter"
 
 const TaskDrawer = () => {
   // CRUD for Tasks
@@ -22,8 +22,8 @@ const TaskDrawer = () => {
       .then((res) => setTaskList(res))
       .catch((err) => console.log(err))
 
-  const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState)
-  const [task, setTask] = useRecoilState(taskState)
+  const taskHidden = useRecoilValue(taskHiddenState)
+  const task = useRecoilValue(taskState)
   const setTaskList = useSetRecoilState(taskListState)
 
   const [taskId, setTaskId] = useState("")
@@ -50,20 +50,6 @@ const TaskDrawer = () => {
 
   const handleChangeName = (e) => setTaskName(e.target.value)
   const handleChangeNotes = (e) => setTaskNotes(e.target.value)
-
-  const handleCloseDrawer = () => {
-    setTask({})
-    setTaskHidden(true)
-  }
-
-  const handleDeleteTask = () => {
-    Task.delete(taskId)
-      .then((res) => setTaskList(res))
-      .then(handleCloseDrawer)
-      .catch((err) => console.log(err))
-  }
-
-  const dateCreated = dayjs(task.dateCreated).format("ddd, MMMM D")
 
   // Automatically submit on task name change
   useEffect(() => {
@@ -113,17 +99,9 @@ const TaskDrawer = () => {
           />
         </form>
       </section>
-      <footer className={scss.footer}>
-        <form>
-          <button type="button" onClick={handleCloseDrawer}>
-            <i className="icon-right-open" />
-          </button>
-          <p>Created on {dateCreated}</p>
-          <button type="button" onClick={handleDeleteTask}>
-            <i className="icon-trash" />
-          </button>
-        </form>
-      </footer>
+
+      {/* Footer with Close Drawer and Delete Task */}
+      <TaskFooter />
     </aside>
   )
 }
