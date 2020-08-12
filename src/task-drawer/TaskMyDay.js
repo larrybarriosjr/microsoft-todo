@@ -9,27 +9,32 @@ const TaskMyDay = () => {
   const [task, setTask] = useRecoilState(taskState)
   const setTaskList = useSetRecoilState(taskListState)
 
-  const handleMyDay = () => {
-    if (!task.myDay) {
-      Task.patch({ id: task.id, myDay: true })
-        .then((res) => setTaskList(res))
-        .then(() => fetchTask(task.id, setTask))
-        .catch((err) => console.log(err))
-    }
-  }
-  const handleRemoveMyDay = () => {
-    Task.patch({ id: task.id, myDay: false })
+  /**
+   * Function for setting or removing My Day from the task.
+   *
+   * @param {Boolean} value
+   */
+  const patchMyDay = (value) => {
+    Task.patch({ id: task.id, myDay: value })
       .then((res) => setTaskList(res))
       .then(() => fetchTask(task.id, setTask))
       .catch((err) => console.log(err))
   }
 
+  // Set My Day to task if not already set
+  const handleSetMyDay = () => {
+    if (!task.myDay) patchMyDay(true)
+  }
+  // Remove My Day from task item
+  const handleRemoveMyDay = () => patchMyDay(false)
+
+  // Style: Set color to primary if task has my day
   const actionMyDayClass = task.myDay && scss["action-myday-checked"]
 
   return (
     <form className={actionMyDayClass}>
-      <i className="icon-sun" onClick={handleMyDay} />
-      <p onClick={handleMyDay}>
+      <i className="icon-sun" onClick={handleSetMyDay} />
+      <p onClick={handleSetMyDay}>
         {task.myDay ? "Added to My Day" : "Add to My Day"}
       </p>
       {task.myDay && (
