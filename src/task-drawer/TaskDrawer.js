@@ -4,10 +4,11 @@ import { taskHiddenState, taskListState, taskState } from "state/atoms"
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
 import scss from "task-drawer/TaskDrawer.module.scss"
+import { debounce } from "utils"
 import TaskHeader from "task-drawer/TaskHeader"
-import { fetchTask, debounce } from "utils"
-import TaskReminder from "./TaskReminder"
-import TaskDueDate from "./TaskDueDate"
+import TaskReminder from "task-drawer/TaskReminder"
+import TaskDueDate from "task-drawer/TaskDueDate"
+import TaskMyDay from "task-drawer/TaskMyDay"
 
 const TaskDrawer = () => {
   // CRUD for Tasks
@@ -47,25 +48,8 @@ const TaskDrawer = () => {
 
   const taskNameRef = useRef(null)
 
-  const handleChangeName = (e) => {
-    setTaskName(e.target.value)
-  }
+  const handleChangeName = (e) => setTaskName(e.target.value)
   const handleChangeNotes = (e) => setTaskNotes(e.target.value)
-
-  const handleMyDay = () => {
-    if (!task.myDay) {
-      Task.patch({ taskId, taskMyDay: true })
-        .then((res) => setTaskList(res))
-        .then(() => task.id === taskId && fetchTask(task.id, setTask))
-        .catch((err) => console.log(err))
-    }
-  }
-  const handleRemoveMyDay = () => {
-    Task.patch({ taskId, taskMyDay: false })
-      .then((res) => setTaskList(res))
-      .then(() => task.id === taskId && fetchTask(task.id, setTask))
-      .catch((err) => console.log(err))
-  }
 
   const handleCloseDrawer = () => {
     setTask({})
@@ -97,8 +81,6 @@ const TaskDrawer = () => {
     }
   }, [taskId, taskNotes, patchNotesDebounced, setTaskList])
 
-  const actionMyDayClass = task.myDay && scss["action-myday-checked"]
-
   return (
     <aside className={scss.container} hidden={taskHidden}>
       <TaskHeader
@@ -111,17 +93,7 @@ const TaskDrawer = () => {
       />
       <section>
         {/* Add to My Day */}
-        <form className={actionMyDayClass}>
-          <i className="icon-sun" onClick={handleMyDay} />
-          <p onClick={handleMyDay}>
-            {task.myDay ? "Added to My Day" : "Add to My Day"}
-          </p>
-          {task.myDay && (
-            <button type="button" onClick={handleRemoveMyDay}>
-              <i className="icon-cancel" />
-            </button>
-          )}
-        </form>
+        <TaskMyDay />
 
         {/* Remind Me */}
         <TaskReminder />
