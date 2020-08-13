@@ -1,6 +1,6 @@
 import React from "react"
-import { useRecoilState } from "recoil"
-import { taskHiddenState, taskState } from "state/atoms"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { taskHiddenState, taskState, stepListState } from "state/atoms"
 import scss from "common/TaskItem.module.scss"
 import CheckButton from "./CheckButton"
 import StarButton from "./StarButton"
@@ -9,9 +9,10 @@ import { fetchTask } from "utils"
 const TaskItem = ({ item }) => {
   const [task, setTask] = useRecoilState(taskState) // Task item
   const [taskHidden, setTaskHidden] = useRecoilState(taskHiddenState) // Drawer display status
+  const setStepList = useSetRecoilState(stepListState)
 
   const toggleTaskDrawer = (id) => () => {
-    fetchTask(id, setTask).then(() => {
+    fetchTask(id, setTask, setStepList).then(() => {
       if (!taskHidden && id !== task.id) {
         // Change drawer content when selecting new task item
         setTaskHidden(false)

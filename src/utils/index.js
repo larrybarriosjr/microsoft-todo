@@ -1,16 +1,24 @@
-import { Task } from "service/lovefield"
+import { Task, Step } from "service/lovefield"
 
 /**
  * Fetch Task API accepting the task ID and the setter function, usually setTask
  *
  * @param {number} id
- * @param {function} setterFunction setState
+ * @param {function} taskSetterFunction setState
+ * @param {function} stepListSetterFunction setState
  * @return {object} Updated task item data
  *
  */
-export const fetchTask = (id, setterFunction) =>
-  Task.get(id)
-    .then((res) => setterFunction(res))
+export const fetchTask = async (
+  id,
+  taskSetterFunction,
+  stepListSetterFunction
+) =>
+  Promise.all([await Task.get(id), await Step.get(id)])
+    .then(([taskRes, stepRes]) => {
+      taskSetterFunction(taskRes)
+      stepListSetterFunction(stepRes)
+    })
     .catch((err) => console.log(err))
 
 /**
