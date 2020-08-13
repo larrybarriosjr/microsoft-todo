@@ -14,12 +14,11 @@ const buildSchema = () => {
     .addColumn("myDay", lf.Type.BOOLEAN)
     .addColumn("completed", lf.Type.BOOLEAN)
     .addColumn("starred", lf.Type.BOOLEAN)
-    .addColumn("steps", lf.Type.ARRAY_BUFFER)
     .addColumn("dueDate", lf.Type.DATE_TIME)
     .addColumn("reminder", lf.Type.DATE_TIME)
     .addColumn("notes", lf.Type.STRING)
 
-    .addColumn("dateCreated", lf.Type.DATE_TIME)
+    .addColumn("_created", lf.Type.DATE_TIME)
     .addColumn("_myDay", lf.Type.DATE_TIME)
     .addColumn("_completed", lf.Type.DATE_TIME)
     .addColumn("_starred", lf.Type.DATE_TIME)
@@ -27,10 +26,24 @@ const buildSchema = () => {
 
     .addColumn("listId", lf.Type.STRING)
     .addPrimaryKey(["id"])
-    .addNullable(["steps", "dueDate", "reminder", "listId"])
+    .addNullable(["dueDate", "reminder", "listId"])
     .addForeignKey("fk_task_list", {
       local: "listId",
       ref: "lists.id",
+      action: lf.ConstraintAction.CASCADE
+    })
+
+  schemaBuilder
+    .createTable("steps")
+    .addColumn("id", lf.Type.STRING)
+    .addColumn("name", lf.Type.STRING)
+    .addColumn("completed", lf.Type.BOOLEAN)
+    .addColumn("order", lf.Type.NUMBER)
+    .addColumn("taskId", lf.Type.STRING)
+    .addPrimaryKey(["id"])
+    .addForeignKey("fk_step_task", {
+      local: "taskId",
+      ref: "tasks.id",
       action: lf.ConstraintAction.CASCADE
     })
 
@@ -93,7 +106,6 @@ export const Task = {
       myDay,
       completed,
       starred,
-      steps,
       dueDate,
       reminder,
       notes
@@ -104,7 +116,6 @@ export const Task = {
       if ("myDay" in obj) return { myDay: myDay, _myDay: dt() }
       if ("completed" in obj) return { completed: completed, _completed: dt() }
       if ("starred" in obj) return { starred: starred, _starred: dt() }
-      if ("steps" in obj) return { steps: steps }
       if ("dueDate" in obj) return { dueDate: dueDate, _dueDate: dt() }
       if ("reminder" in obj) return { reminder: reminder }
       if ("notes" in obj) return { notes: notes }
@@ -115,10 +126,9 @@ export const Task = {
       myDay: true,
       completed: false,
       starred: false,
-      steps: null,
       notes: "",
-      dateCreated: dt(),
       listId: null,
+      _created: dt(),
       _myDay: dt(),
       _completed: dt(),
       _starred: dt(),
