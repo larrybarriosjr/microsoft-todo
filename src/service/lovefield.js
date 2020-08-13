@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid"
 const dt = () => new Date()
 
 const buildSchema = () => {
-  const schemaBuilder = lf.schema.create("futhark", 1)
+  const schemaBuilder = lf.schema.create("ms-todo", 1)
 
   schemaBuilder
     .createTable("tasks")
