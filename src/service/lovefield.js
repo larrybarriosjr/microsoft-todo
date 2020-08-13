@@ -1,8 +1,6 @@
 import lf from "lovefield"
 import { v4 as uuid } from "uuid"
 
-const dt = () => new Date()
-
 const buildSchema = () => {
   const schemaBuilder = lf.schema.create("ms-todo", 1)
 
@@ -18,11 +16,11 @@ const buildSchema = () => {
     .addColumn("reminder", lf.Type.DATE_TIME)
     .addColumn("notes", lf.Type.STRING)
 
-    .addColumn("_created", lf.Type.DATE_TIME)
-    .addColumn("_myDay", lf.Type.DATE_TIME)
-    .addColumn("_completed", lf.Type.DATE_TIME)
-    .addColumn("_starred", lf.Type.DATE_TIME)
-    .addColumn("_dueDate", lf.Type.DATE_TIME)
+    .addColumn("dateCreated", lf.Type.DATE_TIME)
+    .addColumn("myDayEdited", lf.Type.DATE_TIME)
+    .addColumn("completedEdited", lf.Type.DATE_TIME)
+    .addColumn("starredEdited", lf.Type.DATE_TIME)
+    .addColumn("dueDateEdited", lf.Type.DATE_TIME)
 
     .addColumn("listId", lf.Type.STRING)
     .addPrimaryKey(["id"])
@@ -57,24 +55,25 @@ const buildSchema = () => {
 }
 
 const tblTasks = buildSchema().getSchema().table("tasks")
+const tblSteps = buildSchema().getSchema().table("steps")
 
-const select = (id, db) => {
+const selectTask = (id, db) => {
   const query = db.select().from(tblTasks).where(tblTasks.id.eq(id))
   return query.exec()
 }
 
-const index = (db) => {
+const indexTask = (db) => {
   const query = db.select().from(tblTasks)
   return query.exec()
 }
 
-const insert = (data, db) => {
+const insertTask = (data, db) => {
   const dataRow = tblTasks.createRow(data)
   db.insert().into(tblTasks).values([dataRow]).exec()
   return db
 }
 
-const update = (data, id, db) => {
+const updateTask = (data, id, db) => {
   const dataKey = Object.keys(data)[0]
   const dataKeyDate = Object.keys(data)[1]
 
@@ -93,8 +92,19 @@ const update = (data, id, db) => {
   return db
 }
 
-const remove = (id, db) => {
+const removeTask = (id, db) => {
   db.delete().from(tblTasks).where(tblTasks.id.eq(id)).exec()
+  return db
+}
+
+const incrementOrder = (id, db) => {
+  const result = db
+    .select()
+    .from(tblSteps)
+    .where(tblSteps.taskId.eq(id))
+    .orderBy(tblSteps.order, lf.Order.DESC)
+    .exec()
+  result.then((res) => (Step._order = res[0] ? res[0].order + 1 : 1))
   return db
 }
 
@@ -112,13 +122,13 @@ export const Task = {
     } = obj
 
     if (id) {
-      if ("name" in obj) return { name: name }
-      if ("myDay" in obj) return { myDay: myDay, _myDay: dt() }
-      if ("completed" in obj) return { completed: completed, _completed: dt() }
-      if ("starred" in obj) return { starred: starred, _starred: dt() }
-      if ("dueDate" in obj) return { dueDate: dueDate, _dueDate: dt() }
-      if ("reminder" in obj) return { reminder: reminder }
-      if ("notes" in obj) return { notes: notes }
+      if ("name" in obj) return { name }
+      if ("myDay" in obj) return { myDay, myDayEdited: new Date() }
+      if ("completed" in obj) return { completed, completedEdited: new Date() }
+      if ("starred" in obj) return { starred, starredEdited: new Date() }
+      if ("dueDate" in obj) return { dueDate, dueDateEdited: new Date() }
+      if ("reminder" in obj) return { reminder }
+      if ("notes" in obj) return { notes }
     }
     return {
       id: uuid(),
@@ -128,35 +138,91 @@ export const Task = {
       starred: false,
       notes: "",
       listId: null,
-      _created: dt(),
-      _myDay: dt(),
-      _completed: dt(),
-      _starred: dt(),
-      _dueDate: dt()
+      dateCreated: new Date(),
+      myDayEdited: new Date(),
+      completedEdited: new Date(),
+      starredEdited: new Date(),
+      dueDateEdited: new Date()
     }
   },
   get: async (id) => {
     return buildSchema()
       .connect()
-      .then((db) => (typeof id === "undefined" ? index(db) : select(id, db)))
+      .then((db) => (typeof id === "undefined" ? db : incrementOrder(id, db)))
+      .then((db) =>
+        typeof id === "undefined" ? indexTask(db) : selectTask(id, db)
+      )
       .then((res) => (res.length === 1 ? res[0] : res))
   },
   post: async (obj) => {
     return buildSchema()
       .connect()
-      .then((db) => insert(Task._serialize(obj), db))
-      .then((db) => index(db))
+      .then((db) => insertTask(Task._serialize(obj), db))
+      .then((db) => indexTask(db))
   },
   patch: async (obj) => {
     return buildSchema()
       .connect()
-      .then((db) => update(Task._serialize(obj), obj.id, db))
-      .then((db) => index(db))
+      .then((db) => updateTask(Task._serialize(obj), obj.id, db))
+      .then((db) => indexTask(db))
   },
   delete: async (id) => {
     return buildSchema()
       .connect()
-      .then((db) => remove(id, db))
-      .then((db) => index(db))
+      .then((db) => removeTask(id, db))
+      .then((db) => indexTask(db))
+  }
+}
+
+const indexStep = (taskId, db) => {
+  const query = db.select().from(tblSteps).where(tblSteps.taskId.eq(taskId))
+  return query.exec()
+}
+
+const insertStep = (data, db) => {
+  const dataRow = tblSteps.createRow(data)
+  const result = db.insert().into(tblSteps).values([dataRow]).exec()
+  result.then((res) => (Step._order = res[0].order + 1))
+  return db
+}
+
+const removeStep = (id, db) => {
+  db.delete().from(tblSteps).where(tblSteps.id.eq(id)).exec()
+  return db
+}
+
+export const Step = {
+  _order: 0,
+  _serialize: (obj) => {
+    const { id, name, completed, order, taskId } = obj
+    if (id) {
+      if ("completed" in obj) return { completed }
+      if ("order" in obj) return { order }
+    }
+    return {
+      id: uuid(),
+      name: name,
+      completed: false,
+      order: Step._order,
+      taskId: taskId
+    }
+  },
+  get: async (taskId) => {
+    return buildSchema()
+      .connect()
+      .then((db) => indexStep(taskId, db))
+      .then((res) => res || [])
+  },
+  post: async (obj) => {
+    return buildSchema()
+      .connect()
+      .then((db) => insertStep(Step._serialize(obj), db))
+      .then((db) => indexStep(obj.taskId, db))
+  },
+  delete: async (taskId, id) => {
+    return buildSchema()
+      .connect()
+      .then((db) => removeStep(id, db))
+      .then((db) => indexStep(taskId, db))
   }
 }
