@@ -2,7 +2,6 @@
   > li {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    margin: 0.5rem 0;
     &:hover > .step-remove > i {
       visibility: visible;
     }
@@ -14,9 +13,13 @@
       margin-left: 0.3rem;
     }
     > p {
+      padding: 0.25rem 0;
       font-size: 1rem;
       &.deleted {
         text-decoration: line-through;
+      }
+      &:hover {
+        cursor: grab;
       }
     }
     > .step-remove {

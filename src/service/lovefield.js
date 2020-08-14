@@ -175,7 +175,11 @@ export const Task = {
 }
 
 const indexStep = (taskId, db) => {
-  const query = db.select().from(tblSteps).where(tblSteps.taskId.eq(taskId))
+  const query = db
+    .select()
+    .from(tblSteps)
+    .where(tblSteps.taskId.eq(taskId))
+    .orderBy(tblSteps.order)
   return query.exec()
 }
 
@@ -199,6 +203,39 @@ const updateStep = (data, id, db) => {
 
 const removeStep = (id, db) => {
   db.delete().from(tblSteps).where(tblSteps.id.eq(id)).exec()
+  return db
+}
+
+const getAdjacent = async (taskId, fromOrder, toOrder, db) => {
+  if (fromOrder > toOrder) {
+    const result = await db
+      .select(tblSteps.order)
+      .from(tblSteps)
+      .where(lf.op.and(tblSteps.order.lt(toOrder), tblSteps.taskId.eq(taskId)))
+      .orderBy(tblSteps.order, lf.Order.DESC)
+      .exec()
+    if (result.length) return [db, result]
+    return [db, [{ order: Math.floor(toOrder - 1) }]]
+  } else {
+    const result = await db
+      .select(tblSteps.order)
+      .from(tblSteps)
+      .where(lf.op.and(tblSteps.order.gt(toOrder), tblSteps.taskId.eq(taskId)))
+      .orderBy(tblSteps.order)
+      .exec()
+    if (result.length) return [db, result]
+    return [db, [{ order: Math.ceil(toOrder + 1) }]]
+  }
+}
+
+const reorderStep = (fromObj, toOrder, res, db) => {
+  const order = (toOrder + res[0].order) / 2
+
+  db.update(tblSteps)
+    .set(tblSteps.order, order)
+    .where(tblSteps.id.eq(fromObj.id))
+    .exec()
+
   return db
 }
 
@@ -240,6 +277,13 @@ export const Step = {
     return buildSchema()
       .connect()
       .then((db) => removeStep(id, db))
+      .then((db) => indexStep(taskId, db))
+  },
+  reorder: async (taskId, fromObj, toOrder) => {
+    return buildSchema()
+      .connect()
+      .then((db) => getAdjacent(taskId, fromObj.order, toOrder, db))
+      .then(([db, res]) => reorderStep(fromObj, toOrder, res, db))
       .then((db) => indexStep(taskId, db))
   }
 }

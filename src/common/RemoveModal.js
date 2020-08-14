@@ -28,7 +28,7 @@ const RemoveModal = () => {
       .catch((err) => console.log(err))
   }
 
-  const containerClass = stepModal && scss["modal-container"]
+  const containerClass = stepModal ? scss["modal-container"] : ""
 
   return (
     <aside className={containerClass}>
