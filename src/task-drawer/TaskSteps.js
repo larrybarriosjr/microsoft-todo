@@ -51,9 +51,10 @@ const TaskSteps = () => {
               <CheckButton
                 id={item.id}
                 completed={item.completed}
+                taskId={item.taskId}
                 className={scss["step-check"]}
               />
-              <p>{item.name}</p>
+              <p className={item.completed && scss.deleted}>{item.name}</p>
               <button
                 type="button"
                 className={scss["step-remove"]}

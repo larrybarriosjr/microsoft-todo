@@ -186,6 +186,17 @@ const insertStep = (data, db) => {
   return db
 }
 
+const updateStep = (data, id, db) => {
+  const dataKey = Object.keys(data)[0]
+
+  db.update(tblSteps)
+    .set(tblSteps[dataKey], data[dataKey])
+    .where(tblSteps.id.eq(id))
+    .exec()
+
+  return db
+}
+
 const removeStep = (id, db) => {
   db.delete().from(tblSteps).where(tblSteps.id.eq(id)).exec()
   return db
@@ -218,6 +229,12 @@ export const Step = {
       .connect()
       .then((db) => insertStep(Step._serialize(obj), db))
       .then((db) => indexStep(obj.taskId, db))
+  },
+  patch: async (taskId, obj) => {
+    return buildSchema()
+      .connect()
+      .then((db) => updateStep(Step._serialize(obj), obj.id, db))
+      .then((db) => indexStep(taskId, db))
   },
   delete: async (taskId, id) => {
     return buildSchema()
