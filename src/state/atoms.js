@@ -93,5 +93,4 @@ export const stepModalState = atom({
 // 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
 // 20 days
 
-// Overflow scroll for task drawer
 // Drag and drop steps rearrange
