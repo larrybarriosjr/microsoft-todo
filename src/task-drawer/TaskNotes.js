@@ -36,11 +36,9 @@ const TaskNotes = () => {
   // Adjust textarea height automatically and debounce submission
   useEffect(() => {
     const inputEl = notesRef.current
-    if (id) {
-      inputEl.style.height = "7.5rem"
-      inputEl.style.height = `${inputEl.scrollHeight}px`
-      patchNotesDebounced(id, taskNotes)
-    }
+    inputEl.style.height = "7.5rem"
+    if (taskNotes) inputEl.style.height = `${inputEl.scrollHeight}px`
+    if (id) patchNotesDebounced(id, taskNotes)
   }, [id, taskNotes, patchNotesDebounced, setTaskList])
 
   return (

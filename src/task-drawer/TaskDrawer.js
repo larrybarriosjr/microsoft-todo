@@ -14,24 +14,26 @@ const TaskDrawer = () => {
 
   return (
     <aside className={scss.container} hidden={taskHidden}>
-      {/* Header with Task Name, Completed, Starred and Steps Input */}
-      <TaskHeader />
+      <div className={scss.content}>
+        {/* Header with Task Name, Completed, Starred and Steps Input */}
+        <TaskHeader />
 
-      <section>
-        {/* Add to My Day */}
-        <TaskMyDay />
+        <section>
+          {/* Add to My Day */}
+          <TaskMyDay />
 
-        {/* Remind Me */}
-        <TaskReminder />
+          {/* Remind Me */}
+          <TaskReminder />
 
-        {/* Add Due Date */}
-        <TaskDueDate />
-      </section>
+          {/* Add Due Date */}
+          <TaskDueDate />
+        </section>
 
-      <section>
-        {/* Add Note */}
-        <TaskNotes />
-      </section>
+        <section>
+          {/* Add Note */}
+          <TaskNotes />
+        </section>
+      </div>
 
       {/* Footer with Close Drawer and Delete Task */}
       <TaskFooter />
