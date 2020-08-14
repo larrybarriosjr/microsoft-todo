@@ -4,7 +4,13 @@ import CheckButton from "common/CheckButton"
 import StarButton from "common/StarButton"
 import { Task, Step } from "service/lovefield"
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import { taskState, taskListState, stepListState } from "state/atoms"
+import {
+  taskState,
+  taskListState,
+  stepListState,
+  stepState,
+  stepModalState
+} from "state/atoms"
 import { debounce } from "utils"
 import { taskStepsState } from "state/selectors"
 
@@ -12,7 +18,9 @@ const TaskHeader = () => {
   const task = useRecoilValue(taskState)
   const taskSteps = useRecoilValue(taskStepsState)
   const setTaskList = useSetRecoilState(taskListState)
+  const setStep = useSetRecoilState(stepState)
   const setStepList = useSetRecoilState(stepListState)
+  const setStepModal = useSetRecoilState(stepModalState)
   const [taskName, setTaskName] = useState("")
   const [taskStep, setTaskStep] = useState("")
 
@@ -60,10 +68,9 @@ const TaskHeader = () => {
     }
   }
 
-  const handleRemoveStep = (stepId) => () => {
-    Step.delete(id, stepId)
-      .then((res) => setStepList(res))
-      .catch((err) => console.log(err))
+  const handleRemoveStep = (step) => () => {
+    setStep(step)
+    setStepModal(true)
   }
 
   // Adjust textarea height automatically and debounce submission
@@ -111,7 +118,7 @@ const TaskHeader = () => {
               <button
                 type="button"
                 className={scss["step-remove"]}
-                onClick={handleRemoveStep(item.id)}
+                onClick={handleRemoveStep(item)}
               >
                 <i className="icon-cancel" />
               </button>

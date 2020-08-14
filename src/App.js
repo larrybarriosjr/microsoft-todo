@@ -5,6 +5,7 @@ import "App.scss"
 import NavDrawer from "layout/NavDrawer"
 import MyDayPage from "my-day/MyDayPage"
 import TaskDrawer from "task-drawer/TaskDrawer"
+import RemoveModal from "common/RemoveModal"
 
 function App() {
   const page = useRecoilValue(pageState)
@@ -23,6 +24,7 @@ function App() {
       {/* Change task list content depending on page chosen */}
       {page === "myDay" && <MyDayPage />}
       <TaskDrawer />
+      <RemoveModal />
     </main>
   )
 }
