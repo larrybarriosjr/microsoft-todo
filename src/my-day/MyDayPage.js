@@ -44,9 +44,9 @@ const MyDayPage = () => {
       <section className={scss.page}>
         <h2 className={scss.title}>My Day</h2>
         <p className={scss.date}>{currentDate}</p>
-        <button className={scss.bulb} aria-label="Task drawer button">
+        {/* <button className={scss.bulb} aria-label="Task drawer button">
           <i className="icon-lightbulb" />
-        </button>
+        </button> */}
         <article className={scss.list}>
           <ul className={scss["todo-list"]}>
             {myDayList &&
