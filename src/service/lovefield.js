@@ -15,6 +15,8 @@ const buildSchema = () => {
     .addColumn("dueDate", lf.Type.DATE_TIME)
     .addColumn("reminder", lf.Type.DATE_TIME)
     .addColumn("notes", lf.Type.STRING)
+    .addColumn("stepsTotal", lf.Type.NUMBER)
+    .addColumn("stepsCompleted", lf.Type.NUMBER)
 
     .addColumn("dateCreated", lf.Type.DATE_TIME)
     .addColumn("myDayEdited", lf.Type.DATE_TIME)
@@ -138,6 +140,8 @@ export const Task = {
       starred: false,
       notes: "",
       listId: null,
+      stepsTotal: 0,
+      stepsCompleted: 0,
       dateCreated: new Date(),
       myDayEdited: new Date(),
       completedEdited: new Date(),
@@ -183,9 +187,19 @@ const indexStep = (taskId, db) => {
   return query.exec()
 }
 
-const insertStep = (data, db) => {
+const insertStep = async (data, db) => {
   const dataRow = tblSteps.createRow(data)
   const result = db.insert().into(tblSteps).values([dataRow]).exec()
+  const task = await db
+    .select(tblTasks.stepsTotal)
+    .from(tblTasks)
+    .where(tblTasks.id.eq(data.taskId))
+    .exec()
+  const q1 = db
+    .update(tblTasks)
+    .set(tblTasks.stepsTotal, lf.bind(0))
+    .where(tblTasks.id.eq(data.taskId))
+  q1.bind([task[0].stepsTotal + 1]).exec()
   result.then((res) => (Step._order = res[0].order + 1))
   return db
 }
@@ -197,6 +211,10 @@ const updateStep = (data, id, db) => {
     .set(tblSteps[dataKey], data[dataKey])
     .where(tblSteps.id.eq(id))
     .exec()
+
+  if (dataKey === "completed") {
+    db.update()
+  }
 
   return db
 }

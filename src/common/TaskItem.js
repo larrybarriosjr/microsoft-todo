@@ -35,7 +35,10 @@ const TaskItem = ({ item }) => {
         className={scss["item-check"]}
       />
       <p className={itemNameClass}>{item.name}</p>
-      <p className={scss["item-category"]}>{item.listId || "Tasks"}</p>
+      <p className={scss["item-category"]}>
+        {item.listId || "Tasks"}{" "}
+        {item.stepsTotal ? `${item.stepsCompleted} of ${item.stepsTotal}` : ""}
+      </p>
       <StarButton
         id={item.id}
         starred={item.starred}

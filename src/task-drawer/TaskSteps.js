@@ -1,12 +1,13 @@
 import React, { useState, useRef } from "react"
 import scss from "task-drawer/TaskSteps.module.scss"
 import CheckButton from "common/CheckButton"
-import { Step } from "service/lovefield"
+import { Task, Step } from "service/lovefield"
 import {
   stepListState,
   stepState,
   stepModalState,
-  taskState
+  taskState,
+  taskListState
 } from "state/atoms"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { taskStepsState } from "state/selectors"
@@ -17,6 +18,7 @@ const TaskSteps = () => {
   const setStep = useSetRecoilState(stepState)
   const setStepList = useSetRecoilState(stepListState)
   const setStepModal = useSetRecoilState(stepModalState)
+  const setTaskList = useSetRecoilState(taskListState)
 
   const [dragFromOrder, setDragFromOrder] = useState(null)
   const [dragFromId, setDragFromId] = useState(null)
@@ -52,12 +54,15 @@ const TaskSteps = () => {
   const handleChangeStep = (e) => setTaskStep(e.target.value)
 
   // Submit on enter
-  const handleStepSubmit = (e) => {
+  const handleStepSubmit = async (e) => {
     if (e.key === "Enter") {
       e.preventDefault()
-      Step.post({ name: taskStep, taskId: task.id })
+      await Step.post({ name: taskStep, taskId: task.id })
         .then((res) => setStepList(res))
         .then(() => setTaskStep(""))
+        .catch((err) => console.log(err))
+      await Task.get()
+        .then((res) => setTaskList(res))
         .catch((err) => console.log(err))
     }
   }
