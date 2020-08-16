@@ -241,8 +241,21 @@ const updateStep = async (data, id, taskId, db) => {
   return db
 }
 
-const removeStep = (id, db) => {
+const removeStep = async (taskId, id, db) => {
+  const decrementStepsTotal = db
+    .update(tblTasks)
+    .set(tblTasks.stepsTotal, lf.bind(0))
+    .where(tblTasks.id.eq(taskId))
+
+  const task = await db
+    .select(tblTasks.stepsTotal)
+    .from(tblTasks)
+    .where(tblTasks.id.eq(taskId))
+    .exec()
+
+  decrementStepsTotal.bind([task[0].stepsTotal - 1]).exec()
   db.delete().from(tblSteps).where(tblSteps.id.eq(id)).exec()
+
   return db
 }
 
@@ -316,7 +329,7 @@ export const Step = {
   delete: async (taskId, id) => {
     return buildSchema()
       .connect()
-      .then((db) => removeStep(id, db))
+      .then((db) => removeStep(taskId, id, db))
       .then((db) => indexStep(taskId, db))
   },
   reorder: async (taskId, fromObj, toOrder) => {
