@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { useRecoilValue, useRecoilState } from "recoil"
 import { pageState, taskListState } from "state/atoms"
 import scss from "layout/NavDrawer.module.scss"
+import { fetchNavList } from "utils"
 
 const NavDrawer = () => {
   // global states
@@ -26,8 +27,6 @@ const NavDrawer = () => {
   // send to specified page
   const goToPage = (page) => () => setPage(page)
 
-  const myDayAmount = taskList.filter((item) => item.myDay).length
-
   // styling classname variables
   const containerClass = `${scss.container} ${scss[navDisplay]}`
   const brandClass = `${scss.brand} ${scss[navDisplay]}`
@@ -41,16 +40,18 @@ const NavDrawer = () => {
           {navDisplay === "open" ? "Microsoft To Do Clone" : "TD"}
         </h1>
         <ul className={scss["nav-list"]}>
-          <li className={scss["nav-item"]}>
-            <button
-              onClick={goToPage("myDay")}
-              className={navButtonClass("myDay")}
-            >
-              <i className="icon-sun" />
-              <p>My Day</p>
-              <p>{myDayAmount}</p>
-            </button>
-          </li>
+          {fetchNavList(taskList).map((item) => (
+            <li key={item.key} className={scss["nav-item"]}>
+              <button
+                onClick={goToPage(item.key)}
+                className={navButtonClass(item.key)}
+              >
+                <i className={item.icon} />
+                <p>{item.name}</p>
+                <p>{item.amount}</p>
+              </button>
+            </li>
+          ))}
         </ul>
         <hr className={scss.divider} />
       </nav>

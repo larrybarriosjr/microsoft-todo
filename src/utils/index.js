@@ -22,6 +22,27 @@ export const fetchTask = async (
     .catch((err) => console.log(err))
 
 /**
+ * Fetch Nav List API for getting the list of nav items.
+ *
+ * @param {Array} list taskList
+ * @return {Array} Nav list items
+ */
+export const fetchNavList = (list) => [
+  {
+    key: "myDay",
+    name: "My Day",
+    icon: "icon-sun",
+    amount: list.filter((item) => item.myDay).length
+  },
+  {
+    key: "important",
+    name: "Important",
+    icon: "icon-star",
+    amount: list.filter((item) => item.starred).length
+  }
+]
+
+/**
  * Regular debounce function with 500ms default delay
  *
  * @param {function} func
