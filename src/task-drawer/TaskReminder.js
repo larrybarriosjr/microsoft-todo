@@ -3,6 +3,7 @@ import { useRecoilState, useSetRecoilState } from "recoil"
 import {
   taskState,
   taskListState,
+  stepListState,
   reminderModalState,
   reminderCalendarModalState,
   dueDateModalState,
@@ -20,6 +21,7 @@ import dayjs from "dayjs"
 
 const TaskReminder = () => {
   const setTaskList = useSetRecoilState(taskListState)
+  const setStepList = useSetRecoilState(stepListState)
   const setDueDateModal = useSetRecoilState(dueDateModalState)
   const setDueDateCalendarModal = useSetRecoilState(dueDateCalendarModalState)
 
@@ -54,7 +56,7 @@ const TaskReminder = () => {
   const handleRemoveReminder = () => {
     Task.patch({ id: task.id, reminder: null })
       .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask))
+      .then(() => fetchTask(task.id, setTask, setStepList))
       .catch((err) => console.log(err))
   }
 
@@ -104,7 +106,7 @@ const TaskReminder = () => {
 
     Task.patch({ id: task.id, reminder: new Date(dt) })
       .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask))
+      .then(() => fetchTask(task.id, setTask, setStepList))
       .then(setReminderCalendarModal(false)) // Close reminder calendar modal
       // .then(() => registration.showNotification("Task Reminder", options)) // Set PWA Notification
       .then(setCalendarStates()) // Reset calendar values to now

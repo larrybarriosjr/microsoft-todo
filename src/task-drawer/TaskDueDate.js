@@ -7,7 +7,8 @@ import {
   reminderCalendarModalState,
   dueDateModalState,
   dueDateCalendarModalState,
-  dateState
+  dateState,
+  stepListState
 } from "state/atoms"
 import DateCalendar from "common/DateCalendar"
 import { fetchTask } from "utils"
@@ -17,6 +18,7 @@ import dayjs from "dayjs"
 
 const TaskDueDate = () => {
   const setTaskList = useSetRecoilState(taskListState)
+  const setStepList = useSetRecoilState(stepListState)
   const setReminderModal = useSetRecoilState(reminderModalState)
   const setReminderCalendarModal = useSetRecoilState(reminderCalendarModalState)
 
@@ -44,7 +46,7 @@ const TaskDueDate = () => {
   const handleRemoveDueDate = () => {
     Task.patch({ id: task.id, dueDate: null })
       .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask))
+      .then(() => fetchTask(task.id, setTask, setStepList))
       .catch((err) => console.log(err))
   }
 
@@ -91,7 +93,7 @@ const TaskDueDate = () => {
 
     Task.patch({ id: task.id, dueDate: new Date(dt) })
       .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask))
+      .then(() => fetchTask(task.id, setTask, setStepList))
       .then(setDueDateCalendarModal(false)) // Close due date calendar modal
       // .then(() => registration.showNotification("Task Due Date", options)) // Set PWA Notification
       .then(setCalendarStates()) // Reset calendar values to now

@@ -34,7 +34,7 @@ const CheckButton = ({ id, completed, taskId, className }) => {
       Task.patch({ id, completed: !completed })
         .then((res) => setTaskList(res)) // Rerender list of task items
         .then(handleHideCheck) // Hide icon to avoid rendering duplicates
-        .then(() => fetchTask(id, setTask)) // Sync info between list and drawer
+        .then(() => fetchTask(id, setTask, setStepList)) // Sync info between list and drawer
         .catch((err) => console.log(err))
     }
   }
