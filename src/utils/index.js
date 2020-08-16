@@ -16,7 +16,7 @@ export const fetchTask = async (
 ) =>
   Promise.all([await Task.get(id), await Step.get(id)])
     .then(([taskRes, stepRes]) => {
-      taskSetterFunction(taskRes)
+      taskSetterFunction(taskRes[0])
       stepListSetterFunction(stepRes)
     })
     .catch((err) => console.log(err))

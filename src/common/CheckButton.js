@@ -20,12 +20,15 @@ const CheckButton = ({ id, completed, taskId, className }) => {
   const handleHideCheck = () => setCheckShown(false)
 
   // Patch task completed status on click
-  const handleCompleted = (e) => {
+  const handleCompleted = async (e) => {
     e.stopPropagation() // Disable drawer toggle
     if (taskId) {
-      Step.patch(taskId, { id, completed: !completed })
+      await Step.patch(taskId, { id, completed: !completed })
         .then((res) => setStepList(res))
         .then(handleHideCheck) // Hide icon to avoid rendering duplicates
+        .catch((err) => console.log(err))
+      await Task.get()
+        .then((res) => setTaskList(res))
         .catch((err) => console.log(err))
     } else {
       Task.patch({ id, completed: !completed })

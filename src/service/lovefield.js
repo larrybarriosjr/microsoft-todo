@@ -156,7 +156,7 @@ export const Task = {
       .then((db) =>
         typeof id === "undefined" ? indexTask(db) : selectTask(id, db)
       )
-      .then((res) => (res.length === 1 ? res[0] : res))
+      .then((res) => res)
   },
   post: async (obj) => {
     return buildSchema()
@@ -189,22 +189,27 @@ const indexStep = (taskId, db) => {
 
 const insertStep = async (data, db) => {
   const dataRow = tblSteps.createRow(data)
-  const result = db.insert().into(tblSteps).values([dataRow]).exec()
+
+  const incrementStepsTotal = db
+    .update(tblTasks)
+    .set(tblTasks.stepsTotal, lf.bind(0))
+    .where(tblTasks.id.eq(data.taskId))
+
   const task = await db
     .select(tblTasks.stepsTotal)
     .from(tblTasks)
     .where(tblTasks.id.eq(data.taskId))
     .exec()
-  const q1 = db
-    .update(tblTasks)
-    .set(tblTasks.stepsTotal, lf.bind(0))
-    .where(tblTasks.id.eq(data.taskId))
-  q1.bind([task[0].stepsTotal + 1]).exec()
+
+  incrementStepsTotal.bind([task[0].stepsTotal + 1]).exec()
+
+  const result = db.insert().into(tblSteps).values([dataRow]).exec()
   result.then((res) => (Step._order = res[0].order + 1))
+
   return db
 }
 
-const updateStep = (data, id, db) => {
+const updateStep = async (data, id, taskId, db) => {
   const dataKey = Object.keys(data)[0]
 
   db.update(tblSteps)
@@ -213,7 +218,24 @@ const updateStep = (data, id, db) => {
     .exec()
 
   if (dataKey === "completed") {
-    db.update()
+    let value
+    const changeStepsCompleted = db
+      .update(tblTasks)
+      .set(tblTasks.stepsCompleted, lf.bind(0))
+      .where(tblTasks.id.eq(taskId))
+
+    const task = await db
+      .select(tblTasks.stepsCompleted)
+      .from(tblTasks)
+      .where(tblTasks.id.eq(taskId))
+      .exec()
+
+    data.completed
+      ? (value = task[0].stepsCompleted + 1)
+      : (value = task[0].stepsCompleted - 1)
+
+    changeStepsCompleted.bind([value]).exec()
+    db.update(tblTasks).set(tblTasks.stepsCompleted)
   }
 
   return db
@@ -288,7 +310,7 @@ export const Step = {
   patch: async (taskId, obj) => {
     return buildSchema()
       .connect()
-      .then((db) => updateStep(Step._serialize(obj), obj.id, db))
+      .then((db) => updateStep(Step._serialize(obj), obj.id, taskId, db))
       .then((db) => indexStep(taskId, db))
   },
   delete: async (taskId, id) => {
