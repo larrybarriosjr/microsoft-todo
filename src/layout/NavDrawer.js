@@ -1,11 +1,18 @@
 import React, { useState } from "react"
+import { useRecoilValue, useRecoilState } from "recoil"
+import { pageState, taskListState } from "state/atoms"
 import scss from "layout/NavDrawer.module.scss"
 
 const NavDrawer = () => {
+  // global states
+  const taskList = useRecoilValue(taskListState)
+  const [page, setPage] = useRecoilState(pageState)
+
   // local states
   const [navDisplay, setNavDisplay] = useState("open")
   const [navIcon, setNavIcon] = useState("icon-left-open")
 
+  // toggle navigation display and arrow icons
   const toggleNav = () => {
     if (navDisplay === "open") {
       setNavDisplay("close")
@@ -14,23 +21,46 @@ const NavDrawer = () => {
       setNavDisplay("open")
       setNavIcon("icon-left-open")
     }
-    console.log(navDisplay)
   }
+
+  // send to specified page
+  const goToPage = (page) => () => setPage(page)
+
+  const myDayAmount = taskList.filter((item) => item.myDay).length
 
   // styling classname variables
   const containerClass = `${scss.container} ${scss[navDisplay]}`
   const brandClass = `${scss.brand} ${scss[navDisplay]}`
+  const navButtonClass = (selected) =>
+    `${scss["nav-button"]} ${page === selected ? scss.active : ""}`
 
   return (
     <aside className={containerClass}>
       <nav>
         <h1 className={brandClass}>
-          {navDisplay === "open" ? "Futhark — Impel Focus" : "F"}
+          {navDisplay === "open" ? "Microsoft To Do Clone" : "TD"}
         </h1>
+        <ul className={scss["nav-list"]}>
+          <li className={scss["nav-item"]}>
+            <button
+              onClick={goToPage("myDay")}
+              className={navButtonClass("myDay")}
+            >
+              <i className="icon-sun" />
+              <p>My Day</p>
+              <p>{myDayAmount}</p>
+            </button>
+          </li>
+        </ul>
+        <hr className={scss.divider} />
       </nav>
-      <button className={scss.toggle} onClick={toggleNav}>
+      {/* <button
+        className={scss.toggle}
+        onClick={toggleNav}
+        aria-label="Toggle drawer button"
+      >
         <i className={navIcon} />
-      </button>
+      </button> */}
     </aside>
   )
 }

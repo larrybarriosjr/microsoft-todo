@@ -1,0 +1,16 @@
+.item-check {
+  color: var(--secondary-text);
+  border: 2px solid var(--secondary-text);
+  border-radius: 50%;
+  background: none;
+  height: 1.5rem;
+  width: 1.5rem;
+  padding: 0;
+  align-self: center;
+  font-size: 0.75rem;
+  &.checked {
+    color: var(--background);
+    background-color: var(--primary-fill);
+    border: 2px solid var(--primary-fill);
+  }
+}

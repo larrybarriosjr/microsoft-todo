@@ -1,0 +1,55 @@
+.container {
+  position: relative;
+  > .content {
+    width: 360px;
+    height: 100vh;
+    font-size: 0.9rem;
+    color: var(--primary-text);
+    border-left: var(--border-drawer);
+    background-color: var(--background);
+    overflow: auto;
+    > section {
+      color: var(--secondary-text);
+      margin: 0.5rem;
+      border: var(--border-light);
+      background-color: var(--surface);
+      &:last-of-type {
+        margin-bottom: 3.75rem;
+        > textarea {
+          min-height: 7.5rem;
+        }
+      }
+      > form {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        cursor: pointer;
+        &:not(:last-child) {
+          border-bottom: var(--border-light);
+        }
+        > i {
+          font-size: 1.1rem;
+          padding: 0.75rem;
+        }
+        > p {
+          align-self: center;
+        }
+        > button {
+          color: var(--secondary-text);
+          padding: 0.75rem;
+          border: none;
+          background: none;
+        }
+        > textarea {
+          grid-column: 2 / 3;
+          color: var(--secondary-text);
+          padding: 1rem;
+          border: none;
+          background: none;
+          font-size: 0.9rem;
+          font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+            "Lucida Sans", Arial, sans-serif;
+        }
+      }
+    }
+  }
+}

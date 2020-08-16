@@ -1,1 +1,20 @@
 @import "fontello/css/fontello.css";
+
+:root {
+  --background: #111111; // black (one level up)
+  --surface: #222222; // black (two levels up)
+  --surface-transparent: rgba(0, 0, 0, 0.5); // black (50% opacity)
+  --primary-fill: #1e90ff; // dodgerblue
+  --secondary-fill: lightgray;
+  --error-fill: #dc143c; // crimson
+  --primary-text: #eeeeee; // white (one level down)
+  --secondary-text: #808080; // gray
+  --border-drawer: 1px solid #000000; // thin black border
+  --border-light: 1px solid #333333; // thin gray border
+}
+
+main {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  position: relative;
+}

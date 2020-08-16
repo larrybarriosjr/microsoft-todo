@@ -1,0 +1,24 @@
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: var(--secondary-text);
+  background-color: var(--surface);
+  border-top: var(--border-light);
+  > form {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    > button {
+      color: var(--secondary-text);
+      font-size: 1.1rem;
+      border: none;
+      background: none;
+      padding: 1rem;
+    }
+    > p {
+      align-self: center;
+      justify-self: center;
+    }
+  }
+}

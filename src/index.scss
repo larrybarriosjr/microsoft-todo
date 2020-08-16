@@ -62,7 +62,8 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+p {
   margin: 0;
 }
 
@@ -142,12 +143,11 @@ a {
 }
 
 /**
-   * Add the correct text decoration in Edge 18-, IE, and Safari.
+   * Remove text decoration. [larry]
    */
 
 abbr[title] {
-  text-decoration: underline;
-  text-decoration: underline dotted;
+  text-decoration: none;
 }
 
 /**
@@ -565,4 +565,22 @@ textarea,
 [aria-hidden="false"][hidden]:not(:focus) {
   clip: rect(0, 0, 0, 0);
   position: absolute;
+}
+
+/*
+   * Add proper cursor on elements. [larry]
+   */
+
+a,
+button,
+input[type="button"],
+label,
+select,
+summary {
+  cursor: pointer;
+}
+
+input,
+textarea {
+  cursor: text;
 }

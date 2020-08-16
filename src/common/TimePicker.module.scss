@@ -1,0 +1,36 @@
+.time {
+  padding: 0 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  height: 1.5rem;
+  > select {
+    color: var(--primary-text);
+    background: var(--surface);
+    font-size: 0.75rem;
+    padding: 0.25rem;
+    border: 1px solid var(--secondary-fill);
+    &:hover {
+      background-color: var(--background);
+    }
+  }
+  > select:first-of-type {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-right: none;
+  }
+  > select:last-of-type {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: none;
+  }
+}
+
+.modal {
+  position: absolute;
+  top: 1rem;
+}
+
+.hour {
+  overflow-y: auto;
+}

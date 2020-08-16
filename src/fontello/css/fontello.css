@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('../font/fontello.eot?42813335');
-  src: url('../font/fontello.eot?42813335#iefix') format('embedded-opentype'),
-       url('../font/fontello.woff2?42813335') format('woff2'),
-       url('../font/fontello.woff?42813335') format('woff'),
-       url('../font/fontello.ttf?42813335') format('truetype'),
-       url('../font/fontello.svg?42813335#fontello') format('svg');
+  src: url('../font/fontello.eot?4345471');
+  src: url('../font/fontello.eot?4345471#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff2?4345471') format('woff2'),
+       url('../font/fontello.woff?4345471') format('woff'),
+       url('../font/fontello.ttf?4345471') format('truetype'),
+       url('../font/fontello.svg?4345471#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('../font/fontello.svg?42813335#fontello') format('svg');
+    src: url('../font/fontello.svg?4345471#fontello') format('svg');
   }
 }
 */
@@ -66,10 +66,19 @@
 .icon-user-add:before { content: '\e808'; } /* '' */
 .icon-minus:before { content: '\e809'; } /* '' */
 .icon-menu:before { content: '\e80a'; } /* '' */
+.icon-ok:before { content: '\e80b'; } /* '' */
+.icon-star-filled:before { content: '\e80c'; } /* '' */
+.icon-bell:before { content: '\e80d'; } /* '' */
+.icon-cancel:before { content: '\e80e'; } /* '' */
+.icon-fast-fw:before { content: '\e80f'; } /* '' */
+.icon-right:before { content: '\e810'; } /* '' */
+.icon-wristwatch:before { content: '\e811'; } /* '' */
+.icon-hourglass:before { content: '\e812'; } /* '' */
 .icon-down-open:before { content: '\f004'; } /* '' */
 .icon-up-open:before { content: '\f005'; } /* '' */
 .icon-right-open:before { content: '\f006'; } /* '' */
 .icon-left-open:before { content: '\f007'; } /* '' */
 .icon-ellipsis:before { content: '\f141'; } /* '' */
 .icon-trash:before { content: '\f1f8'; } /* '' */
+.icon-calendar-plus-o:before { content: '\f271'; } /* '' */
 .icon-calendar-check-o:before { content: '\f274'; } /* '' */

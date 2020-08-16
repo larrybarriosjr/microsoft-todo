@@ -1,5 +1,5 @@
 {
-  "name": "fontello",
+  "name": "",
   "css_prefix_text": "icon-",
   "css_use_suffix": false,
   "hinting": true,
@@ -11,12 +11,6 @@
       "css": "sun",
       "code": 59392,
       "src": "iconic"
-    },
-    {
-      "uid": "0817b47d6e5f1d85f2428640a021f0c4",
-      "css": "star",
-      "code": 59393,
-      "src": "linecons"
     },
     {
       "uid": "9de4ac1aec6b1cca1929e1407eecf3db",
@@ -113,6 +107,66 @@
       "css": "trash",
       "code": 61944,
       "src": "fontawesome"
+    },
+    {
+      "uid": "bcdc294bb787b15203b82f2be8096548",
+      "css": "star",
+      "code": 59393,
+      "src": "typicons"
+    },
+    {
+      "uid": "vyuzsm6wijlfwtjo4ifkoblfmsepk6g8",
+      "css": "star-filled",
+      "code": 59404,
+      "src": "typicons"
+    },
+    {
+      "uid": "b90d80c250a9bbdd6cd3fe00e6351710",
+      "css": "ok",
+      "code": 59403,
+      "src": "iconic"
+    },
+    {
+      "uid": "2c5335c6e56b876139d7a58ab2f4b2fe",
+      "css": "bell",
+      "code": 59405,
+      "src": "entypo"
+    },
+    {
+      "uid": "e7eecc3cc44f3f4cad6229b202588308",
+      "css": "calendar-plus-o",
+      "code": 62065,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "06301c50d89b5d3e651bd07ebd6d7de7",
+      "css": "cancel",
+      "code": 59406,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "94656a720f169a0fc78c5a942e0c7112",
+      "css": "fast-fw",
+      "code": 59407,
+      "src": "typicons"
+    },
+    {
+      "uid": "4oaz56fmzfvx7vry2o540n9l4z79fz8t",
+      "css": "right",
+      "code": 59408,
+      "src": "typicons"
+    },
+    {
+      "uid": "e5e2804a6d7681eb37e80a1fc380fe49",
+      "css": "wristwatch",
+      "code": 59409,
+      "src": "typicons"
+    },
+    {
+      "uid": "35ce53990ec0892d7dcea2d0159f8dca",
+      "css": "hourglass",
+      "code": 59410,
+      "src": "mfglabs"
     }
   ]
 }

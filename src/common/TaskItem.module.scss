@@ -1,0 +1,36 @@
+.todo-item {
+  display: grid;
+  background-color: var(--background);
+  padding: 0.5rem 0;
+  margin-top: 2px;
+  border: none;
+  border-radius: 5px;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: repeat(2, auto);
+  grid-template-areas:
+    "item-check item-name item-star"
+    "item-check item-category item-star";
+}
+
+.item-check {
+  grid-area: item-check;
+  margin: 0 1rem;
+}
+
+.item-name {
+  grid-area: item-name;
+  &.deleted {
+    text-decoration: line-through;
+  }
+}
+
+.item-category {
+  grid-area: item-category;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.item-star {
+  grid-area: item-star;
+  margin: 0 1rem;
+}
