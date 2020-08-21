@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Task, Step } from "service/lovefield"
 
 /**
@@ -6,7 +7,7 @@ import { Task, Step } from "service/lovefield"
  * @param {number} id
  * @param {function} taskSetterFunction setState
  * @param {function} stepListSetterFunction setState
- * @return {object} Updated task item data
+ * @returns {object} Updated task item data
  *
  */
 export const fetchTask = async (
@@ -25,7 +26,7 @@ export const fetchTask = async (
  * Fetch Nav List API for getting the list of nav items.
  *
  * @param {Array} list taskList
- * @return {Array} Nav list items
+ * @returns {Array} Nav list items
  */
 export const fetchNavList = (list) => [
   {
@@ -43,11 +44,30 @@ export const fetchNavList = (list) => [
 ]
 
 /**
+ * React.useState combined with Window.localStorage
+ *
+ * @param {string} keyName
+ * @param {any} initialValue
+ * @returns {Array} state and setState
+ */
+export const useLocalStorage = (keyName, initialValue) => {
+  const [value, setValue] = useState(localStorage.getItem(keyName))
+
+  const state = value || initialValue
+  const setState = (value) => {
+    setValue(value)
+    localStorage.setItem(keyName, value)
+  }
+
+  return [state, setState]
+}
+
+/**
  * Regular debounce function with 500ms default delay
  *
  * @param {function} func
  * @param {number} delay millisecond
- * @return {function} Debounced function
+ * @returns {function} Debounced function
  */
 export const debounce = (func, delay = 500) => {
   let timeout
