@@ -139,6 +139,8 @@ export const Task = {
       completed: false,
       starred: false,
       notes: "",
+      dueDate: null,
+      reminder: null,
       listId: null,
       stepsTotal: 0,
       stepsCompleted: 0,

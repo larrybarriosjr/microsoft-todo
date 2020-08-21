@@ -36,7 +36,8 @@ const TaskItem = ({ item }) => {
     return (
       <>
         {" "}
-        {bullet} {icon} {item.stepsCompleted} of {item.stepsTotal}
+        {bullet} {icon}
+        {item.stepsCompleted} of {item.stepsTotal}
       </>
     )
   }
@@ -52,7 +53,8 @@ const TaskItem = ({ item }) => {
     return (
       <>
         {" "}
-        {bullet} {icon} {timeDiff(date)}
+        {bullet} {icon}
+        {timeDiff(date)}
       </>
     )
   }

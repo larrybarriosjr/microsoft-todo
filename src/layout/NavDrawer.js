@@ -43,7 +43,7 @@ const NavDrawer = () => {
           {fetchNavList(taskList).map((item) => (
             <li key={item.key} className={scss["nav-item"]}>
               <button
-                onClick={goToPage(item.key)}
+                onClick={goToPage(item.name)}
                 className={navButtonClass(item.key)}
               >
                 <i className={item.icon} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import scss from "my-day/MyDayPage.module.scss"
+import scss from "common/TaskPage.module.scss"
 import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
 import { Task } from "service/lovefield"
@@ -7,12 +7,12 @@ import { useSetRecoilState, useRecoilValue } from "recoil"
 import { taskListState } from "state/atoms"
 import { pageListState } from "state/selectors"
 
-const MyDayPage = () => {
+const MyDayPage = ({ name }) => {
   // local states
   const [submitHidden, setSubmitHidden] = useState(true)
   const [taskName, setTaskName] = useState("")
   const setTaskList = useSetRecoilState(taskListState)
-  const myDayList = useRecoilValue(pageListState)
+  const currentList = useRecoilValue(pageListState)
 
   // formatted current date
   const currentDate = dayjs().format("dddd, MMMM D")
@@ -39,24 +39,41 @@ const MyDayPage = () => {
       .catch((err) => console.log(err))
   }, [setTaskList])
 
+  const icon = () => {
+    switch (name) {
+      case "Important":
+        return "icon-star"
+      case "Planned":
+        return "icon-calendar-check-o"
+      case "Tasks":
+        return "icon-home"
+      default:
+        break
+    }
+  }
+
   return (
     <div className={scss.background}>
       <section className={scss.page}>
-        <h2 className={scss.title}>My Day</h2>
-        <p className={scss.date}>{currentDate}</p>
+        <h2 className={scss.title}>
+          <i className={icon()} /> {name}
+        </h2>
+        <p className={scss.date}>{name === "My Day" && currentDate}</p>
         {/* <button className={scss.bulb} aria-label="Task drawer button">
           <i className="icon-lightbulb" />
         </button> */}
         <article className={scss.list}>
           <ul className={scss["todo-list"]}>
-            {myDayList &&
-              myDayList.map((item, i) => <TaskItem key={i} item={item} />)}
+            {currentList &&
+              currentList.map((item, i) => <TaskItem key={i} item={item} />)}
           </ul>
         </article>
         <form className={scss.form} onSubmit={handleSubmit}>
           <input
             name="task-name"
-            placeholder="Add a task"
+            placeholder={
+              name === "Planned" ? "Add a task due today" : "Add a task"
+            }
             onChange={handleInput}
             value={taskName}
             aria-label="Add task"
