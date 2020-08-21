@@ -4,14 +4,24 @@ import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
 import { Task } from "service/lovefield"
 import { useSetRecoilState, useRecoilValue } from "recoil"
-import { taskListState } from "state/atoms"
+import { pageState, taskListState } from "state/atoms"
 import { pageListState } from "state/selectors"
+import { useLocalStorage } from "utils"
+import images from "state/background-image"
 
-const MyDayPage = ({ name }) => {
+const TaskPage = ({ name }) => {
+  // local storage state
+  const [bgImage, setBgImage] = useLocalStorage(
+    "background-image",
+    "/assets/barley-fields.jpg"
+  )
+
   // local states
   const [submitHidden, setSubmitHidden] = useState(true)
   const [taskName, setTaskName] = useState("")
+  const [bgImageModal, setBgImageModal] = useState(false)
   const setTaskList = useSetRecoilState(taskListState)
+  const page = useRecoilValue(pageState)
   const currentList = useRecoilValue(pageListState)
 
   // formatted current date
@@ -32,6 +42,8 @@ const MyDayPage = ({ name }) => {
         .catch((err) => console.log(err))
     }
   }
+  const handleBgImage = (url) => () => setBgImage(url)
+  const handleBgImageModal = () => setBgImageModal(!bgImageModal)
 
   useEffect(() => {
     Task.get()
@@ -53,15 +65,40 @@ const MyDayPage = ({ name }) => {
   }
 
   return (
-    <div className={scss.background}>
+    <div
+      className={scss.background}
+      style={{ "--background-image": `url("${page === "My Day" && bgImage}")` }}
+    >
       <section className={scss.page}>
         <h2 className={scss.title}>
           <i className={icon()} /> {name}
         </h2>
         <p className={scss.date}>{name === "My Day" && currentDate}</p>
-        {/* <button className={scss.bulb} aria-label="Task drawer button">
-          <i className="icon-lightbulb" />
-        </button> */}
+        <div className={scss.settings}>
+          <button
+            className={scss.ellipsis}
+            aria-label="Task drawer button"
+            onClick={handleBgImageModal}
+          >
+            <i className="icon-ellipsis" />
+          </button>
+          <dialog open={!bgImageModal} className={scss.modal}>
+            <header>Theme</header>
+            <section>
+              {images.map((img) => (
+                <button
+                  key={img.key}
+                  onClick={handleBgImage(img.url)}
+                  className={img.url === bgImage ? scss.selected : ""}
+                >
+                  <span>
+                    <img src={img.url} alt={img.alt} />
+                  </span>
+                </button>
+              ))}
+            </section>
+          </dialog>
+        </div>
         <article className={scss.list}>
           <ul className={scss["todo-list"]}>
             {currentList &&
@@ -87,4 +124,4 @@ const MyDayPage = ({ name }) => {
   )
 }
 
-export default MyDayPage
+export default TaskPage

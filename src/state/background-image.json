@@ -1,0 +1,52 @@
+[
+  {
+    "key": 0,
+    "url": "/assets/autumn-trees.jpg",
+    "alt": "autumn trees"
+  },
+  {
+    "key": 1,
+    "url": "/assets/barley-fields.jpg",
+    "alt": "barley fields"
+  },
+  {
+    "key": 2,
+    "url": "/assets/cloud-lightning.jpg",
+    "alt": "cloud lightning"
+  },
+  {
+    "key": 3,
+    "url": "/assets/crumpled-map.jpg",
+    "alt": "crumpled map"
+  },
+  {
+    "key": 4,
+    "url": "/assets/gradient-color.png",
+    "alt": "gradient color"
+  },
+  {
+    "key": 5,
+    "url": "/assets/outer-space.jpg",
+    "alt": "outer space"
+  },
+  {
+    "key": 6,
+    "url": "/assets/sea-shore.jpg",
+    "alt": "sea shore"
+  },
+  {
+    "key": 7,
+    "url": "/assets/tree-sunset.jpg",
+    "alt": "tree sunset"
+  },
+  {
+    "key": 8,
+    "url": "/assets/wet-rose.jpg",
+    "alt": "wet rose"
+  },
+  {
+    "key": 9,
+    "url": "/assets/wood-board.jpg",
+    "alt": "wood board"
+  }
+]
