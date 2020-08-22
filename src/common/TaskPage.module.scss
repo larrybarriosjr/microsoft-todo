@@ -124,6 +124,25 @@
   margin: 0;
 }
 
+.completed {
+  display: flex;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--surface-transparent);
+  color: var(--primary-text);
+  margin-top: calc(1rem - 1px);
+  margin-left: 2px;
+  padding: 0.5rem;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  &.my-day {
+    background-color: var(--surface);
+  }
+  > i {
+    margin-right: 0.5rem;
+  }
+}
+
 .form {
   grid-area: form;
   display: flex;

@@ -5,7 +5,7 @@ import TaskItem from "common/TaskItem"
 import { Task } from "service/lovefield"
 import { useSetRecoilState, useRecoilValue } from "recoil"
 import { pageState, taskListState } from "state/atoms"
-import { pageListState } from "state/selectors"
+import { pageListState, completedListState } from "state/selectors"
 import { useLocalStorage } from "utils"
 import images from "state/background-image"
 
@@ -20,9 +20,11 @@ const TaskPage = ({ name }) => {
   const [submitHidden, setSubmitHidden] = useState(true)
   const [taskName, setTaskName] = useState("")
   const [bgImageModal, setBgImageModal] = useState(false)
+  const [showCompleted, setShowCompleted] = useState(true)
   const setTaskList = useSetRecoilState(taskListState)
   const page = useRecoilValue(pageState)
   const currentList = useRecoilValue(pageListState)
+  const completedList = useRecoilValue(completedListState)
 
   // formatted current date
   const currentDate = dayjs().format("dddd, MMMM D")
@@ -44,6 +46,7 @@ const TaskPage = ({ name }) => {
   }
   const handleBgImage = (url) => () => setBgImage(url)
   const handleBgImageModal = () => setBgImageModal(!bgImageModal)
+  const handleCompletedDisplay = () => setShowCompleted(!showCompleted)
 
   useEffect(() => {
     Task.get()
@@ -65,6 +68,9 @@ const TaskPage = ({ name }) => {
   }
 
   const listClass = page === "My Day" ? scss.list : `${scss.list} ${scss.lines}`
+  const completedIcon = showCompleted ? "icon-down-open" : "icon-right-open"
+  const completedClass =
+    page === "My Day" ? scss.completed : `${scss.completed} ${scss["my-day"]}`
 
   return (
     <div
@@ -106,6 +112,23 @@ const TaskPage = ({ name }) => {
             {currentList &&
               currentList.map((item, i) => <TaskItem key={i} item={item} />)}
           </ul>
+          {completedList.length ? (
+            <button
+              type="button"
+              onClick={handleCompletedDisplay}
+              className={completedClass}
+            >
+              <i className={completedIcon} />
+              <p>Completed</p>
+            </button>
+          ) : null}
+          {completedList.length && showCompleted ? (
+            <ul>
+              {completedList.map((item, i) => (
+                <TaskItem key={i} item={item} />
+              ))}
+            </ul>
+          ) : null}
         </article>
         <form className={scss.form} onSubmit={handleSubmit}>
           <input
