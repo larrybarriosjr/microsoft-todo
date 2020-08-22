@@ -64,6 +64,8 @@ const TaskPage = ({ name }) => {
     }
   }
 
+  const listClass = page === "My Day" ? scss.list : `${scss.list} ${scss.lines}`
+
   return (
     <div
       className={scss.background}
@@ -82,7 +84,7 @@ const TaskPage = ({ name }) => {
           >
             <i className="icon-ellipsis" />
           </button>
-          <dialog open={!bgImageModal} className={scss.modal}>
+          <dialog open={bgImageModal} className={scss.modal}>
             <header>Theme</header>
             <section>
               {images.map((img) => (
@@ -99,7 +101,7 @@ const TaskPage = ({ name }) => {
             </section>
           </dialog>
         </div>
-        <article className={scss.list}>
+        <article className={listClass}>
           <ul className={scss["todo-list"]}>
             {currentList &&
               currentList.map((item, i) => <TaskItem key={i} item={item} />)}

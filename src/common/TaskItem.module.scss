@@ -1,8 +1,8 @@
 .todo-item {
   display: grid;
-  background-color: var(--background);
+  background-color: var(--surface);
   padding: 0.5rem 0;
-  margin-top: 2px;
+  margin-bottom: 2px;
   border: none;
   border-radius: 5px;
   grid-template-columns: auto 1fr auto;
@@ -10,6 +10,9 @@
   grid-template-areas:
     "item-check item-name item-star"
     "item-check item-category item-star";
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
 .item-check {

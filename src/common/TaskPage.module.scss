@@ -1,6 +1,6 @@
 .background {
   position: relative;
-  background-color: black;
+  background-color: var(--background);
   &::after {
     content: "";
     position: absolute;
@@ -109,6 +109,15 @@
   grid-area: list;
   height: calc(100vh - 12.5rem);
   overflow-y: auto;
+  height: 100%;
+  &.lines {
+    background-attachment: local;
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent 59px,
+      #0d0d0d 61px
+    );
+  }
 }
 
 .todo-list {
@@ -121,6 +130,7 @@
   height: 3.5rem;
   border: none;
   border-radius: 5px;
+  margin-top: 0.75rem;
   background-color: var(--surface-transparent);
   position: relative;
   > input {
