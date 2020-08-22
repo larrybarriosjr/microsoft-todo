@@ -15,6 +15,17 @@ export const pageListState = selector({
             .filter((task) => task.myDay)
             .sort((a, b) => a.myDayEdited - b.myDayEdited) // ascending, new item at the end
 
+        // return all task items with Starred only
+        case "Important":
+          return taskList
+            .filter((task) => task.starred)
+            .sort((a, b) => a.starredEdited - b.starredEdited) // ascending, new item at the end
+
+        // return all task items with Due Date only
+        case "Planned":
+          return taskList
+            .filter((task) => task.dueDate)
+            .sort((a, b) => a.dueDate - b.dueDate) // ascending, new item at the end
 
         // return all task items not belonging to a list
         default:

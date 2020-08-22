@@ -40,6 +40,18 @@ export const fetchNavList = (list) => [
     name: "Important",
     icon: "icon-star",
     amount: list.filter((item) => item.starred).length
+  },
+  {
+    key: "planned",
+    name: "Planned",
+    icon: "icon-calendar-check-o",
+    amount: list.filter((item) => item.dueDate).length
+  },
+  {
+    key: "tasks",
+    name: "Tasks",
+    icon: "icon-home",
+    amount: list.filter((item) => item.listId === null).length
   }
 ]
 
