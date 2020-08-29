@@ -4,7 +4,7 @@ import dayjs from "dayjs"
 /** Current page name. */
 export const pageState = atom({
   key: "pageState",
-  default: "myDay"
+  default: "My Day"
 })
 
 /** Reminder modal with preset actions. */
@@ -90,7 +90,7 @@ export const stepModalState = atom({
   default: false
 })
 
-// 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
-// 19 days
+// 29, 21, 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
+// 21 days
 
 // Nav drawer
