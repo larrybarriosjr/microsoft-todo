@@ -1,6 +1,6 @@
 import React from "react"
 import { useRecoilValue } from "recoil"
-import { taskHiddenState } from "state/atoms"
+import { taskHiddenState, taskState } from "state/atoms"
 import scss from "task-drawer/TaskDrawer.module.scss"
 import TaskHeader from "task-drawer/TaskHeader"
 import TaskReminder from "task-drawer/TaskReminder"
@@ -11,9 +11,11 @@ import TaskNotes from "./TaskNotes"
 
 const TaskDrawer = () => {
   const taskHidden = useRecoilValue(taskHiddenState)
+  const task = useRecoilValue(taskState)
 
   return (
-    !taskHidden && (
+    !taskHidden &&
+    task && (
       <aside className={scss.container} hidden={taskHidden}>
         <div className={scss.content}>
           {/* Header with Task Name, Completed, Starred and Steps Input */}
