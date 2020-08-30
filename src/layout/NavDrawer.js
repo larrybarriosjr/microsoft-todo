@@ -3,6 +3,7 @@ import { useRecoilValue, useRecoilState } from "recoil"
 import { pageState, taskItemsState } from "state/atoms"
 import scss from "layout/NavDrawer.module.scss"
 import { fetchNavList } from "utils"
+import TaskLists from "layout/TaskLists"
 
 const NavDrawer = () => {
   // global states
@@ -55,6 +56,7 @@ const NavDrawer = () => {
           ))}
         </ul>
         <hr className={scss.divider} />
+        <TaskLists />
       </nav>
       {/* <button
         className={scss.toggle}
