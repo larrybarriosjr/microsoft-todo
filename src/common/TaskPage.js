@@ -4,7 +4,7 @@ import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
 import { Task } from "service/lovefield"
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil"
-import { pageState, taskListState, themeModalState } from "state/atoms"
+import { pageState, taskItemsState, themeModalState } from "state/atoms"
 import { pageListState, completedListState } from "state/selectors"
 import ThemeModal from "./ThemeModal"
 import { useLocalStorage } from "utils"
@@ -19,7 +19,7 @@ const TaskPage = ({ name }) => {
   const [taskName, setTaskName] = useState("")
   const [showCompleted, setShowCompleted] = useState(true)
   const [themeModal, setThemeModal] = useRecoilState(themeModalState)
-  const setTaskList = useSetRecoilState(taskListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
   const page = useRecoilValue(pageState)
   const currentList = useRecoilValue(pageListState)
   const completedList = useRecoilValue(completedListState)
@@ -36,7 +36,7 @@ const TaskPage = ({ name }) => {
     e.preventDefault()
     if (taskName) {
       Task.post({ name: taskName })
-        .then((res) => setTaskList(res))
+        .then((res) => setTaskItems(res))
         .then(() => setTaskName(""))
         .then(() => setSubmitHidden(true))
         .catch((err) => console.log(err))
@@ -51,9 +51,9 @@ const TaskPage = ({ name }) => {
 
   useEffect(() => {
     Task.get()
-      .then((res) => setTaskList(res))
+      .then((res) => setTaskItems(res))
       .catch((err) => console.log(err))
-  }, [setTaskList])
+  }, [setTaskItems])
 
   const icon = () => {
     switch (name) {

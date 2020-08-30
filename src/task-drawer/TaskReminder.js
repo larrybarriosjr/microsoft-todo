@@ -2,8 +2,8 @@ import React from "react"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import {
   taskState,
-  taskListState,
-  stepListState,
+  taskItemsState,
+  stepItemsState,
   reminderModalState,
   reminderCalendarModalState,
   dueDateModalState,
@@ -20,8 +20,8 @@ import scss from "task-drawer/TaskReminder.module.scss"
 import dayjs from "dayjs"
 
 const TaskReminder = () => {
-  const setTaskList = useSetRecoilState(taskListState)
-  const setStepList = useSetRecoilState(stepListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
+  const setStepItems = useSetRecoilState(stepItemsState)
   const setDueDateModal = useSetRecoilState(dueDateModalState)
   const setDueDateCalendarModal = useSetRecoilState(dueDateCalendarModalState)
 
@@ -55,8 +55,8 @@ const TaskReminder = () => {
   // Remove reminder in task item on button press
   const handleRemoveReminder = () => {
     Task.patch({ id: task.id, reminder: null })
-      .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask, setStepList))
+      .then((res) => setTaskItems(res))
+      .then(() => fetchTask(task.id, setTask, setStepItems))
       .catch((err) => console.log(err))
   }
 
@@ -105,8 +105,8 @@ const TaskReminder = () => {
     // }
 
     Task.patch({ id: task.id, reminder: new Date(dt) })
-      .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask, setStepList))
+      .then((res) => setTaskItems(res))
+      .then(() => fetchTask(task.id, setTask, setStepItems))
       .then(setReminderCalendarModal(false)) // Close reminder calendar modal
       // .then(() => registration.showNotification("Task Reminder", options)) // Set PWA Notification
       .then(setCalendarStates()) // Reset calendar values to now

@@ -1,12 +1,12 @@
 import React from "react"
 import { useRecoilValue, useRecoilState } from "recoil"
-import { pageState, taskListState } from "state/atoms"
+import { pageState, taskItemsState } from "state/atoms"
 import scss from "layout/NavDrawer.module.scss"
 import { fetchNavList } from "utils"
 
 const NavDrawer = () => {
   // global states
-  const taskList = useRecoilValue(taskListState)
+  const taskItems = useRecoilValue(taskItemsState)
   const [page, setPage] = useRecoilState(pageState)
 
   // local states
@@ -41,7 +41,7 @@ const NavDrawer = () => {
           Microsoft To Do Clone
         </h1>
         <ul className={scss["nav-list"]}>
-          {fetchNavList(taskList).map((item) => (
+          {fetchNavList(taskItems).map((item) => (
             <li key={item.key} className={scss["nav-item"]}>
               <button
                 onClick={goToPage(item.name)}

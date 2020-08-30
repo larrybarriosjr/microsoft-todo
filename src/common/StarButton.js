@@ -1,14 +1,14 @@
 import React, { useState } from "react"
 import { useSetRecoilState } from "recoil"
-import { taskListState, taskState, stepListState } from "state/atoms"
+import { taskItemsState, taskState, stepItemsState } from "state/atoms"
 import scss from "common/StarButton.module.scss"
 import { Task } from "service/lovefield"
 import { fetchTask } from "utils"
 
 const StarButton = ({ id, starred, className }) => {
   const setTask = useSetRecoilState(taskState)
-  const setTaskList = useSetRecoilState(taskListState)
-  const setStepList = useSetRecoilState(stepListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
+  const setStepItems = useSetRecoilState(stepItemsState)
   const [highlight, setHighlight] = useState(false)
 
   const highlightStar = (starred) => () => {
@@ -20,9 +20,9 @@ const StarButton = ({ id, starred, className }) => {
   const handleStarred = (e) => {
     e.stopPropagation()
     Task.patch({ id, starred: !starred })
-      .then((res) => setTaskList(res))
+      .then((res) => setTaskItems(res))
       .then(unhighlightStar)
-      .then(() => fetchTask(id, setTask, setStepList))
+      .then(() => fetchTask(id, setTask, setStepItems))
       .catch((err) => console.log(err))
   }
 

@@ -2,13 +2,13 @@ import React from "react"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import {
   taskState,
-  taskListState,
+  taskItemsState,
   reminderModalState,
   reminderCalendarModalState,
   dueDateModalState,
   dueDateCalendarModalState,
   dateState,
-  stepListState
+  stepItemsState
 } from "state/atoms"
 import DateCalendar from "common/DateCalendar"
 import { fetchTask } from "utils"
@@ -17,8 +17,8 @@ import scss from "task-drawer/TaskDueDate.module.scss"
 import dayjs from "dayjs"
 
 const TaskDueDate = () => {
-  const setTaskList = useSetRecoilState(taskListState)
-  const setStepList = useSetRecoilState(stepListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
+  const setStepItems = useSetRecoilState(stepItemsState)
   const setReminderModal = useSetRecoilState(reminderModalState)
   const setReminderCalendarModal = useSetRecoilState(reminderCalendarModalState)
 
@@ -45,8 +45,8 @@ const TaskDueDate = () => {
   // Remove due date in task item on button press
   const handleRemoveDueDate = () => {
     Task.patch({ id: task.id, dueDate: null })
-      .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask, setStepList))
+      .then((res) => setTaskItems(res))
+      .then(() => fetchTask(task.id, setTask, setStepItems))
       .catch((err) => console.log(err))
   }
 
@@ -92,8 +92,8 @@ const TaskDueDate = () => {
     // }
 
     Task.patch({ id: task.id, dueDate: new Date(dt) })
-      .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask, setStepList))
+      .then((res) => setTaskItems(res))
+      .then(() => fetchTask(task.id, setTask, setStepItems))
       .then(setDueDateCalendarModal(false)) // Close due date calendar modal
       // .then(() => registration.showNotification("Task Due Date", options)) // Set PWA Notification
       .then(setCalendarStates()) // Reset calendar values to now

@@ -4,13 +4,13 @@ import CheckButton from "common/CheckButton"
 import StarButton from "common/StarButton"
 import { Task } from "service/lovefield"
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import { taskState, taskListState } from "state/atoms"
+import { taskState, taskItemsState } from "state/atoms"
 import { debounce } from "utils"
 import TaskSteps from "./TaskSteps"
 
 const TaskHeader = () => {
   const task = useRecoilValue(taskState)
-  const setTaskList = useSetRecoilState(taskListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
   const [taskName, setTaskName] = useState("")
 
   // Task name input element reference
@@ -23,7 +23,7 @@ const TaskHeader = () => {
   const patchNameDebounced = useCallback(
     debounce((id, name) =>
       Task.patch({ id, name })
-        .then((res) => setTaskList(res))
+        .then((res) => setTaskItems(res))
         .catch((err) => console.log(err))
     ),
     []
@@ -50,7 +50,7 @@ const TaskHeader = () => {
       inputEl.style.height = `${inputEl.scrollHeight}px`
       patchNameDebounced(id, taskName)
     }
-  }, [id, taskName, patchNameDebounced, setTaskList])
+  }, [id, taskName, patchNameDebounced, setTaskItems])
 
   // Style: Strikethrough task name when completed
   const itemNameClass = `${scss["item-name"]} ${completed && scss.deleted}`

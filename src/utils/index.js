@@ -6,26 +6,26 @@ import { Task, Step } from "service/lovefield"
  *
  * @param {number} id
  * @param {function} taskSetterFunction setState
- * @param {function} stepListSetterFunction setState
+ * @param {function} stepItemsSetterFunction setState
  * @returns {object} Updated task item data
  *
  */
 export const fetchTask = async (
   id,
   taskSetterFunction,
-  stepListSetterFunction
+  stepItemsSetterFunction
 ) =>
   Promise.all([await Task.get(id), await Step.get(id)])
     .then(([taskRes, stepRes]) => {
       taskSetterFunction(taskRes[0])
-      stepListSetterFunction(stepRes)
+      stepItemsSetterFunction(stepRes)
     })
     .catch((err) => console.log(err))
 
 /**
  * Fetch Nav List API for getting the list of nav items.
  *
- * @param {Array} list taskList
+ * @param {Array} list taskItems
  * @returns {Array} Nav list items
  */
 export const fetchNavList = (list) => [

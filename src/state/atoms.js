@@ -62,8 +62,8 @@ export const taskHiddenState = atom({
 })
 
 /** List of all task items (unfiltered). */
-export const taskListState = atom({
-  key: "taskList",
+export const taskItemsState = atom({
+  key: "taskItems",
   default: []
 })
 
@@ -74,8 +74,8 @@ export const taskState = atom({
 })
 
 /** List of all step items (unfiltered). */
-export const stepListState = atom({
-  key: "stepListState",
+export const stepItemsState = atom({
+  key: "stepItemsState",
   default: []
 })
 
