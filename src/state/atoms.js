@@ -90,7 +90,7 @@ export const stepModalState = atom({
   default: false
 })
 
-// 29, 21, 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
-// 21 days
+// 30, 29, 21, 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
+// 22 days
 
-// Nav drawer
+// Public images not loading on production build

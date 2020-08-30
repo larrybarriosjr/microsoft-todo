@@ -13,7 +13,7 @@ const TaskPage = ({ name }) => {
   // local storage state
   const [bgImage, setBgImage] = useLocalStorage(
     "background-image",
-    "/assets/barley-fields.jpg"
+    require("assets/barley-fields.jpg")
   )
 
   // local states
@@ -44,7 +44,7 @@ const TaskPage = ({ name }) => {
         .catch((err) => console.log(err))
     }
   }
-  const handleBgImage = (url) => () => setBgImage(url)
+  const handleBgImage = (url) => () => setBgImage(require("assets/" + url))
   const handleBgImageModal = () => setBgImageModal(!bgImageModal)
   const handleCompletedDisplay = () => setShowCompleted(!showCompleted)
 
@@ -100,7 +100,7 @@ const TaskPage = ({ name }) => {
                   className={img.url === bgImage ? scss.selected : ""}
                 >
                   <span>
-                    <img src={img.url} alt={img.alt} />
+                    <img src={require("assets/" + img.url)} alt={img.alt} />
                   </span>
                 </button>
               ))}
