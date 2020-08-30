@@ -3,24 +3,22 @@ import scss from "common/TaskPage.module.scss"
 import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
 import { Task } from "service/lovefield"
-import { useSetRecoilState, useRecoilValue } from "recoil"
-import { pageState, taskListState } from "state/atoms"
+import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil"
+import { pageState, taskListState, themeModalState } from "state/atoms"
 import { pageListState, completedListState } from "state/selectors"
+import ThemeModal from "./ThemeModal"
 import { useLocalStorage } from "utils"
-import images from "state/background-image"
 
 const TaskPage = ({ name }) => {
-  // local storage state
   const [bgImage, setBgImage] = useLocalStorage(
     "background-image",
     require("assets/barley-fields.jpg")
   )
-
   // local states
   const [submitHidden, setSubmitHidden] = useState(true)
   const [taskName, setTaskName] = useState("")
-  const [bgImageModal, setBgImageModal] = useState(false)
   const [showCompleted, setShowCompleted] = useState(true)
+  const [themeModal, setThemeModal] = useRecoilState(themeModalState)
   const setTaskList = useSetRecoilState(taskListState)
   const page = useRecoilValue(pageState)
   const currentList = useRecoilValue(pageListState)
@@ -44,9 +42,12 @@ const TaskPage = ({ name }) => {
         .catch((err) => console.log(err))
     }
   }
-  const handleBgImage = (url) => () => setBgImage(require("assets/" + url))
-  const handleBgImageModal = () => setBgImageModal(!bgImageModal)
+  const handleThemeModal = (e) => {
+    e.stopPropagation()
+    setThemeModal(!themeModal)
+  }
   const handleCompletedDisplay = () => setShowCompleted(!showCompleted)
+  const handleBgImage = (url) => () => setBgImage(require("assets/" + url))
 
   useEffect(() => {
     Task.get()
@@ -75,7 +76,11 @@ const TaskPage = ({ name }) => {
   return (
     <div
       className={scss.background}
-      style={{ "--background-image": `url("${page === "My Day" && bgImage}")` }}
+      style={{
+        "--background-image": `url("${
+          page === "My Day" && localStorage.getItem("background-image")
+        }")`
+      }}
     >
       <section className={scss.page}>
         <h2 className={scss.title}>
@@ -86,26 +91,11 @@ const TaskPage = ({ name }) => {
           <button
             className={scss.ellipsis}
             aria-label="Task drawer button"
-            onClick={handleBgImageModal}
+            onClick={handleThemeModal}
           >
             <i className="icon-ellipsis" />
           </button>
-          <dialog open={bgImageModal} className={scss.modal}>
-            <header>Theme</header>
-            <section>
-              {images.map((img) => (
-                <button
-                  key={img.key}
-                  onClick={handleBgImage(img.url)}
-                  className={img.url === bgImage ? scss.selected : ""}
-                >
-                  <span>
-                    <img src={require("assets/" + img.url)} alt={img.alt} />
-                  </span>
-                </button>
-              ))}
-            </section>
-          </dialog>
+          <ThemeModal image={bgImage} handleImage={handleBgImage} />
         </div>
         <article className={listClass}>
           <ul className={scss["todo-list"]}>

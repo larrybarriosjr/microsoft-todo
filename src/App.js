@@ -1,6 +1,11 @@
 import React from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import { pageState, reminderModalState, dueDateModalState } from "state/atoms"
+import {
+  pageState,
+  reminderModalState,
+  dueDateModalState,
+  themeModalState
+} from "state/atoms"
 import "App.scss"
 import NavDrawer from "layout/NavDrawer"
 import TaskPage from "common/TaskPage"
@@ -11,11 +16,13 @@ function App() {
   const page = useRecoilValue(pageState)
   const setReminderModal = useSetRecoilState(reminderModalState)
   const setDueDateModal = useSetRecoilState(dueDateModalState)
+  const setThemeModal = useSetRecoilState(themeModalState)
 
   // Close all modals when clicking anywhere outside the modal
   const closeAllModals = () => {
     setReminderModal(false)
     setDueDateModal(false)
+    setThemeModal(false)
   }
 
   return (

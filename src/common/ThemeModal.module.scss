@@ -1,0 +1,44 @@
+.modal {
+  position: absolute;
+  top: 2.75rem;
+  left: -15rem;
+  border: none;
+  background: var(--surface);
+  padding: 1.25rem;
+  border: var(--border-light);
+  border-radius: 5px;
+  color: var(--primary-text);
+  > header {
+    font-size: 0.9rem;
+  }
+  > section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    padding-top: 1rem;
+    > button {
+      position: relative;
+      height: 3rem;
+      width: 3rem;
+      padding: 0;
+      border: none;
+      > span {
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        > img {
+          height: 3rem;
+        }
+      }
+      &.selected::before {
+        content: "";
+        position: absolute;
+        top: -0.3rem;
+        left: -0.3rem;
+        right: -0.3rem;
+        bottom: -0.3rem;
+        border: 2px solid var(--primary-fill);
+      }
+    }
+  }
+}
