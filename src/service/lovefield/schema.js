@@ -55,3 +55,7 @@ export const buildSchema = () => {
 
   return schemaBuilder
 }
+
+export const tblTasks = buildSchema().getSchema().table("tasks")
+export const tblSteps = buildSchema().getSchema().table("steps")
+export const tblLists = buildSchema().getSchema().table("lists")

@@ -1,10 +1,7 @@
 import lf from "lovefield"
-import { buildSchema } from "service/lovefield/schema"
+import { buildSchema, tblTasks, tblSteps } from "service/lovefield/schema"
 import { Step } from "service/lovefield/Step"
 import { v4 as uuid } from "uuid"
-
-const tblTasks = buildSchema().getSchema().table("tasks")
-const tblSteps = buildSchema().getSchema().table("steps")
 
 const selectTask = (id, db) => {
   const query = db.select().from(tblTasks).where(tblTasks.id.eq(id))
@@ -105,7 +102,6 @@ export const Task = {
       .then((db) =>
         typeof id === "undefined" ? indexTask(db) : selectTask(id, db)
       )
-      .then((res) => res)
   },
   post: async (obj) => {
     return buildSchema()

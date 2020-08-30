@@ -1,9 +1,6 @@
 import lf from "lovefield"
-import { buildSchema } from "service/lovefield/schema"
+import { buildSchema, tblSteps, tblTasks } from "service/lovefield/schema"
 import { v4 as uuid } from "uuid"
-
-const tblTasks = buildSchema().getSchema().table("tasks")
-const tblSteps = buildSchema().getSchema().table("steps")
 
 const indexStep = (taskId, db) => {
   const query = db
