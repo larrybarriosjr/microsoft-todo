@@ -19,7 +19,8 @@
     "predeploy": "yarn build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && yarn postbuild",
+    "postbuild": "shopt -s extglob && mkdir build/microsoft-todo && mv build/!(microsoft-todo) build/microsoft-todo",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
