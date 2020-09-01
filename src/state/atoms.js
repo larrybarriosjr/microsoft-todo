@@ -63,7 +63,7 @@ export const taskHiddenState = atom({
 
 /** List of all task items (unfiltered). */
 export const taskItemsState = atom({
-  key: "taskItems",
+  key: "taskItemsState",
   default: []
 })
 
