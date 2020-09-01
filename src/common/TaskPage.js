@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react"
 import scss from "common/TaskPage.module.scss"
 import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
-import { Task } from "service/lovefield"
+import { Task, List } from "service/lovefield"
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil"
-import { pageState, taskItemsState, themeModalState } from "state/atoms"
+import {
+  pageState,
+  taskItemsState,
+  themeModalState,
+  taskListsState
+} from "state/atoms"
 import { pageListState, completedListState } from "state/selectors"
 import ThemeModal from "./ThemeModal"
 import { useLocalStorage } from "utils"
@@ -20,6 +25,7 @@ const TaskPage = ({ name }) => {
   const [showCompleted, setShowCompleted] = useState(true)
   const [themeModal, setThemeModal] = useRecoilState(themeModalState)
   const setTaskItems = useSetRecoilState(taskItemsState)
+  const setTaskLists = useSetRecoilState(taskListsState)
   const page = useRecoilValue(pageState)
   const currentList = useRecoilValue(pageListState)
   const completedList = useRecoilValue(completedListState)
@@ -50,10 +56,16 @@ const TaskPage = ({ name }) => {
   const handleBgImage = (url) => () => setBgImage(require("assets/" + url))
 
   useEffect(() => {
-    Task.get()
-      .then((res) => setTaskItems(res))
-      .catch((err) => console.log(err))
-  }, [setTaskItems])
+    const fetchInitialData = async () => {
+      Promise.all([await Task.get(), await List.get()])
+        .then(([taskRes, listRes]) => {
+          setTaskItems(taskRes)
+          setTaskLists(listRes)
+        })
+        .catch((err) => console.log(err))
+    }
+    fetchInitialData()
+  }, [setTaskItems, setTaskLists])
 
   const icon = () => {
     switch (name) {

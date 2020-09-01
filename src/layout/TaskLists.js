@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef } from "react"
 import scss from "layout/TaskLists.module.scss"
 import { taskListsState } from "state/atoms"
 import { List } from "service/lovefield"
@@ -55,12 +55,6 @@ const TaskLists = () => {
   //   setList(list)
   //   setListModal(true)
   // }
-
-  useEffect(() => {
-    List.get()
-      .then((res) => setTaskLists(res))
-      .catch((err) => console.log(err))
-  }, [setTaskLists])
 
   return (
     <div className={scss.container}>
