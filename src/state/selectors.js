@@ -4,7 +4,7 @@ import {
   taskItemsState,
   stepItemsState,
   taskState,
-  listIdState
+  listState
 } from "state/atoms"
 
 /** List of task items depending on current page. */
@@ -13,7 +13,7 @@ export const pageListState = selector({
   get: ({ get }) => {
     const page = get(pageState) // get page name
     const taskItems = get(taskItemsState) // get all task items (unfiltered)
-    const listId = get(listIdState) // get list id
+    const list = get(listState) // get list id
 
     if (taskItems.length) {
       switch (page) {
@@ -38,7 +38,7 @@ export const pageListState = selector({
         // return all task items not belonging to a list
         default:
           return taskItems.filter(
-            (task) => task.listId === (listId || null) && !task.completed
+            (task) => task.listId === (list.id || null) && !task.completed
           )
       }
     } else {
@@ -52,7 +52,7 @@ export const completedListState = selector({
   get: ({ get }) => {
     const page = get(pageState) // get page name
     const taskItems = get(taskItemsState) // get all task items (unfiltered)
-    const listId = get(listIdState) // get list id
+    const list = get(listState) // get list id
 
     if (taskItems.length) {
       switch (page) {
@@ -70,7 +70,7 @@ export const completedListState = selector({
         default:
           return taskItems
             .filter(
-              (task) => task.listId === (listId || null) && task.completed
+              (task) => task.listId === (list.id || null) && task.completed
             )
             .sort((a, b) => a.completedEdited - b.completedEdited) // ascending, new item at the end
       }

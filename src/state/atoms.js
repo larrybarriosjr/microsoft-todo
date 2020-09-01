@@ -100,9 +100,14 @@ export const taskListsState = atom({
   default: []
 })
 
-export const listIdState = atom({
-  key: "listIdState",
-  default: ""
+export const listState = atom({
+  key: "listState",
+  default: {}
+})
+
+export const listModalState = atom({
+  key: "listModalState",
+  default: false
 })
 
 // 1, 30, 29, 21, 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8

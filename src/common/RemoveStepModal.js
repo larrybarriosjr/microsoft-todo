@@ -1,5 +1,5 @@
 import React from "react"
-import scss from "common/RemoveModal.module.scss"
+import scss from "common/RemoveStepModal.module.scss"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import {
   stepState,
@@ -10,7 +10,7 @@ import {
 } from "state/atoms"
 import { Task, Step } from "service/lovefield"
 
-const RemoveModal = () => {
+const RemoveStepModal = () => {
   const task = useRecoilValue(taskState)
   const [step, setStep] = useRecoilState(stepState)
   const [stepModal, setStepModal] = useRecoilState(stepModalState)
@@ -53,4 +53,4 @@ const RemoveModal = () => {
   )
 }
 
-export default RemoveModal
+export default RemoveStepModal

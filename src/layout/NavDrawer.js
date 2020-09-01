@@ -1,6 +1,6 @@
 import React from "react"
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil"
-import { pageState, taskItemsState, listIdState } from "state/atoms"
+import { pageState, taskItemsState, listState } from "state/atoms"
 import scss from "layout/NavDrawer.module.scss"
 import { fetchNavList } from "utils"
 import TaskLists from "layout/TaskLists"
@@ -9,11 +9,11 @@ const NavDrawer = () => {
   // global states
   const taskItems = useRecoilValue(taskItemsState)
   const [page, setPage] = useRecoilState(pageState)
-  const setListId = useSetRecoilState(listIdState)
+  const setList = useSetRecoilState(listState)
 
   // send to specified page
   const goToPage = (page) => () => {
-    setListId("")
+    setList({})
     setPage(page)
   }
 

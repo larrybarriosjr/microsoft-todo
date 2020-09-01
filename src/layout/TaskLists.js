@@ -1,6 +1,11 @@
 import React, { useState, useRef } from "react"
 import scss from "layout/TaskLists.module.scss"
-import { taskListsState, pageState, listIdState } from "state/atoms"
+import {
+  taskListsState,
+  pageState,
+  listState,
+  listModalState
+} from "state/atoms"
 import { List } from "service/lovefield"
 import { useRecoilState, useSetRecoilState } from "recoil"
 
@@ -12,7 +17,8 @@ const TaskLists = () => {
   const [taskList, setTaskList] = useState("")
 
   const setPage = useSetRecoilState(pageState)
-  const [listId, setListId] = useRecoilState(listIdState)
+  const [list, setList] = useRecoilState(listState)
+  const setListModal = useSetRecoilState(listModalState)
 
   // List input element reference
   const taskListRef = useRef(null)
@@ -54,21 +60,22 @@ const TaskLists = () => {
   }
 
   // Open remove list modal
-  // const handleRemoveList = (list) => () => {
-  //   setList(list)
-  //   setListModal(true)
-  // }
+  const handleRemoveList = (list) => (e) => {
+    e.stopPropagation()
+    setList(list)
+    setListModal(true)
+  }
 
   // send to specified page
-  const goToPage = (id, page) => () => {
+  const goToPage = (list, page) => () => {
     setPage(page)
-    setListId(id)
+    setList(list)
   }
 
   // styling classname variables
   const listButtonClass = (selected) =>
-    `${scss["list-button"]} ${listId === selected ? scss.active : ""}`
-  const nameClass = (selected) => (listId === selected ? scss.active : "")
+    `${scss["list-button"]} ${list.id === selected ? scss.active : ""}`
+  const nameClass = (selected) => (list.id === selected ? scss.active : "")
 
   return (
     <div className={scss.container}>
@@ -85,21 +92,21 @@ const TaskLists = () => {
               onDrop={handleListsUpdate}
             >
               <button
-                onClick={goToPage(item.id, item.name)}
+                onClick={goToPage(item, item.name)}
                 className={listButtonClass(item.id)}
               >
                 <i className="icon-bell" />
                 <p className={nameClass(item.id)}>{item.name}</p>
-                <p>
-                  {taskLists.filter((item) => item.listId === item.id).length}
-                </p>
-                {/* <button
-                type="button"
-                className={scss["list-remove"]}
-                onClick={handleRemoveList(item)}
-              >
-                <i className="icon-cancel" />
-              </button> */}
+                <button
+                  type="button"
+                  className={scss["list-remove"]}
+                  onClick={handleRemoveList(item)}
+                >
+                  <p>
+                    {taskLists.filter((item) => item.listId === item.id).length}
+                  </p>
+                  <i className="icon-cancel" />
+                </button>
               </button>
             </li>
           ))}

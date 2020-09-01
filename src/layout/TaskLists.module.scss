@@ -7,14 +7,11 @@
   gap: 0.25rem;
   > li {
     padding: 0 2px;
-    //   &:hover > .step-remove > i {
-    //     visibility: visible;
-    //   }
     > .list-button {
       cursor: grab;
       display: grid;
       position: relative;
-      grid-template-columns: 2rem 1fr 1rem;
+      grid-template-columns: 2rem 1fr 1.5rem;
       width: 100%;
       color: var(--primary-text);
       background: none;
@@ -23,6 +20,12 @@
       padding-left: 1rem;
       text-align: left;
       font-size: 0.9rem;
+      &:hover > .list-remove > p {
+        display: none;
+      }
+      &:hover > .list-remove > i {
+        display: block;
+      }
       &.active::before {
         content: "";
         position: absolute;
@@ -38,23 +41,19 @@
       > p.active {
         color: var(--primary-fill);
       }
-      > p:last-of-type {
+      > .list-remove {
+        font-size: 0.9rem;
         color: var(--secondary-text);
+        border: none;
+        background: none;
+        padding: 0;
+        text-align: center;
+        > i {
+          display: none;
+        }
       }
     }
   }
-  //   > .step-remove {
-  //     font-size: 0.9rem;
-  //     color: var(--secondary-text);
-  //     border: none;
-  //     background: none;
-  //     > i {
-  //       visibility: hidden;
-  //     }
-  //     &:hover > i {
-  //       visibility: visible;
-  //     }
-  //   }
 }
 
 .list {
