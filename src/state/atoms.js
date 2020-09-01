@@ -100,7 +100,12 @@ export const taskListsState = atom({
   default: []
 })
 
-// 30, 29, 21, 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
-// 22 days
+export const listIdState = atom({
+  key: "listIdState",
+  default: ""
+})
+
+// 1, 30, 29, 21, 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
+// 23 days
 
 // Task lists

@@ -1,48 +1,67 @@
 .container {
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .lists {
+  display: grid;
+  gap: 0.25rem;
   > li {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    &:hover > .step-remove > i {
-      visibility: visible;
-    }
-    > i {
-      margin-right: 1rem;
-      font-size: 1.1rem;
-      vertical-align: middle;
-      color: var(--primary-fill);
-    }
-    > p {
-      padding: 0.25rem 0;
-      font-size: 1rem;
-      &:hover {
-        cursor: grab;
-      }
-    }
-    > .step-remove {
-      font-size: 0.9rem;
-      color: var(--secondary-text);
-      border: none;
+    padding: 0 2px;
+    //   &:hover > .step-remove > i {
+    //     visibility: visible;
+    //   }
+    > .list-button {
+      cursor: grab;
+      display: grid;
+      position: relative;
+      grid-template-columns: 2rem 1fr 1rem;
+      width: 100%;
+      color: var(--primary-text);
       background: none;
-      > i {
-        visibility: hidden;
+      border: none;
+      padding: 0.5rem;
+      padding-left: 1rem;
+      text-align: left;
+      font-size: 0.9rem;
+      &.active::before {
+        content: "";
+        position: absolute;
+        top: 0.25rem;
+        bottom: 0.25rem;
+        left: 0.25rem;
+        width: 2px;
+        background: blue;
       }
-      &:hover > i {
-        visibility: visible;
+      > i {
+        color: var(--primary-fill);
+      }
+      > p.active {
+        color: var(--primary-fill);
+      }
+      > p:last-of-type {
+        color: var(--secondary-text);
       }
     }
   }
+  //   > .step-remove {
+  //     font-size: 0.9rem;
+  //     color: var(--secondary-text);
+  //     border: none;
+  //     background: none;
+  //     > i {
+  //       visibility: hidden;
+  //     }
+  //     &:hover > i {
+  //       visibility: visible;
+  //     }
+  //   }
 }
 
 .list {
   display: grid;
-  grid-template-columns: auto 1fr;
-  margin-top: 1rem;
+  grid-template-columns: 2rem 1fr;
+  padding: 0 1rem;
   > i {
-    margin-right: 1rem;
     font-size: 1.1rem;
     color: var(--secondary-text);
   }
