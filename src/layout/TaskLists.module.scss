@@ -38,6 +38,12 @@
       > i {
         color: var(--primary-fill);
       }
+      > p:first-of-type {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 8.5rem;
+      }
       > p.active {
         color: var(--primary-fill);
       }

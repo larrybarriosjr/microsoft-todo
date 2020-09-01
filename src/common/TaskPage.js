@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import scss from "common/TaskPage.module.scss"
 import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
@@ -8,11 +8,12 @@ import {
   pageState,
   taskItemsState,
   themeModalState,
-  taskListsState
+  taskListsState,
+  listState
 } from "state/atoms"
 import { pageListState, completedListState } from "state/selectors"
 import ThemeModal from "./ThemeModal"
-import { useLocalStorage } from "utils"
+import { useLocalStorage, debounce } from "utils"
 
 const TaskPage = ({ name }) => {
   const [bgImage, setBgImage] = useLocalStorage(
@@ -24,11 +25,31 @@ const TaskPage = ({ name }) => {
   const [taskName, setTaskName] = useState("")
   const [showCompleted, setShowCompleted] = useState(true)
   const [themeModal, setThemeModal] = useRecoilState(themeModalState)
+  const list = useRecoilValue(listState)
   const setTaskItems = useSetRecoilState(taskItemsState)
   const setTaskLists = useSetRecoilState(taskListsState)
   const page = useRecoilValue(pageState)
   const currentList = useRecoilValue(pageListState)
   const completedList = useRecoilValue(completedListState)
+  const [listName, setListName] = useState("")
+
+  // Debounced function for patching list name (500ms delay)
+  const patchListDebounced = useCallback(
+    debounce((id, name) =>
+      List.patch({ id, name })
+        .then((res) => setTaskLists(res))
+        .catch((err) => console.log(err))
+    ),
+    []
+  )
+
+  // Disable enter key when typing in list name
+  const disableEnter = (e) => {
+    if (e.key === "Enter") e.preventDefault()
+  }
+
+  // Automatically submit on list name change
+  const handleChangeList = (e) => setListName(e.target.value)
 
   // formatted current date
   const currentDate = dayjs().format("dddd, MMMM D")
@@ -54,6 +75,17 @@ const TaskPage = ({ name }) => {
   }
   const handleCompletedDisplay = () => setShowCompleted(!showCompleted)
   const handleBgImage = (url) => () => setBgImage(require("assets/" + url))
+
+  useEffect(() => {
+    setListName(list.name)
+  }, [list])
+
+  // Adjust textarea height automatically and debounce submission
+  useEffect(() => {
+    if (list.id && listName) {
+      patchListDebounced(list.id, listName)
+    }
+  }, [list, listName, patchListDebounced])
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -89,14 +121,22 @@ const TaskPage = ({ name }) => {
     <div
       className={scss.background}
       style={{
-        "--background-image": `url("${
-          page === "My Day" && localStorage.getItem("background-image")
-        }")`
+        "--background-image": `url("${page === "My Day" && bgImage}")`
       }}
     >
       <section className={scss.page}>
         <h2 className={scss.title}>
-          <i className={icon()} /> {name}
+          <i className={icon()} />{" "}
+          {listName ? (
+            <input
+              name="list-name"
+              onChange={handleChangeList}
+              onKeyPress={disableEnter}
+              value={listName}
+            />
+          ) : (
+            name
+          )}
         </h2>
         <p className={scss.date}>{name === "My Day" && currentDate}</p>
         <div className={scss.settings}>
