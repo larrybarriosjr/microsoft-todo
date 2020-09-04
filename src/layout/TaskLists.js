@@ -4,10 +4,11 @@ import {
   taskListsState,
   pageState,
   listState,
-  listModalState
+  listModalState,
+  taskItemsState
 } from "state/atoms"
 import { List } from "service/lovefield"
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil"
 
 const TaskLists = () => {
   const [taskLists, setTaskLists] = useRecoilState(taskListsState)
@@ -16,9 +17,10 @@ const TaskLists = () => {
   const [dragFromId, setDragFromId] = useState(null)
   const [taskList, setTaskList] = useState("")
 
+  const taskItems = useRecoilValue(taskItemsState)
   const setPage = useSetRecoilState(pageState)
-  const [list, setList] = useRecoilState(listState)
   const setListModal = useSetRecoilState(listModalState)
+  const [list, setList] = useRecoilState(listState)
 
   // List input element reference
   const taskListRef = useRef(null)
@@ -95,7 +97,7 @@ const TaskLists = () => {
                 onClick={goToPage(item, item.name)}
                 className={listButtonClass(item.id)}
               >
-                <i className="icon-bell" />
+                <i className="icon-menu" />
                 <p className={nameClass(item.id)}>{item.name}</p>
                 <button
                   type="button"
@@ -103,7 +105,7 @@ const TaskLists = () => {
                   onClick={handleRemoveList(item)}
                 >
                   <p>
-                    {taskLists.filter((item) => item.listId === item.id).length}
+                    {taskItems.filter((task) => task.listId === item.id).length}
                   </p>
                   <i className="icon-cancel" />
                 </button>
