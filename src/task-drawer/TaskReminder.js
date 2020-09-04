@@ -106,15 +106,6 @@ const TaskReminder = () => {
       badge: "./favicon.ico",
       body: task.name,
       showTrigger: new window.TimestampTrigger(dt.valueOf()),
-      actions: [
-        { action: "snooze-action", title: "Snooze 30 mins." },
-        { action: "dismiss-action", title: "Dismiss" }
-      ],
-      data: {
-        id: task.id,
-        url: window.location.href,
-        name: task.name
-      },
       requireInteraction: true
     }
 
