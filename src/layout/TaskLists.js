@@ -114,7 +114,7 @@ const TaskLists = () => {
           ))}
       </ul>
       <form className={scss.list}>
-        <i className="icon-plus" />
+        <i className="icon-list-add" />
         <textarea
           rows={1}
           name="task-list"
