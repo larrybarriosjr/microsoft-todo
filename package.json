@@ -38,5 +38,9 @@
   "devDependencies": {
     "dotenv": "^8.2.0",
     "node-sass": "^4.14.1"
+  },
+  "resolutions": {
+    "js-yaml": "^3.14.0",
+    "underscore.string": "^3.3.5"
   }
 }
