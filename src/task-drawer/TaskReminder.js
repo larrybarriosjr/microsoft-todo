@@ -112,7 +112,8 @@ const TaskReminder = () => {
       ],
       data: {
         id: task.id,
-        url: window.location.href
+        url: window.location.href,
+        name: task.name
       },
       requireInteraction: true
     }

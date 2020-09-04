@@ -17,6 +17,24 @@ import dayjs from "dayjs"
 
 function App() {
   window.self.addEventListener("notificationclick", (e) => {
+    const registration = await window.navigator.serviceWorker.getRegistration()
+    const options = {
+      tag: e.tag,
+      icon: "./favicon.ico",
+      badge: "./favicon.ico",
+      body: e.name,
+      showTrigger: new window.TimestampTrigger(dayjs(e.tag).valueOf()),
+      actions: [
+        { action: "snooze-action", title: "Snooze 30 mins." },
+        { action: "dismiss-action", title: "Dismiss" }
+      ],
+      data: {
+        id: e.id,
+        url: window.location.href,
+        name: e.name
+      },
+      requireInteraction: true
+    }
     switch (e.action) {
       case "snooze-action":
         console.log("ID: " + e.id)
@@ -25,6 +43,7 @@ function App() {
         console.log("Snooze 30 minutes")
         window.location.href = e.url
         Task.patch({ id: e.id, reminder: new Date(dayjs().add(10, "second")) })
+        .then(() => registration.showNotification("Task Reminder", options)) // Set PWA Notification
         break
       case "dismiss-action":
         console.log("ID: " + e.id)
