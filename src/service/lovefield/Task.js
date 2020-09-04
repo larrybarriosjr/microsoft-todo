@@ -64,7 +64,8 @@ export const Task = {
       starred,
       dueDate,
       reminder,
-      notes
+      notes,
+      listId
     } = obj
 
     if (id) {
@@ -79,13 +80,13 @@ export const Task = {
     return {
       id: uuid(),
       name: name,
-      myDay: true,
+      myDay: !!myDay,
       completed: false,
-      starred: false,
+      starred: !!starred,
       notes: "",
-      dueDate: null,
+      dueDate: dueDate || null,
       reminder: null,
-      listId: null,
+      listId: listId || null,
       stepsTotal: 0,
       stepsCompleted: 0,
       dateCreated: new Date(),

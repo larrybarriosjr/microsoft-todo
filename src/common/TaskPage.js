@@ -62,7 +62,13 @@ const TaskPage = ({ name }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (taskName) {
-      Task.post({ name: taskName })
+      Task.post({
+        name: taskName,
+        myDay: name === "My Day",
+        starred: name === "Important",
+        dueDate: name === "Planned" && new Date(dayjs().startOf("day")),
+        listId: list.id
+      })
         .then((res) => setTaskItems(res))
         .then(() => setTaskName(""))
         .then(() => setSubmitHidden(true))

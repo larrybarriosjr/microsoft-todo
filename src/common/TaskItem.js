@@ -71,7 +71,7 @@ const TaskItem = ({ item }) => {
       />
       <p className={itemNameClass}>{item.name}</p>
       <p className={scss["item-category"]}>
-        {item.listId || "Tasks"}
+        {item.listName || "Tasks"}
         {item.stepsTotal > 0 && <StepsIndicator />}
         {item.dueDate && <DateIndicator date={item.dueDate} dueDate />}
         {item.reminder && <DateIndicator date={item.reminder} reminder />}
