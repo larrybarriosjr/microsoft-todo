@@ -83,19 +83,10 @@ const TaskDueDate = () => {
       dt = dayjs(date).startOf("day")
     }
 
-    // Don't forget ASYNC for AWAIT
-    // const registration = await navigator.serviceWorker.getRegistration()
-    // const options = {
-    //   tag: dt.valueOf(),
-    //   body: "Sample Task",
-    //   showTrigger: new window.TimestampTrigger(dt.valueOf())
-    // }
-
     Task.patch({ id: task.id, dueDate: new Date(dt) })
       .then((res) => setTaskItems(res))
       .then(() => fetchTask(task.id, setTask, setStepItems))
       .then(setDueDateCalendarModal(false)) // Close due date calendar modal
-      // .then(() => registration.showNotification("Task Due Date", options)) // Set PWA Notification
       .then(setCalendarStates()) // Reset calendar values to now
       .catch((err) => console.log(err))
   }
