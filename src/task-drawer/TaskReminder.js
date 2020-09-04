@@ -2,8 +2,8 @@ import React from "react"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import {
   taskState,
-  taskListState,
-  stepListState,
+  taskItemsState,
+  stepItemsState,
   reminderModalState,
   reminderCalendarModalState,
   dueDateModalState,
@@ -20,8 +20,8 @@ import scss from "task-drawer/TaskReminder.module.scss"
 import dayjs from "dayjs"
 
 const TaskReminder = () => {
-  const setTaskList = useSetRecoilState(taskListState)
-  const setStepList = useSetRecoilState(stepListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
+  const setStepItems = useSetRecoilState(stepItemsState)
   const setDueDateModal = useSetRecoilState(dueDateModalState)
   const setDueDateCalendarModal = useSetRecoilState(dueDateCalendarModalState)
 
@@ -55,14 +55,17 @@ const TaskReminder = () => {
   // Remove reminder in task item on button press
   const handleRemoveReminder = () => {
     Task.patch({ id: task.id, reminder: null })
-      .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask, setStepList))
+      .then((res) => setTaskItems(res))
+      .then(() => fetchTask(task.id, setTask, setStepItems))
       .catch((err) => console.log(err))
   }
 
   // Open Remind Me modal and close Due Date modals
   const handleReminder = (e) => {
     e.stopPropagation() // Disable closing of this modal
+    if (window.Notification.permission !== "granted") {
+      return window.Notification.requestPermission()
+    }
     setReminderModal(true)
     setDueDateModal(false)
     setDueDateCalendarModal(false)
@@ -80,7 +83,7 @@ const TaskReminder = () => {
   const nextWeek = dayjs().startOf("day").add(7, "d").add(9, "h")
 
   // Submit reminder and immediately update task list and task item details
-  const handleSubmitReminder = (preset) => () => {
+  const handleSubmitReminder = (preset) => async () => {
     let dt
 
     // Check preset value
@@ -96,19 +99,29 @@ const TaskReminder = () => {
       dt = dayjs(date).add(hr, "h").add(minute, "m")
     }
 
-    // Don't forget ASYNC for AWAIT
-    // const registration = await navigator.serviceWorker.getRegistration()
-    // const options = {
-    //   tag: dt.valueOf(),
-    //   body: "Sample Task",
-    //   showTrigger: new window.TimestampTrigger(dt.valueOf())
-    // }
+    const registration = await window.navigator.serviceWorker.getRegistration()
+    const options = {
+      tag: dt.valueOf(),
+      icon: "./favicon.ico",
+      badge: "./favicon.ico",
+      body: task.name,
+      showTrigger: new window.TimestampTrigger(dt.valueOf()),
+      actions: [
+        { action: "snooze-action", title: "Snooze 30 mins." },
+        { action: "dismiss-action", title: "Dismiss" }
+      ],
+      data: {
+        id: task.id,
+        url: window.location.href
+      },
+      requireInteraction: true
+    }
 
     Task.patch({ id: task.id, reminder: new Date(dt) })
-      .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask, setStepList))
+      .then((res) => setTaskItems(res))
+      .then(() => fetchTask(task.id, setTask, setStepItems))
       .then(setReminderCalendarModal(false)) // Close reminder calendar modal
-      // .then(() => registration.showNotification("Task Reminder", options)) // Set PWA Notification
+      .then(() => registration.showNotification("Task Reminder", options)) // Set PWA Notification
       .then(setCalendarStates()) // Reset calendar values to now
       .catch((err) => console.log(err))
   }

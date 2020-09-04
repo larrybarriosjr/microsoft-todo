@@ -1,6 +1,6 @@
 import React from "react"
 import { useSetRecoilState, useRecoilState } from "recoil"
-import { taskHiddenState, taskState, taskListState } from "state/atoms"
+import { taskHiddenState, taskState, taskItemsState } from "state/atoms"
 import scss from "task-drawer/TaskFooter.module.scss"
 import { Task } from "service/lovefield"
 import dayjs from "dayjs"
@@ -8,7 +8,7 @@ import dayjs from "dayjs"
 const TaskFooter = () => {
   const [task, setTask] = useRecoilState(taskState)
   const setTaskHidden = useSetRecoilState(taskHiddenState)
-  const setTaskList = useSetRecoilState(taskListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
 
   // Date formatted like Sat, September 16
   const dateCreated = dayjs(task.dateCreated).format("ddd, MMMM D")
@@ -22,7 +22,7 @@ const TaskFooter = () => {
   // Delete chosen task item, reset data and close drawer
   const handleDeleteTask = () => {
     Task.delete(task.id)
-      .then((res) => setTaskList(res))
+      .then((res) => setTaskItems(res))
       .then(handleCloseDrawer)
       .catch((err) => console.log(err))
   }

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react"
 import { Task } from "service/lovefield"
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import { taskState, taskListState } from "state/atoms"
+import { taskState, taskItemsState } from "state/atoms"
 import { debounce } from "utils"
 
 const TaskNotes = () => {
   const task = useRecoilValue(taskState)
-  const setTaskList = useSetRecoilState(taskListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
   const [taskNotes, setTaskNotes] = useState("")
 
   // HTML Element References
@@ -19,7 +19,7 @@ const TaskNotes = () => {
   const patchNotesDebounced = useCallback(
     debounce((id, notes) =>
       Task.patch({ id, notes })
-        .then((res) => setTaskList(res))
+        .then((res) => setTaskItems(res))
         .catch((err) => console.log(err))
     ),
     []
@@ -39,7 +39,7 @@ const TaskNotes = () => {
     inputEl.style.height = "7.5rem"
     if (taskNotes) inputEl.style.height = `${inputEl.scrollHeight}px`
     if (id) patchNotesDebounced(id, taskNotes)
-  }, [id, taskNotes, patchNotesDebounced, setTaskList])
+  }, [id, taskNotes, patchNotesDebounced, setTaskItems])
 
   return (
     <form>

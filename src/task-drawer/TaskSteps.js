@@ -3,11 +3,11 @@ import scss from "task-drawer/TaskSteps.module.scss"
 import CheckButton from "common/CheckButton"
 import { Task, Step } from "service/lovefield"
 import {
-  stepListState,
+  stepItemsState,
   stepState,
   stepModalState,
   taskState,
-  taskListState
+  taskItemsState
 } from "state/atoms"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { taskStepsState } from "state/selectors"
@@ -16,9 +16,9 @@ const TaskSteps = () => {
   const task = useRecoilValue(taskState)
   const taskSteps = useRecoilValue(taskStepsState)
   const setStep = useSetRecoilState(stepState)
-  const setStepList = useSetRecoilState(stepListState)
+  const setStepItems = useSetRecoilState(stepItemsState)
   const setStepModal = useSetRecoilState(stepModalState)
-  const setTaskList = useSetRecoilState(taskListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
 
   const [dragFromOrder, setDragFromOrder] = useState(null)
   const [dragFromId, setDragFromId] = useState(null)
@@ -46,7 +46,7 @@ const TaskSteps = () => {
       { id: dragFromId, order: dragFromOrder },
       Number(e.currentTarget.dataset.order)
     )
-      .then((res) => setStepList(res))
+      .then((res) => setStepItems(res))
       .catch((err) => console.log(err))
   }
 
@@ -58,11 +58,11 @@ const TaskSteps = () => {
     if (e.key === "Enter") {
       e.preventDefault()
       await Step.post({ name: taskStep, taskId: task.id })
-        .then((res) => setStepList(res))
+        .then((res) => setStepItems(res))
         .then(() => setTaskStep(""))
         .catch((err) => console.log(err))
       await Task.get()
-        .then((res) => setTaskList(res))
+        .then((res) => setTaskItems(res))
         .catch((err) => console.log(err))
     }
   }

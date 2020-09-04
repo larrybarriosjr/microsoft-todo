@@ -1,14 +1,14 @@
 import React, { useState } from "react"
 import { useSetRecoilState } from "recoil"
-import { taskListState, taskState, stepListState } from "state/atoms"
+import { taskItemsState, taskState, stepItemsState } from "state/atoms"
 import scss from "common/CheckButton.module.scss"
 import { Task, Step } from "service/lovefield"
 import { fetchTask } from "utils"
 
 const CheckButton = ({ id, completed, taskId, className }) => {
   const setTask = useSetRecoilState(taskState)
-  const setTaskList = useSetRecoilState(taskListState)
-  const setStepList = useSetRecoilState(stepListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
+  const setStepItems = useSetRecoilState(stepItemsState)
   const [checkShown, setCheckShown] = useState(false)
 
   // Display icon on mouse enter
@@ -24,17 +24,17 @@ const CheckButton = ({ id, completed, taskId, className }) => {
     e.stopPropagation() // Disable drawer toggle
     if (taskId) {
       await Step.patch(taskId, { id, completed: !completed })
-        .then((res) => setStepList(res))
+        .then((res) => setStepItems(res))
         .then(handleHideCheck) // Hide icon to avoid rendering duplicates
         .catch((err) => console.log(err))
       await Task.get()
-        .then((res) => setTaskList(res))
+        .then((res) => setTaskItems(res))
         .catch((err) => console.log(err))
     } else {
       Task.patch({ id, completed: !completed })
-        .then((res) => setTaskList(res)) // Rerender list of task items
+        .then((res) => setTaskItems(res)) // Rerender list of task items
         .then(handleHideCheck) // Hide icon to avoid rendering duplicates
-        .then(() => fetchTask(id, setTask, setStepList)) // Sync info between list and drawer
+        .then(() => fetchTask(id, setTask, setStepItems)) // Sync info between list and drawer
         .catch((err) => console.log(err))
     }
   }

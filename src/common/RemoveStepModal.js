@@ -1,21 +1,21 @@
 import React from "react"
-import scss from "common/RemoveModal.module.scss"
+import scss from "common/RemoveStepModal.module.scss"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import {
   stepState,
   stepModalState,
   taskState,
-  stepListState,
-  taskListState
+  stepItemsState,
+  taskItemsState
 } from "state/atoms"
 import { Task, Step } from "service/lovefield"
 
-const RemoveModal = () => {
+const RemoveStepModal = () => {
   const task = useRecoilValue(taskState)
   const [step, setStep] = useRecoilState(stepState)
   const [stepModal, setStepModal] = useRecoilState(stepModalState)
-  const setStepList = useSetRecoilState(stepListState)
-  const setTaskList = useSetRecoilState(taskListState)
+  const setStepItems = useSetRecoilState(stepItemsState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
 
   const handleCloseModal = () => {
     setStepModal(false)
@@ -24,12 +24,12 @@ const RemoveModal = () => {
 
   const handleRemoveStep = async () => {
     await Step.delete(task.id, step.id)
-      .then((res) => setStepList(res))
+      .then((res) => setStepItems(res))
       .then(() => setStep({}))
       .then(() => setStepModal(false))
       .catch((err) => console.log(err))
     await Task.get()
-      .then((res) => setTaskList(res))
+      .then((res) => setTaskItems(res))
       .catch((err) => console.log(err))
   }
 
@@ -53,4 +53,4 @@ const RemoveModal = () => {
   )
 }
 
-export default RemoveModal
+export default RemoveStepModal

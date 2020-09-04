@@ -1,5 +1,10 @@
 import lf from "lovefield"
-import { buildSchema, tblTasks, tblSteps } from "service/lovefield/schema"
+import {
+  buildSchema,
+  tblTasks,
+  tblSteps,
+  tblLists
+} from "service/lovefield/schema"
 import { Step } from "service/lovefield/Step"
 import { v4 as uuid } from "uuid"
 
@@ -9,7 +14,28 @@ const selectTask = (id, db) => {
 }
 
 const indexTask = (db) => {
-  const query = db.select().from(tblTasks)
+  const query = db
+    .select(
+      tblTasks.id.as("id"),
+      tblTasks.name.as("name"),
+      tblTasks.myDay.as("myDay"),
+      tblTasks.completed.as("completed"),
+      tblTasks.starred.as("starred"),
+      tblTasks.dueDate.as("dueDate"),
+      tblTasks.reminder.as("reminder"),
+      tblTasks.notes.as("notes"),
+      tblTasks.stepsTotal.as("stepsTotal"),
+      tblTasks.stepsCompleted.as("stepsCompleted"),
+      tblTasks.dateCreated.as("dateCreated"),
+      tblTasks.myDayEdited.as("myDayEdited"),
+      tblTasks.completedEdited.as("completedEdited"),
+      tblTasks.starredEdited.as("starredEdited"),
+      tblTasks.dueDateEdited.as("dueDateEdited"),
+      tblTasks.listId.as("listId"),
+      tblLists.name.as("listName")
+    )
+    .from(tblTasks)
+    .leftOuterJoin(tblLists, tblLists.id.eq(tblTasks.listId))
   return query.exec()
 }
 
@@ -64,7 +90,8 @@ export const Task = {
       starred,
       dueDate,
       reminder,
-      notes
+      notes,
+      listId
     } = obj
 
     if (id) {
@@ -79,13 +106,13 @@ export const Task = {
     return {
       id: uuid(),
       name: name,
-      myDay: true,
+      myDay: !!myDay,
       completed: false,
-      starred: false,
+      starred: !!starred,
       notes: "",
-      dueDate: null,
+      dueDate: dueDate || null,
       reminder: null,
-      listId: null,
+      listId: listId || null,
       stepsTotal: 0,
       stepsCompleted: 0,
       dateCreated: new Date(),

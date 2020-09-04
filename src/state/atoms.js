@@ -62,8 +62,8 @@ export const taskHiddenState = atom({
 })
 
 /** List of all task items (unfiltered). */
-export const taskListState = atom({
-  key: "taskList",
+export const taskItemsState = atom({
+  key: "taskItemsState",
   default: []
 })
 
@@ -74,8 +74,8 @@ export const taskState = atom({
 })
 
 /** List of all step items (unfiltered). */
-export const stepListState = atom({
-  key: "stepListState",
+export const stepItemsState = atom({
+  key: "stepItemsState",
   default: []
 })
 
@@ -90,7 +90,27 @@ export const stepModalState = atom({
   default: false
 })
 
-// 30, 29, 21, 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
-// 22 days
+export const themeModalState = atom({
+  key: "themeModalState",
+  default: false
+})
 
-// Public images not loading on production build
+export const taskListsState = atom({
+  key: "taskListsState",
+  default: []
+})
+
+export const listState = atom({
+  key: "listState",
+  default: {}
+})
+
+export const listModalState = atom({
+  key: "listModalState",
+  default: false
+})
+
+// 4, 1, 30, 29, 22, 21, 16, 15, 14, 13, 12, 11, 5, 3, 28, 26, 24, 23, 21, 20, 14, 13, 10, 9, 8
+// 25 days
+
+// PWA Actions

@@ -1,30 +1,55 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import scss from "common/TaskPage.module.scss"
 import dayjs from "dayjs"
 import TaskItem from "common/TaskItem"
-import { Task } from "service/lovefield"
-import { useSetRecoilState, useRecoilValue } from "recoil"
-import { pageState, taskListState } from "state/atoms"
+import { Task, List } from "service/lovefield"
+import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil"
+import {
+  pageState,
+  taskItemsState,
+  themeModalState,
+  taskListsState,
+  listState
+} from "state/atoms"
 import { pageListState, completedListState } from "state/selectors"
-import { useLocalStorage } from "utils"
-import images from "state/background-image"
+import ThemeModal from "./ThemeModal"
+import { useLocalStorage, debounce } from "utils"
 
 const TaskPage = ({ name }) => {
-  // local storage state
   const [bgImage, setBgImage] = useLocalStorage(
     "background-image",
     require("assets/barley-fields.jpg")
   )
-
   // local states
   const [submitHidden, setSubmitHidden] = useState(true)
   const [taskName, setTaskName] = useState("")
-  const [bgImageModal, setBgImageModal] = useState(false)
   const [showCompleted, setShowCompleted] = useState(true)
-  const setTaskList = useSetRecoilState(taskListState)
+  const [themeModal, setThemeModal] = useRecoilState(themeModalState)
+  const list = useRecoilValue(listState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
+  const setTaskLists = useSetRecoilState(taskListsState)
   const page = useRecoilValue(pageState)
   const currentList = useRecoilValue(pageListState)
   const completedList = useRecoilValue(completedListState)
+  const [listName, setListName] = useState("")
+
+  // Debounced function for patching list name (500ms delay)
+  const patchListDebounced = useCallback(
+    debounce((id, name) =>
+      List.patch({ id, name })
+        .then((res) => setTaskLists(res))
+        .catch((err) => console.log(err))
+    ),
+    []
+  )
+
+  // Disable enter key when typing in list name
+  const disableEnter = (e) => {
+    if (e.key === "Enter") e.preventDefault()
+  }
+
+  // Automatically submit on list name change
+  const handleChangeList = (e) => setListName(e.target.value)
 
   // formatted current date
   const currentDate = dayjs().format("dddd, MMMM D")
@@ -37,22 +62,48 @@ const TaskPage = ({ name }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (taskName) {
-      Task.post({ name: taskName })
-        .then((res) => setTaskList(res))
+      Task.post({
+        name: taskName,
+        myDay: name === "My Day",
+        starred: name === "Important",
+        dueDate: name === "Planned" && new Date(dayjs().startOf("day")),
+        listId: list.id
+      })
+        .then((res) => setTaskItems(res))
         .then(() => setTaskName(""))
         .then(() => setSubmitHidden(true))
         .catch((err) => console.log(err))
     }
   }
-  const handleBgImage = (url) => () => setBgImage(require("assets/" + url))
-  const handleBgImageModal = () => setBgImageModal(!bgImageModal)
+  const handleThemeModal = (e) => {
+    e.stopPropagation()
+    setThemeModal(!themeModal)
+  }
   const handleCompletedDisplay = () => setShowCompleted(!showCompleted)
+  const handleBgImage = (url) => () => setBgImage(require("assets/" + url))
 
   useEffect(() => {
-    Task.get()
-      .then((res) => setTaskList(res))
-      .catch((err) => console.log(err))
-  }, [setTaskList])
+    setListName(list.name)
+  }, [list])
+
+  // Adjust textarea height automatically and debounce submission
+  useEffect(() => {
+    if (list.id && listName) {
+      patchListDebounced(list.id, listName)
+    }
+  }, [list, listName, patchListDebounced])
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      Promise.all([await Task.get(), await List.get()])
+        .then(([taskRes, listRes]) => {
+          setTaskItems(taskRes)
+          setTaskLists(listRes)
+        })
+        .catch((err) => console.log(err))
+    }
+    fetchInitialData()
+  }, [setTaskItems, setTaskLists])
 
   const icon = () => {
     switch (name) {
@@ -75,37 +126,34 @@ const TaskPage = ({ name }) => {
   return (
     <div
       className={scss.background}
-      style={{ "--background-image": `url("${page === "My Day" && bgImage}")` }}
+      style={{
+        "--background-image": `url("${page === "My Day" && bgImage}")`
+      }}
     >
       <section className={scss.page}>
         <h2 className={scss.title}>
-          <i className={icon()} /> {name}
+          <i className={icon()} />{" "}
+          {listName ? (
+            <input
+              name="list-name"
+              onChange={handleChangeList}
+              onKeyPress={disableEnter}
+              value={listName}
+            />
+          ) : (
+            name
+          )}
         </h2>
         <p className={scss.date}>{name === "My Day" && currentDate}</p>
         <div className={scss.settings}>
           <button
             className={scss.ellipsis}
             aria-label="Task drawer button"
-            onClick={handleBgImageModal}
+            onClick={handleThemeModal}
           >
             <i className="icon-ellipsis" />
           </button>
-          <dialog open={bgImageModal} className={scss.modal}>
-            <header>Theme</header>
-            <section>
-              {images.map((img) => (
-                <button
-                  key={img.key}
-                  onClick={handleBgImage(img.url)}
-                  className={img.url === bgImage ? scss.selected : ""}
-                >
-                  <span>
-                    <img src={require("assets/" + img.url)} alt={img.alt} />
-                  </span>
-                </button>
-              ))}
-            </section>
-          </dialog>
+          <ThemeModal image={bgImage} handleImage={handleBgImage} />
         </div>
         <article className={listClass}>
           <ul className={scss["todo-list"]}>

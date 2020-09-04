@@ -1,14 +1,14 @@
 import React from "react"
 import { useSetRecoilState, useRecoilState } from "recoil"
-import { taskListState, taskState, stepListState } from "state/atoms"
+import { taskItemsState, taskState, stepItemsState } from "state/atoms"
 import scss from "task-drawer/TaskMyDay.module.scss"
 import { Task } from "service/lovefield"
 import { fetchTask } from "utils"
 
 const TaskMyDay = () => {
   const [task, setTask] = useRecoilState(taskState)
-  const setTaskList = useSetRecoilState(taskListState)
-  const setStepList = useSetRecoilState(stepListState)
+  const setTaskItems = useSetRecoilState(taskItemsState)
+  const setStepItems = useSetRecoilState(stepItemsState)
 
   /**
    * Function for setting or removing My Day from the task.
@@ -17,8 +17,8 @@ const TaskMyDay = () => {
    */
   const patchMyDay = (value) => {
     Task.patch({ id: task.id, myDay: value })
-      .then((res) => setTaskList(res))
-      .then(() => fetchTask(task.id, setTask, setStepList))
+      .then((res) => setTaskItems(res))
+      .then(() => fetchTask(task.id, setTask, setStepItems))
       .catch((err) => console.log(err))
   }
 

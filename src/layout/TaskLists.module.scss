@@ -1,0 +1,84 @@
+.container {
+  padding: 0;
+}
+
+.lists {
+  display: grid;
+  gap: 0.25rem;
+  > li {
+    padding: 0 2px;
+    > .list-button {
+      cursor: grab;
+      display: grid;
+      position: relative;
+      grid-template-columns: 2rem 1fr 1.5rem;
+      width: 100%;
+      color: var(--primary-text);
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      padding-left: 1rem;
+      text-align: left;
+      font-size: 0.9rem;
+      &:hover > .list-remove > p {
+        display: none;
+      }
+      &:hover > .list-remove > i {
+        display: block;
+      }
+      &.active::before {
+        content: "";
+        position: absolute;
+        top: 0.25rem;
+        bottom: 0.25rem;
+        left: 0.25rem;
+        width: 2px;
+        background: blue;
+      }
+      > i {
+        color: var(--primary-fill);
+      }
+      > p:first-of-type {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 8.5rem;
+      }
+      > p.active {
+        color: var(--primary-fill);
+      }
+      > .list-remove {
+        font-size: 0.9rem;
+        color: var(--secondary-text);
+        border: none;
+        background: none;
+        padding: 0;
+        text-align: center;
+        > i {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  padding: 0 1rem;
+  > i {
+    font-size: 1.1rem;
+    color: var(--secondary-text);
+  }
+  > textarea {
+    resize: none;
+    overflow: hidden;
+    font-size: 0.9rem;
+    color: var(--primary-text);
+    border: none;
+    background: none;
+    padding-top: 0.25rem;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+  }
+}
